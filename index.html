@@ -391,7 +391,7 @@
 <tbody>
 <tr>
 <td style="text-align:left">Each application gets its own executor processes, which stay up for the duration of the whole application and run tasks in multiple threads. This has the benefit of isolating applications from each other, on both the scheduling side (each driver schedules its own tasks) and executor side (tasks from different applications run in different JVMs). However, it also means that data cannot be shared across different Spark applications (instances of SparkContext) without writing it to an external storage syste</td>
-<td style="text-align:left">每个应用都有自己的executor进程，只要application存在，executor就存在，并且可以已多线程的方式在Executor上运行task。分离应用的方式有很多好处, 不管是在调度端(每个driver调度它自己的多个task)还是在executor端(不同应用的那些task运行在不同的JVM上)。但是，这也就意味着在没有外部存储的情况下不能跨不同的Spark应用(SparkContext实例)来共享数据</td>
+<td style="text-align:left">每个应用都有自己的executor进程，只要application存在，executor就存在，并且可以以多线程的方式在Executor上运行task。分离应用的方式有很多好处, 不管是在调度端(每个driver调度它自己的多个task)还是在executor端(不同应用的那些task运行在不同的JVM上)。但是，这也就意味着在没有外部存储的情况下不能跨不同的Spark应用(SparkContext实例)来共享数据</td>
 </tr>
 </tbody>
 </table>
