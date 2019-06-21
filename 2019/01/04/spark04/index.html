@@ -6,15 +6,19 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="http://HenryangTi.github.io">
-  <title>Archives: 2019 | HenryangTi&#39;s blog</title>
+  <title>Spark On YARN如何提交运行 | HenryangTi&#39;s blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="HenryangTi&#39;s blog">
-<meta property="og:url" content="http://HenryangTi.github.io/archives/2019/index.html">
+  <meta name="description" content="1.最开始支持YARN的Spark的版本    官网原文 中文翻译     Support for running on YARN (Hadoop NextGen) was added to Spark in version 0.6.0, and improved in subsequent releases. 支持运行在YARN上是在Spark 0.6.0版本被引入的       官网原文 中文">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spark On YARN如何提交运行">
+<meta property="og:url" content="http://HenryangTi.github.io/2019/01/04/spark04/index.html">
 <meta property="og:site_name" content="HenryangTi&#39;s blog">
+<meta property="og:description" content="1.最开始支持YARN的Spark的版本    官网原文 中文翻译     Support for running on YARN (Hadoop NextGen) was added to Spark in version 0.6.0, and improved in subsequent releases. 支持运行在YARN上是在Spark 0.6.0版本被引入的       官网原文 中文">
 <meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-06-21T10:12:07.899Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="HenryangTi&#39;s blog">
+<meta name="twitter:title" content="Spark On YARN如何提交运行">
+<meta name="twitter:description" content="1.最开始支持YARN的Spark的版本    官网原文 中文翻译     Support for running on YARN (Hadoop NextGen) was added to Spark in version 0.6.0, and improved in subsequent releases. 支持运行在YARN上是在Spark 0.6.0版本被引入的       官网原文 中文">
   
     <link rel="alternative" href="/atom.xml" title="HenryangTi&#39;s blog" type="application/atom+xml">
   
@@ -150,37 +154,116 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
+            <article id="post-spark04" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
   
+    <h1 class="article-title" itemprop="name">
+      Spark On YARN如何提交运行
+    </h1>
   
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2019" class="archive-year">2019</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/01/04/spark04/" class="archive-article-date">
+
+        
+        <a href="/2019/01/04/spark04/" class="archive-article-date">
   	<time datetime="2019-01-03T16:34:14.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-01-04</time>
 </a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/01/04/spark04/">Spark On YARN如何提交运行</a>
-    </h1>
-  
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.最开始支持YARN的Spark的版本</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">官网原文</th>
+<th style="text-align:left">中文翻译</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">Support for running on YARN (Hadoop NextGen) was added to Spark in version 0.6.0, and improved in subsequent releases.</td>
+<td style="text-align:left">支持运行在YARN上是在Spark 0.6.0版本被引入的</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">官网原文</th>
+<th style="text-align:left">中文翻译</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">Ensure that HADOOP_CONF_DIR or YARN_CONF_DIR points to the directory which contains the (client side) configuration files for the Hadoop cluster. These configs are used to write to HDFS and connect to the YARN ResourceManager. The configuration contained in this directory will be distributed to the YARN cluster so that all containers used by the application use the same configuration.</td>
+<td style="text-align:left">确保HADOOP_CONF_DIR或者YARN_CONF_DIR指向的是保存的的hadoop集群的客户端配置文件的文件夹。这些配置信息被写入到HDFS中并且连接YARN的ResourceManager。保存在该文件夹下的配置信息将会被分发到YARN集群上以便被Spark应用使用的所有的container都使用的是相同的配置信息</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">官网原文</th>
+<th style="text-align:left">中文翻译</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">If the configuration references Java system properties or environment variables not managed by YARN, they should also be set in the Spark application’s configuration (driver, executors, and the AM when running in client mode).</td>
+<td style="text-align:left">如果配置信息指向的是不被YARN所管理的Java系统变量或者环境变量，应该被设置与Spark应用的配置信息中(包括driver中，executors中和当运行的是cluster模式的AM中)</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">官网原文</th>
+<th style="text-align:left">中文翻译</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">There are two deploy modes that can be used to launch Spark applications on YARN. In cluster mode, the Spark driver runs inside an application master process which is managed by YARN on the cluster, and the client can go away after initiating the application. In client mode, the driver runs in the client process, and the application master is only used for requesting resources from YARN.</td>
+<td style="text-align:left">启动Spark on yarn有两种deploy-mode。在cluster模式下, spark driver运行在application master进程中, application master被集群中的YARN所管理，在应用初始化之后client就会消失。在client模式下，driver运行在client进程中，application master只是从YARN上获取资源</td>
+</tr>
+</tbody>
+</table>
+<p>注</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">在cluster模式下, client作用是提交脚本</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">在client模式下, 终端是不允许关闭的, 关闭就整个挂掉, 因为driver跑在本地</span><br></pre></td></tr></table></figure>
 
-        <div class="article-info info-on-right">
-          
-          
+      
+
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
 	<div class="article-category tagcloud">
 		<i class="icon-book icon"></i>
 		<ul class="article-tag-list">
@@ -193,131 +276,104 @@
 	</div>
 
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://HenryangTi.github.io/2019/01/04/spark04/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/01/03/spark03/" class="archive-article-date">
-  	<time datetime="2019-01-02T16:34:14.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-01-03</time>
-</a>
+<nav id="article-nav">
+  
+  
+    <a href="/2019/01/03/spark03/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Spark On YARN</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/01/03/spark03/">Spark On YARN</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Spark//" class="article-tag-list-link color1">Spark</a>
-        		</li>
-      		
-		</ul>
-	</div>
+        
+        
+    </div>
+</aside>
 
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/01/02/spark02/" class="archive-article-date">
-  	<time datetime="2019-01-01T16:34:14.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-01-02</time>
-</a>
-        </div>
-    	 
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/01/02/spark02/">Spark集群工作方式</a>
-    </h1>
   
 
-        <div class="article-info info-on-right">
-          
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Spark//" class="article-tag-list-link color1">Spark</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/01/01/hello-world/" class="archive-article-date">
-  	<time datetime="2018-12-31T16:34:14.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-01-01</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/01/01/hello-world/">Spark简介</a>
-    </h1>
   
 
-        <div class="article-info info-on-right">
-          
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Spark//" class="article-tag-list-link color1">Spark</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
   
 
-    
+  
 
 
           </div>
@@ -340,8 +396,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
