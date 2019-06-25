@@ -327,6 +327,8 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(1) 当Spark Application启动后会先访问cluster manager，因为需要根据cluster manager来申请资源，cluster manager是pluggable, 用户不需要关注application是运行在那个集群上的</span><br></pre></td></tr></table></figure>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(2) 如果Cluster Manager是YARN的话, 那么没有Worker Node这一概念，YARN的executors都运行在Node Manager中的Container中，而Worker Node存在于Cluster Manager为standalone</span><br></pre></td></tr></table></figure>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(3) container的内存大于executor的内存</span><br></pre></td></tr></table></figure>
+<p>6.常用基于yarn框架的架构以及将其他框架跑在YARN之上的原因</p>
+<p><img src="/img/yarn.png" alt="avatar"></p>
 
       
 
