@@ -6,21 +6,23 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="http://HenryangTi.github.io">
-  <title>宽依赖与窄依赖 | HenryangTi&#39;s blog</title>
+  <title>key-value pair | HenryangTi&#39;s blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="1.定义     定义     宽依赖 一个父RDD只能被子RDD的partition使用一次   窄依赖 一个父RDD能够被子RDD的partition使用多次    2.图示  注1234(1) map、filter和union都是窄依赖(2) groupByKey是宽依赖(3) 宽依赖都具有shuffle(4) join操作不一定都是宽依赖 3.宽依赖与窄依赖的区别 12(1) 对于子RDD">
+  <meta name="description" content="1.官网对于key-value pair的描述    官网原文 中文翻译     While most Spark operations work on RDDs containing any type of objects, a few special operations are only available on RDDs of key-value pairs. The most commo">
 <meta property="og:type" content="article">
-<meta property="og:title" content="宽依赖与窄依赖">
-<meta property="og:url" content="http://HenryangTi.github.io/2019/01/06/spark06/index.html">
+<meta property="og:title" content="key-value pair">
+<meta property="og:url" content="http://HenryangTi.github.io/2019/01/07/spark07/index.html">
 <meta property="og:site_name" content="HenryangTi&#39;s blog">
-<meta property="og:description" content="1.定义     定义     宽依赖 一个父RDD只能被子RDD的partition使用一次   窄依赖 一个父RDD能够被子RDD的partition使用多次    2.图示  注1234(1) map、filter和union都是窄依赖(2) groupByKey是宽依赖(3) 宽依赖都具有shuffle(4) join操作不一定都是宽依赖 3.宽依赖与窄依赖的区别 12(1) 对于子RDD">
+<meta property="og:description" content="1.官网对于key-value pair的描述    官网原文 中文翻译     While most Spark operations work on RDDs containing any type of objects, a few special operations are only available on RDDs of key-value pairs. The most commo">
 <meta property="og:locale" content="default">
-<meta property="og:image" content="http://henryangti.github.io/img/dependency.jpg">
-<meta property="og:updated_time" content="2019-06-27T10:33:02.715Z">
+<meta property="og:image" content="http://henryangti.github.io/img/KeyValue1.png">
+<meta property="og:image" content="http://henryangti.github.io/img/KeyValue2.png">
+<meta property="og:image" content="http://henryangti.github.io/img/KeyValue3.png">
+<meta property="og:updated_time" content="2019-06-28T03:21:12.449Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="宽依赖与窄依赖">
-<meta name="twitter:description" content="1.定义     定义     宽依赖 一个父RDD只能被子RDD的partition使用一次   窄依赖 一个父RDD能够被子RDD的partition使用多次    2.图示  注1234(1) map、filter和union都是窄依赖(2) groupByKey是宽依赖(3) 宽依赖都具有shuffle(4) join操作不一定都是宽依赖 3.宽依赖与窄依赖的区别 12(1) 对于子RDD">
-<meta name="twitter:image" content="http://henryangti.github.io/img/dependency.jpg">
+<meta name="twitter:title" content="key-value pair">
+<meta name="twitter:description" content="1.官网对于key-value pair的描述    官网原文 中文翻译     While most Spark operations work on RDDs containing any type of objects, a few special operations are only available on RDDs of key-value pairs. The most commo">
+<meta name="twitter:image" content="http://henryangti.github.io/img/KeyValue1.png">
   
     <link rel="alternative" href="/atom.xml" title="HenryangTi&#39;s blog" type="application/atom+xml">
   
@@ -156,50 +158,82 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-spark06" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-spark07" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      宽依赖与窄依赖
+      key-value pair
     </h1>
   
 
         
-        <a href="/2019/01/06/spark06/" class="archive-article-date">
-  	<time datetime="2019-01-05T16:34:14.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-01-06</time>
+        <a href="/2019/01/07/spark07/" class="archive-article-date">
+  	<time datetime="2019-01-06T16:34:14.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-01-07</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>1.定义</p>
+        <p>1.官网对于key-value pair的描述</p>
 <table>
 <thead>
 <tr>
-<th style="text-align:left"></th>
-<th style="text-align:center">定义</th>
+<th style="text-align:left">官网原文</th>
+<th style="text-align:left">中文翻译</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align:left">宽依赖</td>
-<td style="text-align:center">一个父RDD只能被子RDD的partition使用一次</td>
-</tr>
-<tr>
-<td style="text-align:left">窄依赖</td>
-<td style="text-align:center">一个父RDD能够被子RDD的partition使用多次</td>
+<td style="text-align:left">While most Spark operations work on RDDs containing any type of objects, a few special operations are only available on RDDs of key-value pairs. The most common ones are distributed “shuffle” operations, such as grouping or aggregating the elements by a key.</td>
+<td style="text-align:left">尽管大多数的Spark算子都能操作包含任意对象的RDD，一小部分特殊的算子只能作用于包含key-value pair类型的RDD。最常见的就是带有shuffle操作的，比如grouping操作和aggregating操作</td>
 </tr>
 </tbody>
 </table>
-<p>2.图示</p>
-<p><img src="/img/dependency.jpg" alt="avatar"></p>
-<p>注<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">(1) map、filter和union都是窄依赖</span><br><span class="line">(2) groupByKey是宽依赖</span><br><span class="line">(3) 宽依赖都具有shuffle</span><br><span class="line">(4) join操作不一定都是宽依赖</span><br></pre></td></tr></table></figure></p>
-<p>3.宽依赖与窄依赖的区别</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(1) 对于子RDD的某个partition的情况下，窄依赖直接从其父RDD恢复，而宽依赖就需要从头开始计算</span><br><span class="line">(2) 窄依赖属于同一个stage中，都是以pipeline的形式</span><br></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">官网原文</th>
+<th style="text-align:left">中文翻译</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">In Scala, these operations are automatically available on RDDs containing Tuple2 objects (the built-in tuples in the language, created by simply writing (a, b)). The key-value pair operations are available in the PairRDDFunctions class, which automatically wraps around an RDD of tuples.</td>
+<td style="text-align:left">在scala中，这些操作在Tuple2对象的RDD上可以使用(Tuple2对象是语言本身自带的内置tuple，形式为（a,b） )。key-value pair算子的操作都能从PairRDDFunctions获得，会自动包装成tuple的RDD</td>
+</tr>
+</tbody>
+</table>
+<p>2.PairRDDFunctions类</p>
+<p>2.1 PairRDDFunctions注释</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">注释原文</th>
+<th style="text-align:left">中文翻译</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">functions available on RDDs of (key, value) pairs through an implicit conversion</td>
+<td style="text-align:left">通过隐式转换的方式使用这些函数, 函数在(key, value)的RDD上使用</td>
+</tr>
+</tbody>
+</table>
+<p>2.2 在源码中如何体现该隐式转换的</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">implicit</span> <span class="function"><span class="keyword">def</span> <span class="title">rddToPairRDDFunctions</span></span>[<span class="type">K</span>, <span class="type">V</span>](rdd: <span class="type">RDD</span>[(<span class="type">K</span>, <span class="type">V</span>)])</span><br><span class="line">  (<span class="keyword">implicit</span> kt: <span class="type">ClassTag</span>[<span class="type">K</span>], vt: <span class="type">ClassTag</span>[<span class="type">V</span>], ord: <span class="type">Ordering</span>[<span class="type">K</span>] = <span class="literal">null</span>): <span class="type">PairRDDFunctions</span>[<span class="type">K</span>, <span class="type">V</span>] = &#123;</span><br><span class="line">  <span class="keyword">new</span> <span class="type">PairRDDFunctions</span>(rdd)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">从代码可以，rddToPairRDDFunctions入参为RDD类型，返回类型为PairRDDFunctions类型</span><br></pre></td></tr></table></figure>
+<p>2.3 Example</p>
+<p>示例代码<br><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rdd.map((_,<span class="number">1</span>)).reduceByKey(_+_).collect().foreach(println)</span><br></pre></td></tr></table></figure></p>
+<p>map函数源码为</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">map</span></span>[<span class="type">U</span>: <span class="type">ClassTag</span>](f: <span class="type">T</span> =&gt; <span class="type">U</span>): <span class="type">RDD</span>[<span class="type">U</span>] = withScope &#123;</span><br><span class="line">  <span class="keyword">val</span> cleanF = sc.clean(f)</span><br><span class="line">  <span class="keyword">new</span> <span class="type">MapPartitionsRDD</span>[<span class="type">U</span>, <span class="type">T</span>](<span class="keyword">this</span>, (context, pid, iter) =&gt; iter.map(cleanF))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">从map函数源码可以看出map函数的返回值为RDD，并且由于map((_,1)), 说明其输出为包含tuple的RDD</span><br></pre></td></tr></table></figure>
+<p>示例代码经过map操作后经过的操作如下图所示</p>
+<p><img src="/img/KeyValue1.png" alt="avatar"><br><img src="/img/KeyValue2.png" alt="avatar"><br><img src="/img/KeyValue3.png" alt="avatar"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">从上图可以看出, 在示例代码经过map函数后，会自动走到rddToPairRDDFunctions函数，将RDD转化为PairRDDFunctions, 然后才能进行reduceByKey操作</span><br></pre></td></tr></table></figure>
 
       
 
@@ -290,7 +324,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http://HenryangTi.github.io/2019/01/06/spark06/" alt="微信分享二维码">
+      <img src="//pan.baidu.com/share/qrcode?url=http://HenryangTi.github.io/2019/01/07/spark07/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -304,18 +338,9 @@
   
 <nav id="article-nav">
   
-    <a href="/2019/01/07/spark07/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          key-value pair
-        
-      </div>
-    </a>
   
-  
-    <a href="/2019/01/05/spark05/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">Spark Shuffle</div>
+    <a href="/2019/01/06/spark06/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">宽依赖与窄依赖</div>
       <i class="icon-circle-right"></i>
     </a>
   
