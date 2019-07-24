@@ -252,6 +252,264 @@
 
 
   
+    <article id="post-spark10" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/01/12/spark10/">RDD五大特性</a>
+    </h1>
+  
+
+        
+        <a href="/2019/01/12/spark10/" class="archive-article-date">
+  	<time datetime="2019-01-11T16:34:14.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-01-12</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.RDD源代码注释(RDD.scala)</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">原文</th>
+<th style="text-align:center">翻译</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">A Resilient Distributed Dataset (RDD), the basic abstraction in Spark.Represents an immutable, partitioned collection of elements that can be operated on in parallel.</td>
+<td style="text-align:center">一个弹性的分布式数据集(RDD), Spark中最基本的抽象。代表一个不可变的能够并行处理的分区的元素。</td>
+</tr>
+</tbody>
+</table>
+<p>关键词解释<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">(1) immutable:</span><br><span class="line">        RDDA==map==&gt;RDDB, 但是RDDA != RDDB</span><br><span class="line"></span><br><span class="line">(2) partitioned:</span><br><span class="line">        类似于List, 比如List(1, 2, 3, 4, 5, 6, 7, 8, 9, 10), (1, 2, 3)存储于一起、(4, 5, 6)存储于一起、(7, 8, 9, 10)存储于一起。</span><br><span class="line">        这样的好处就是分区后可以将其发到几个不同的节点上, 其效率是有明显的提升的。</span><br><span class="line"></span><br><span class="line">(3) 弹性体现在哪:</span><br><span class="line"></span><br><span class="line">    根据RDD第一大特性, 一个RDD是由很多Partitions构成的,RDD之间是有依赖关系, 那么对于图1的情况, RDD_C肯定知道它是从哪个RDD变化的, RDD_F肯定知道它是从哪个RDD得到的</span><br><span class="line"></span><br><span class="line">    所以弹性就体现在当RDD_C failure, 其父RDD(RDD_B或RDD_A)还在, 我们可以直接从RDD_B计算出RDD_C</span><br><span class="line"></span><br><span class="line">    归根到底, 弹性指当数据丢失, 它是如何进行快速修复的</span><br></pre></td></tr></table></figure></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">原文</th>
+<th style="text-align:center">翻译</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">This class contains the basic operations available on all RDDs, such as <code>map</code>, <code>filter</code>, and <code>persist</code></td>
+<td style="text-align:center">该RDD包含了在RDD上执行的所有操作, 如map, filter和persist, flatmap等</td>
+</tr>
+<tr>
+<td style="text-align:center">In addition, PairRDDFunctions contains operations available only on RDDs of key-value pairs, such as <code>groupByKey</code> and <code>join</code></td>
+<td style="text-align:center">除此之外, PairRDDFunctions包含了只是在key-value的RDD上才有的操作, 如groupByKey和join</td>
+</tr>
+</tbody>
+</table>
+<p>解释<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">哪些RDD是key-value的？</span><br><span class="line"></span><br><span class="line">    能使用groupByKey和reduceByKey的RDD</span><br></pre></td></tr></table></figure></p>
+<p>RDD类源码<br><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">RDD</span>[<span class="type">T</span>: <span class="type">ClassTag</span>](<span class="params"></span></span></span><br><span class="line"><span class="class"><span class="params">    @transient private var _sc: <span class="type">SparkContext</span>,</span></span></span><br><span class="line"><span class="class"><span class="params">    @transient private var deps: <span class="type">Seq</span>[<span class="type">Dependency</span>[_]]</span></span></span><br><span class="line"><span class="class"><span class="params">  </span>) <span class="keyword">extends</span> <span class="title">Serializable</span> <span class="keyword">with</span> <span class="title">Logging</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">trait</span> <span class="title">Logging</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>解释<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">(1) 首先RDD是抽象类, 其特点是需要使用其子类, 因为抽象类无法直接使用</span><br><span class="line"></span><br><span class="line">(2) RDD类继承了Serializable, 说明该类需要序列化。</span><br><span class="line">      序列化的原因是需要进行网络传输</span><br><span class="line"></span><br><span class="line">(3) Logging是trait，本来正常写法是with serializable with Logging, 但是在scala中, 对于trait, 第一个可以使用extends, 之后用with</span><br></pre></td></tr></table></figure></p>
+<p>实现类的体现<br><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* HadoopRDD继承了RDD</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">HadoopRDD</span>[<span class="type">K</span>, <span class="type">V</span>](<span class="params">...</span>)<span class="keyword">extends</span> <span class="title">RDD</span>[(<span class="type">K</span>, <span class="type">V</span>)](<span class="params">sc, <span class="type">Nil</span></span>) <span class="keyword">with</span> <span class="title">Logging</span> </span>&#123;</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>2.RDD五大特性</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">原文</th>
+<th style="text-align:center">翻译</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">Internally, each RDD is characterized by five main properties</td>
+<td style="text-align:center">内部上说, 每个RDD都有5大特点</td>
+</tr>
+</tbody>
+</table>
+<p>2.1 第一特性</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">原文</th>
+<th style="text-align:center">翻译</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">A list of partitions</td>
+<td style="text-align:center">分区的list</td>
+</tr>
+</tbody>
+</table>
+<p>解释<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">类似于List, 比如List(1, 2, 3, 4, 5, 6, 7, 8, 9, 10), (1, 2, 3)存储于一起、(4, 5, 6)存储于一起、(7, 8, 9, 10)存储于一起。</span><br><span class="line"></span><br><span class="line">所以该RDD就是由3个分区构成</span><br></pre></td></tr></table></figure></p>
+<p>源码中体现<br><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">RDD</span>[<span class="type">T</span>: <span class="type">ClassTag</span>](<span class="params">...</span>) <span class="keyword">extends</span> <span class="title">Serializable</span> <span class="keyword">with</span> <span class="title">Logging</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">protected</span> <span class="function"><span class="keyword">def</span> <span class="title">getPartitions</span></span>: <span class="type">Array</span>[<span class="type">Partition</span>]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">*Array[Partition]中Partition的源码</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="class"><span class="keyword">trait</span> <span class="title">Partition</span> <span class="keyword">extends</span> <span class="title">Serializable</span></span>&#123; </span><br><span class="line">  <span class="comment">//记录是第几个分区</span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">index</span></span>: <span class="type">Int</span></span><br><span class="line">  <span class="comment">// A better default implementation of HashCode</span></span><br><span class="line">  <span class="keyword">override</span> <span class="function"><span class="keyword">def</span> <span class="title">hashCode</span></span>(): <span class="type">Int</span> = index</span><br><span class="line"></span><br><span class="line">  <span class="keyword">override</span> <span class="function"><span class="keyword">def</span> <span class="title">equals</span></span>(other: <span class="type">Any</span>): <span class="type">Boolean</span> = <span class="keyword">super</span>.equals(other)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>partition源码注释</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">原文</th>
+<th style="text-align:center">翻译</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">Implemented by subclasses to return the set of partitions in this RDD.</td>
+<td style="text-align:center">该类被其子类所实现, 并且返回的是该RDD的一组分区</td>
+</tr>
+<tr>
+<td style="text-align:center">This method will onlybe called once, so it is safe to implement a time-consuming computation in it</td>
+<td style="text-align:center">此方法仅仅被调用一次, 所以在其之上实现耗时的计算是安全的</td>
+</tr>
+</tbody>
+</table>
+<p>源码解释<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(1) getPartitions对应的是a list of partitions</span><br></pre></td></tr></table></figure></p>
+<p>实现类中体现<br><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">HadoopRDD</span>[<span class="type">K</span>, <span class="type">V</span>](<span class="params">...</span>)</span></span><br><span class="line"><span class="class"><span class="keyword">extends</span> <span class="title">RDD</span>[(<span class="type">K</span>, <span class="type">V</span>)](<span class="params">sc, <span class="type">Nil</span></span>) <span class="keyword">with</span> <span class="title">Logging</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">def</span> <span class="title">getPartitions</span></span>: <span class="type">Array</span>[<span class="type">Partition</span>] = &#123;</span><br><span class="line">        <span class="keyword">val</span> jobConf = getJobConf()</span><br><span class="line">        ...</span><br><span class="line">        <span class="keyword">val</span> allInputSplits = getInputFormat(jobConf).getSplits(jobConf, minPartitions)</span><br><span class="line">        ...</span><br><span class="line">        <span class="comment">//分片的数量就是partition的数量</span></span><br><span class="line">        <span class="keyword">val</span> array = <span class="keyword">new</span> <span class="type">Array</span>[<span class="type">Partition</span>](inputSplits.size)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (i &lt;- <span class="number">0</span> until inputSplits.size) &#123;</span><br><span class="line">            <span class="comment">//构建出partition</span></span><br><span class="line">            <span class="comment">//此时就知道一个RDD被拆为几块</span></span><br><span class="line">            array(i) = <span class="keyword">new</span> <span class="type">HadoopPartition</span>(id, i, inputSplits(i))</span><br><span class="line">        &#125;</span><br><span class="line">      array</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* Partition接口实现类HadoopPartition</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">private</span>[spark] <span class="class"><span class="keyword">class</span> <span class="title">HadoopPartition</span>(<span class="params">rddId: <span class="type">Int</span>, override val index: <span class="type">Int</span>, s: <span class="type">InputSplit</span></span>) <span class="keyword">extends</span> <span class="title">Partition</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">*getInputFormat源码</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">protected</span> <span class="function"><span class="keyword">def</span> <span class="title">getInputFormat</span></span>(conf: <span class="type">JobConf</span>): <span class="type">InputFormat</span>[<span class="type">K</span>, <span class="type">V</span>] = &#123;</span><br><span class="line">    <span class="keyword">val</span> newInputFormat = <span class="type">ReflectionUtils</span>.newInstance(inputFormatClass.asInstanceOf[<span class="type">Class</span>[_]], conf)</span><br><span class="line">      .asInstanceOf[<span class="type">InputFormat</span>[<span class="type">K</span>, <span class="type">V</span>]]</span><br><span class="line">    newInputFormat <span class="keyword">match</span> &#123;</span><br><span class="line">      <span class="keyword">case</span> c: <span class="type">Configurable</span> =&gt; c.setConf(conf)</span><br><span class="line">      <span class="keyword">case</span> _ =&gt;</span><br><span class="line">    &#125;</span><br><span class="line">    newInputFormat</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">*newInstance</span></span><br><span class="line"><span class="comment">反射创建对象</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line">public static &lt;<span class="type">T</span>&gt; <span class="type">T</span> newInstance(<span class="type">Class</span>&lt;<span class="type">T</span>&gt; theClass, <span class="type">Configuration</span> conf) &#123;</span><br><span class="line">    <span class="type">Object</span> result;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="type">Constructor</span>&lt;<span class="type">T</span>&gt; meth = (<span class="type">Constructor</span>)<span class="type">CONSTRUCTOR_CACHE</span>.get(theClass);</span><br><span class="line">        <span class="keyword">if</span> (meth == <span class="literal">null</span>) &#123;</span><br><span class="line">            meth = theClass.getDeclaredConstructor(<span class="type">EMPTY_ARRAY</span>);</span><br><span class="line">            meth.setAccessible(<span class="literal">true</span>);</span><br><span class="line">            <span class="type">CONSTRUCTOR_CACHE</span>.put(theClass, meth);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        result = meth.newInstance();</span><br><span class="line">    &#125; <span class="keyword">catch</span> (<span class="type">Exception</span> var4) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="type">RuntimeException</span>(var4);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    setConf(result, conf);</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* getSplits源码</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line">public interface <span class="type">InputFormat</span>&lt;<span class="type">K</span>, <span class="type">V</span>&gt; &#123;</span><br><span class="line">    <span class="type">InputSplit</span>[] getSplits(<span class="type">JobConf</span> var1, int var2) <span class="keyword">throws</span> <span class="type">IOException</span>;</span><br><span class="line"></span><br><span class="line">    <span class="type">RecordReader</span>&lt;<span class="type">K</span>, <span class="type">V</span>&gt; getRecordReader(<span class="type">InputSplit</span> var1, <span class="type">JobConf</span> var2, <span class="type">Reporter</span> var3) <span class="keyword">throws</span> <span class="type">IOException</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* getSplit在其实现类FileInputFormat中的体现</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line">public <span class="type">InputSplit</span>[] getSplits(<span class="type">JobConf</span> job, int numSplits) <span class="keyword">throws</span> <span class="type">IOException</span> &#123;</span><br><span class="line">        <span class="type">StopWatch</span> sw = (<span class="keyword">new</span> <span class="type">StopWatch</span>()).start();</span><br><span class="line">        <span class="type">FileStatus</span>[] files = <span class="keyword">this</span>.listStatus(job);</span><br><span class="line">        job.setLong(<span class="string">"mapreduce.input.fileinputformat.numinputfiles"</span>, (long)files.length);</span><br><span class="line">        long totalSize = <span class="number">0</span>L;</span><br><span class="line">        <span class="type">FileStatus</span>[] arr$ = files;</span><br><span class="line">        int len$ = files.length;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span>(int i$ = <span class="number">0</span>; i$ &lt; len$; ++i$) &#123;</span><br><span class="line">            <span class="type">FileStatus</span> file = arr$[i$];</span><br><span class="line">            <span class="keyword">if</span> (file.isDirectory()) &#123;</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> <span class="type">IOException</span>(<span class="string">"Not a file: "</span> + file.getPath());</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            totalSize += file.getLen();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        long goalSize = totalSize / (long)(numSplits == <span class="number">0</span> ? <span class="number">1</span> : numSplits);</span><br><span class="line">        long minSize = <span class="type">Math</span>.max(job.getLong(<span class="string">"mapreduce.input.fileinputformat.split.minsize"</span>, <span class="number">1</span>L), <span class="keyword">this</span>.minSplitSize);</span><br><span class="line">        <span class="type">ArrayList</span>&lt;<span class="type">FileSplit</span>&gt; splits = <span class="keyword">new</span> <span class="type">ArrayList</span>(numSplits);</span><br><span class="line">        <span class="type">NetworkTopology</span> clusterMap = <span class="keyword">new</span> <span class="type">NetworkTopology</span>();</span><br><span class="line">        <span class="type">FileStatus</span>[] arr$ = files;</span><br><span class="line">        int len$ = files.length;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span>(int i$ = <span class="number">0</span>; i$ &lt; len$; ++i$) &#123;</span><br><span class="line">            <span class="type">FileStatus</span> file = arr$[i$];</span><br><span class="line">            <span class="type">Path</span> path = file.getPath();</span><br><span class="line">            long length = file.getLen();</span><br><span class="line">            <span class="keyword">if</span> (length == <span class="number">0</span>L) &#123;</span><br><span class="line">                splits.add(<span class="keyword">this</span>.makeSplit(path, <span class="number">0</span>L, length, <span class="keyword">new</span> <span class="type">String</span>[<span class="number">0</span>]));</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="type">FileSystem</span> fs = path.getFileSystem(job);</span><br><span class="line">                <span class="type">BlockLocation</span>[] blkLocations;</span><br><span class="line">                <span class="keyword">if</span> (file instanceof <span class="type">LocatedFileStatus</span>) &#123;</span><br><span class="line">                    blkLocations = ((<span class="type">LocatedFileStatus</span>)file).getBlockLocations();</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    blkLocations = fs.getFileBlockLocations(file, <span class="number">0</span>L, length);</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                <span class="keyword">if</span> (!<span class="keyword">this</span>.isSplitable(fs, path)) &#123;</span><br><span class="line">                    <span class="type">String</span>[][] splitHosts = <span class="keyword">this</span>.getSplitHostsAndCachedHosts(blkLocations, <span class="number">0</span>L, length, clusterMap);</span><br><span class="line">                    splits.add(<span class="keyword">this</span>.makeSplit(path, <span class="number">0</span>L, length, splitHosts[<span class="number">0</span>], splitHosts[<span class="number">1</span>]));</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    long blockSize = file.getBlockSize();</span><br><span class="line">                    long splitSize = <span class="keyword">this</span>.computeSplitSize(goalSize, minSize, blockSize);</span><br><span class="line"></span><br><span class="line">                    long bytesRemaining;</span><br><span class="line">                    <span class="type">String</span>[][] splitHosts;</span><br><span class="line">                    <span class="keyword">for</span>(bytesRemaining = length; (double)bytesRemaining / (double)splitSize &gt; <span class="number">1.1</span>D; bytesRemaining -= splitSize) &#123;</span><br><span class="line">                        splitHosts = <span class="keyword">this</span>.getSplitHostsAndCachedHosts(blkLocations, length - bytesRemaining, splitSize, clusterMap);</span><br><span class="line">                        splits.add(<span class="keyword">this</span>.makeSplit(path, length - bytesRemaining, splitSize, splitHosts[<span class="number">0</span>], splitHosts[<span class="number">1</span>]));</span><br><span class="line">                    &#125;</span><br><span class="line"></span><br><span class="line">                    <span class="keyword">if</span> (bytesRemaining != <span class="number">0</span>L) &#123;</span><br><span class="line">                        splitHosts = <span class="keyword">this</span>.getSplitHostsAndCachedHosts(blkLocations, length - bytesRemaining, bytesRemaining, clusterMap);</span><br><span class="line">                        splits.add(<span class="keyword">this</span>.makeSplit(path, length - bytesRemaining, bytesRemaining, splitHosts[<span class="number">0</span>], splitHosts[<span class="number">1</span>]));</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        sw.stop();</span><br><span class="line">        <span class="keyword">if</span> (<span class="type">LOG</span>.isDebugEnabled()) &#123;</span><br><span class="line">            <span class="type">LOG</span>.debug(<span class="string">"Total # of splits generated by getSplits: "</span> + splits.size() + <span class="string">", TimeTaken: "</span> + sw.now(<span class="type">TimeUnit</span>.<span class="type">MILLISECONDS</span>));</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> (<span class="type">InputSplit</span>[])splits.toArray(<span class="keyword">new</span> <span class="type">FileSplit</span>[splits.size()]);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>2.2 第二特性</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">原文</th>
+<th style="text-align:center">翻译</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">A function for computing each split</td>
+<td style="text-align:center">由一个计算每个split的函数, 对于RDD做计算实际上是作用于每个分片上</td>
+</tr>
+</tbody>
+</table>
+<p>理解<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(1) split可以近似理解为partition</span><br><span class="line">(2) 对于一个有3个partitions的RDD_A, 对于RDD_A进行map操作(RDD_A.map(x =&gt; x)), 底层就是对其3个partition进行map操作</span><br><span class="line">(3) 在spark中partition概念对应的就是task, 也就是说由几个partition就有几个task</span><br></pre></td></tr></table></figure></p>
+<p>源码中体现<br><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">compute</span></span>(split: <span class="type">Partition</span>, context: <span class="type">TaskContext</span>): <span class="type">Iterator</span>[<span class="type">T</span>]</span><br></pre></td></tr></table></figure></p>
+<p>compute源码注释</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">原文</th>
+<th style="text-align:center">翻译</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">Implemented by subclasses to compute a given partition</td>
+<td style="text-align:center">该方法被子类所实现, 计算指定的分区, RDD通过getPartitions函数得到分区, 对于每个分区作用该函数</td>
+</tr>
+</tbody>
+</table>
+<p>其子类中的实现<br><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* HadoopRDD</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">override</span> <span class="function"><span class="keyword">def</span> <span class="title">compute</span></span>(theSplit: <span class="type">Partition</span>, context: <span class="type">TaskContext</span>): <span class="type">InterruptibleIterator</span>[(<span class="type">K</span>, <span class="type">V</span>)] = &#123;</span><br><span class="line">    <span class="comment">//首先判断是否是HadoopPartition</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">val</span> split = theSplit.asInstanceOf[<span class="type">HadoopPartition</span>]</span><br><span class="line">    ...</span><br><span class="line">    <span class="comment">//借助于InputSplit来读数据</span></span><br><span class="line">    split.inputSplit.value <span class="keyword">match</span> &#123;</span><br><span class="line">        <span class="keyword">case</span> fs: <span class="type">FileSplit</span> =&gt;</span><br><span class="line">          <span class="type">InputFileBlockHolder</span>.set(fs.getPath.toString, fs.getStart, fs.getLength)</span><br><span class="line">        <span class="keyword">case</span> _ =&gt;</span><br><span class="line">          <span class="type">InputFileBlockHolder</span>.unset()</span><br><span class="line">    ...</span><br><span class="line">    <span class="comment">//Hadoop中使用RecordReader来读取HDFS上文件的类</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">var</span> reader: <span class="type">RecordReader</span>[<span class="type">K</span>, <span class="type">V</span>] = <span class="literal">null</span></span><br><span class="line">    ...</span><br><span class="line">    reader = inputFormat.getRecordReader(split.inputSplit.value, jobConf, <span class="type">Reporter</span>.<span class="type">NULL</span>)</span><br><span class="line">    ...</span><br><span class="line">    <span class="comment">//获得下一个数据</span></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">def</span> <span class="title">getNext</span></span>(): (<span class="type">K</span>, <span class="type">V</span>) = &#123;</span><br><span class="line">        finished = !reader.next(key, value)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//最终输出的是key-value pair</span></span><br><span class="line">    (key, value) </span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>解释<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HadoopRDD的compute函数的返回值为(key, value)的一个tuple，其中key时offset, value是数据，但是offset不需要，只需要value</span><br></pre></td></tr></table></figure></p>
+<p>2.3 第三特性</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">原文</th>
+<th style="text-align:center">翻译</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">A list of dependencies on other RDDs</td>
+<td style="text-align:center">有一组对于其他RDD的依赖</td>
+</tr>
+</tbody>
+</table>
+<p>对应源码<br><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> <span class="function"><span class="keyword">def</span> <span class="title">getDependencies</span></span>: <span class="type">Seq</span>[<span class="type">Dependency</span>[_]] = deps</span><br></pre></td></tr></table></figure></p>
+<p>解释<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(1) Seq[Dependency[_]]表示多个Dependency的集合</span><br><span class="line">(2) 其子类HadoopRDD中无法找到getDependencies, 其原因是如果数据从hadoop上读取进来, 那么hadoop就是源头RDD, 它没有父依赖, 所以不需要该函数的实现</span><br></pre></td></tr></table></figure></p>
+<p>2.4 第四特性</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">原文</th>
+<th style="text-align:center">翻译</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">Optionally, a Partitioner for key-value RDDs (e.g. to say that the RDD is hash-partitioned)</td>
+<td style="text-align:center">(可选的)， 对于key-value的RDDs有一个Partitioner, 其默认Partitioner是hash的</td>
+</tr>
+</tbody>
+</table>
+<p>对应源码<br><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@transient</span> <span class="keyword">val</span> partitioner: <span class="type">Option</span>[<span class="type">Partitioner</span>] = <span class="type">None</span></span><br></pre></td></tr></table></figure></p>
+<p>在其子类中的实现(HadoopMapPartitionsWithSplitRDD)<br><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* hadoop的partitioner就是HadoopMapPartitionsWithSplitRDD类中的partitioner</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">private</span>[spark] <span class="class"><span class="keyword">class</span> <span class="title">HadoopMapPartitionsWithSplitRDD</span>[<span class="type">U</span>: <span class="type">ClassTag</span>, <span class="type">T</span>: <span class="type">ClassTag</span>](<span class="params"></span></span></span><br><span class="line"><span class="class"><span class="params">      prev: <span class="type">RDD</span>[<span class="type">T</span>],</span></span></span><br><span class="line"><span class="class"><span class="params">      f: (<span class="type">InputSplit</span>, <span class="type">Iterator</span>[<span class="type">T</span>]</span>) <span class="title">=&gt;</span> <span class="title">Iterator</span>[<span class="type">U</span>],</span></span><br><span class="line"><span class="class">      <span class="title">preservesPartitioning</span></span>: <span class="type">Boolean</span> = <span class="literal">false</span>)</span><br><span class="line">    <span class="keyword">extends</span> <span class="type">RDD</span>[<span class="type">U</span>](prev) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="keyword">val</span> partitioner = <span class="keyword">if</span> (preservesPartitioning) firstParent[<span class="type">T</span>].partitioner <span class="keyword">else</span> <span class="type">None</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>2.5 第五特性</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">原文</th>
+<th style="text-align:center">翻译</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">Optionally, a list of preferred locations to compute each split on (e.g. block locations for an HDFS file)</td>
+<td style="text-align:center">(可选的)有一组计算每个split的最佳的位置(例如: HDFS文件的block位置)</td>
+</tr>
+</tbody>
+</table>
+<p>解释<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">数据本地化:</span><br><span class="line">  此时有hadoop001-hadoop100这100台机器，此时某文件file1的3副本分别存储于hadoop001-hadoop003, 那么对于计算某RDD(该RDD由该文件的数据生成的)的最佳位置就是hadoop001-hadoop003, 因为数据存在于这三台机器上</span><br><span class="line"></span><br><span class="line">如果移动计算的话，也就是当hadoop001-hadoop003特别繁忙时，将计算移动到其他机器上比如hadoop100，但是这样做还需要移动数据，未必比等待这三台机器处理完当前任务的事件更短</span><br></pre></td></tr></table></figure></p>
+<p>源码中体现<br><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> <span class="function"><span class="keyword">def</span> <span class="title">getPreferredLocations</span></span>(split: <span class="type">Partition</span>): <span class="type">Seq</span>[<span class="type">String</span>] = <span class="type">Nil</span></span><br></pre></td></tr></table></figure></p>
+<p>解释<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(1) 由于每个分片都有其prefered location, 所以其参数就是Partition类型的split</span><br><span class="line">(2) 其返回值是Nil, 是个空List</span><br></pre></td></tr></table></figure></p>
+<p>在其子类中的体现(HadoopRDD)<br><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">override</span> <span class="function"><span class="keyword">def</span> <span class="title">getPreferredLocations</span></span>(split: <span class="type">Partition</span>): <span class="type">Seq</span>[<span class="type">String</span>] = &#123;</span><br><span class="line">    <span class="comment">//获取数据存储在hdfs哪个节点之上</span></span><br><span class="line">    <span class="keyword">val</span> hsplit = split.asInstanceOf[<span class="type">HadoopPartition</span>].inputSplit.value</span><br><span class="line">    <span class="keyword">val</span> locs = hsplit <span class="keyword">match</span> &#123;</span><br><span class="line">      <span class="keyword">case</span> lsplit: <span class="type">InputSplitWithLocationInfo</span> =&gt;</span><br><span class="line">        <span class="type">HadoopRDD</span>.convertSplitLocationInfo(lsplit.getLocationInfo)</span><br><span class="line">      <span class="keyword">case</span> _ =&gt; <span class="type">None</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//获取存放位置</span></span><br><span class="line">    locs.getOrElse(hsplit.getLocations.filter(_ != <span class="string">"localhost"</span>))</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Spark//" class="article-tag-list-link color1">Spark</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/01/12/spark10/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-Netty02" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1261,101 +1519,6 @@
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2019/01/04/spark04/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-spark03" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/01/03/spark03/">Spark On YARN</a>
-    </h1>
-  
-
-        
-        <a href="/2019/01/03/spark03/" class="archive-article-date">
-  	<time datetime="2019-01-02T16:34:14.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-01-03</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>1.YARN的产生背景</p>
-<p>在YARN还未出现的时候, 如果既要使用Hadoop又要使用Spark的话，那就必须要启动Hadoop集群和Spark集群</p>
-<p>但是此时会带来如下问题:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(1) 由于每个框架的高峰期与低谷期的时间不同，那么这样就会导致了一个问题, 就是资源利用率特别低</span><br></pre></td></tr></table></figure></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(2) 管理起来很繁琐, 因为MapReduce是跑在Hadoop集群上的, Spark是跑在Standalone之上的</span><br></pre></td></tr></table></figure>
-<p>所以此时我们需要统一的资源管理与调度, YARN也就随之诞生</p>
-<p>2.回顾MapReduce在YARN上的执行流程</p>
-<p><img src="/img/yarn.png" alt="avatar"></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(1) 用户(client)向Resource Manager提交应用程序(job), 将job提交到Resource Manager的Application Manager中</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(2) Resource Manager会与Node Manager进行RPC通信, 要求其启动一个container来运行application master</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(3) Application Master向Application Manager进行注册(此时就可以通过web界面查看其状态)</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(4) Application Master使用RPC协议并采用轮询的方式向Resource Scheduler申请和领取资源列表</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(5) 一旦Application Master申请到资源后, 就会与对应的NM进行通信, 要求其启动任务</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(6) 容器中的task与Application Master进行通信, 失败也可重启</span><br></pre></td></tr></table></figure>
-<p>3.对应的Spark的执行流程图</p>
-<p><img src="/img/sparkOnYarn.png" alt="avatar"></p>
-<p>4.MapReduce VS Spark</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">在MapReduce中，每个Task都是在自己的进程中，MapTask和ReduceTask全部都是进程，当Task完成后进程也就结束</span><br><span class="line"></span><br><span class="line">而在Spark中，在一个executor中并行的运行多个task，该进程在整个Spark Application的生命周期内会一直存在，也就是说即使没有job运行, 该进程(executor)仍然存在</span><br><span class="line"></span><br><span class="line">所以当执行完每个task后，不需要创建和销毁进程，不想MapReduce会执行完Task后会销毁进程，耗费资源</span><br></pre></td></tr></table></figure>
-<p>Spark的优势<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(1) 处理速度提升, 因为很多作业拿到进程后就可以直接启动线程, 这样启动速度是非常快的, 而且可以直接处理数据, 不需要等待创建进程</span><br><span class="line">(2) 基于内存，一个stage内都是pipeline的，不会与disk进行交互，速度快</span><br></pre></td></tr></table></figure></p>
-<p>5.几点注意事项</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(1) 当Spark Application启动后会先访问cluster manager，因为需要根据cluster manager来申请资源，cluster manager是pluggable, 用户不需要关注application是运行在那个集群上的</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(2) 如果Cluster Manager是YARN的话, 那么没有Worker Node这一概念，YARN的executors都运行在Node Manager中的Container中，而Worker Node存在于Cluster Manager为standalone</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(3) container的内存大于executor的内存</span><br></pre></td></tr></table></figure>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Spark//" class="article-tag-list-link color1">Spark</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/01/03/spark03/">展开全文 >></a>
         </p>
       
 
