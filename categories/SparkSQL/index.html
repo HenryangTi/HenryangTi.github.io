@@ -6,22 +6,15 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="http://HenryangTi.github.io">
-  <title>coalesce与repartition | HenryangTi&#39;s blog</title>
+  <title>Category: SparkSQL | HenryangTi&#39;s blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="1.coalesce 1.1 coalesce源码注释    原文 中文翻译     Return a new RDD that is reduced into numPartitions partitions.This results in a narrow dependency, e.g. if you go from 1000 partitions to 100 partitions, th">
-<meta property="og:type" content="article">
-<meta property="og:title" content="coalesce与repartition">
-<meta property="og:url" content="http://HenryangTi.github.io/2019/01/08/spark08/index.html">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="HenryangTi&#39;s blog">
+<meta property="og:url" content="http://HenryangTi.github.io/categories/SparkSQL/index.html">
 <meta property="og:site_name" content="HenryangTi&#39;s blog">
-<meta property="og:description" content="1.coalesce 1.1 coalesce源码注释    原文 中文翻译     Return a new RDD that is reduced into numPartitions partitions.This results in a narrow dependency, e.g. if you go from 1000 partitions to 100 partitions, th">
 <meta property="og:locale" content="default">
-<meta property="og:image" content="http://henryangti.github.io/img/shuffle3.png">
-<meta property="og:image" content="http://henryangti.github.io/img/shuffle6.png">
-<meta property="og:updated_time" content="2019-06-28T07:20:25.549Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="coalesce与repartition">
-<meta name="twitter:description" content="1.coalesce 1.1 coalesce源码注释    原文 中文翻译     Return a new RDD that is reduced into numPartitions partitions.This results in a narrow dependency, e.g. if you go from 1000 partitions to 100 partitions, th">
-<meta name="twitter:image" content="http://henryangti.github.io/img/shuffle3.png">
+<meta name="twitter:title" content="HenryangTi&#39;s blog">
   
     <link rel="alternative" href="/atom.xml" title="HenryangTi&#39;s blog" type="application/atom+xml">
   
@@ -175,249 +168,60 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-spark08" class="article article-type-post " itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
+            
   
-    <h1 class="article-title" itemprop="name">
-      coalesce与repartition
+  
+    
+    
+      
+      
+      <section class="archives-wrap">
+        <div class="archive-year-wrap">
+          <a href="/archives/2019" class="archive-year">2019</a>
+        </div>
+        <div class="archives">
+    
+    <article class="archive-article archive-type-post">
+  <div class="archive-article-inner">
+    <header class="archive-article-header">
+      	<div class="article-meta">
+	      	<a href="/2019/01/25/SparkSQL01/" class="archive-article-date">
+  	<time datetime="2019-01-24T16:34:14.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-01-25</time>
+</a>
+        </div>
+    	 
+  
+    <h1 itemprop="name">
+      <a class="archive-article-title" href="/2019/01/25/SparkSQL01/">DataFrame</a>
     </h1>
   
 
-        
-        <a href="/2019/01/08/spark08/" class="archive-article-date">
-  	<time datetime="2019-01-07T16:34:14.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-01-08</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>1.coalesce</p>
-<p>1.1 coalesce源码注释</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:left">原文</th>
-<th style="text-align:left">中文翻译</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left">Return a new RDD that is reduced into <code>numPartitions</code> partitions.This results in a narrow dependency, e.g. if you go from 1000 partitions to 100 partitions, there will not be a shuffle, instead each of the 100 new partitions will claim 10 of the current partitions.</td>
-<td style="text-align:left">返回一个新的RDD, 其分区数减少到numPartitions的分区数。coalesce是窄依赖操作，比如，如果你将1000个partitions降低到100个partitions的过程中不会存在shuffle</td>
-</tr>
-</tbody>
-</table>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">numPartitions默认为2，可以自定义分区数</span><br></pre></td></tr></table></figure>
-<p>1.2 coalesce测试案例</p>
-<p>1.2.1 测试案例1</p>
-<p>scala代码<br><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> data = sc.textFile(<span class="string">"hdfs://hadoop:9000/helloworld.txt"</span>)</span><br><span class="line">data.partitions.length</span><br></pre></td></tr></table></figure></p>
-<p>其输出结果为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">res1: Int = 2</span><br></pre></td></tr></table></figure></p>
-<p>说明coalesce默认的分区数为2</p>
-<p>1.2.2 测试案例2</p>
-<p>scala代码</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> data = sc.textFile(<span class="string">"hdfs://hadoop:9000/helloworld.txt"</span>)</span><br><span class="line"><span class="keyword">val</span> data1 = data.coalesce(<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
-<p>输出为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">res2: Int = 1</span><br></pre></td></tr></table></figure></p>
-<p>说明此时分区已变为1个</p>
-<p>1.2.3 测试案例3</p>
-<p>scala代码<br><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> data = sc.textFile(<span class="string">"hdfs://hadoop:9000/helloworld.txt"</span>)</span><br><span class="line"><span class="keyword">val</span> data1 = data.coalesce(<span class="number">4</span>)</span><br><span class="line">data1.partitions.length</span><br></pre></td></tr></table></figure></p>
-<p>输出结果为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">res3: Int = 2</span><br></pre></td></tr></table></figure></p>
-<p>由于data的partition使用的默认值，即为2，无法使用coalesce变成4分区，可以使用repartition算子或者data.coalesce(4, true)</p>
-<p>注<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">data.coalesce(4, true)就不是一个窄依赖操作了，如下图所示</span><br></pre></td></tr></table></figure></p>
-<p><img src="/img/shuffle3.png" alt="avatar"></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">此时coalesce就不是窄依赖算子了，因为出现了2个stage</span><br></pre></td></tr></table></figure>
-<p>1.3 coalesce源码</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">coalesce</span></span>(numPartitions: <span class="type">Int</span>, shuffle: <span class="type">Boolean</span> = <span class="literal">false</span>,</span><br><span class="line">               partitionCoalescer: <span class="type">Option</span>[<span class="type">PartitionCoalescer</span>] = <span class="type">Option</span>.empty)</span><br><span class="line">              (<span class="keyword">implicit</span> ord: <span class="type">Ordering</span>[<span class="type">T</span>] = <span class="literal">null</span>)</span><br><span class="line">      : <span class="type">RDD</span>[<span class="type">T</span>] = withScope &#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>说明coalesce默认情况下是不会进行shuffle的，所以是窄依赖的</p>
-<p>2.repartition</p>
-<p>2.1 repartition注释</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:left">原文</th>
-<th style="text-align:left">中文翻译</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left">Return a new RDD that has exactly numPartitions partitions, Can increase or decrease the level of parallelism in this RDD</td>
-<td style="text-align:left">返回一个新的RDD, 它有<code>numPartitions</code>分区, 可以通过repartition算子来增加或降低RDD的并行度</td>
-</tr>
-</tbody>
-</table>
-<p>通过代码和Web UI截图解释</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> data5 = data.repartition(<span class="number">6</span>)</span><br><span class="line">data5.collect</span><br></pre></td></tr></table></figure>
-<p><img src="/img/shuffle6.png" alt="avatar"></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">从上图可以看出，经过repartition操作后产生了新的stage</span><br><span class="line">partition数从2个变成了6个，提高了并行度</span><br></pre></td></tr></table></figure>
-<table>
-<thead>
-<tr>
-<th style="text-align:left">原文</th>
-<th style="text-align:left">中文翻译</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left">Internally, this uses a shuffle to redistribute data.If you are decreasing the number of partitions in this RDD, consider using <code>coalesce</code>, which can avoid performing a shuffle.</td>
-<td style="text-align:left">内部上，该算子使用shuffle来将数据重新分布数据。如果你只是减少RDD上partition的数量，考虑使用coalesce, 它可以避免shuffle</td>
-</tr>
-</tbody>
-</table>
-<p>3.coalesce和repartition的应用场景</p>
-<p>3.1 coalesce应用场景<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">如果RDDA有100万条数据，300个分区，每个分区3333条，但是经过filter操作后，发现每个分区只有一条数据，此时就需要coalesce减少分区</span><br></pre></td></tr></table></figure></p>
-<p>3.2 repartition应用场景<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">当处理过慢时，需要提高并行度的地方</span><br></pre></td></tr></table></figure></p>
-
-      
-
-      
-        <div class="page-reward">
-          <a href="javascript:;" class="page-reward-btn tooltip-top">
-            <div class="tooltip tooltip-east">
-            <span class="tooltip-item">
-              赏
-            </span>
-            <span class="tooltip-content">
-              <span class="tooltip-text">
-                <span class="tooltip-inner">
-                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
-                  <div class="reward-box">
-                    
-                    
-                  </div>
-                </span>
-              </span>
-            </span>
-          </div>
-          </a>
-        </div>
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
+        <div class="article-info info-on-right">
+          
+          
 	<div class="article-category tagcloud">
 		<i class="icon-book icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="/categories/Spark//" class="article-tag-list-link color1">Spark</a>
+        			<a href="/categories/SparkSQL//" class="article-tag-list-link color4">SparkSQL</a>
         		</li>
       		
 		</ul>
 	</div>
 
 
-      
-
-      
-        
-<div class="share-btn share-icons tooltip-left">
-  <div class="tooltip tooltip-east">
-    <span class="tooltip-item">
-      <a href="javascript:;" class="share-sns share-outer">
-        <i class="icon icon-share"></i>
-      </a>
-    </span>
-    <span class="tooltip-content">
-      <div class="share-wrap">
-        <div class="share-icons">
-          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
-            <i class="icon icon-weibo"></i>
-          </a>
-          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
-            <i class="icon icon-weixin"></i>
-          </a>
-          <a class="qq share-sns" href="javascript:;" data-type="qq">
-            <i class="icon icon-qq"></i>
-          </a>
-          <a class="douban share-sns" href="javascript:;" data-type="douban">
-            <i class="icon icon-douban"></i>
-          </a>
-          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
-            <i class="icon icon-qzone"></i>
-          </a>
-          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
-            <i class="icon icon-facebook"></i>
-          </a>
-          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
-            <i class="icon icon-twitter"></i>
-          </a>
-          <a class="google share-sns" href="javascript:;" data-type="google">
-            <i class="icon icon-google"></i>
-          </a>
         </div>
-      </div>
-    </span>
-  </div>
-</div>
-
-<div class="page-modal wx-share js-wx-box">
-    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
-    <p>扫一扫，分享到微信</p>
-    <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http://HenryangTi.github.io/2019/01/08/spark08/" alt="微信分享二维码">
-    </div>
-</div>
-
-<div class="mask js-mask"></div>
-      
-      <div class="clearfix"></div>
-    </div>
+        <div class="clearfix"></div>
+    </header>
   </div>
 </article>
-
-  
-<nav id="article-nav">
-  
-    <a href="/2019/01/09/spark09/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          grouppByKey与reduceByKey
-        
-      </div>
-    </a>
   
   
-    <a href="/2019/01/07/spark07/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">key-value pair</div>
-      <i class="icon-circle-right"></i>
-    </a>
-  
-</nav>
-
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-  
-  
+    </div></section>
   
 
-  
-
-  
-
-  
+    
 
 
           </div>
@@ -440,10 +244,10 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: true,
+		isPost: false,
 		isArchive: false,
 		isTag: false,
-		isCategory: false,
+		isCategory: true,
 		open_in_new: false,
 		toc_hide_index: true,
 		root: "/",

@@ -57,6 +57,8 @@
 	        
 				<li><a href="/categories/Spark">Spark</a></li>
 	        
+				<li><a href="/categoties/SparkSQL">SparkSQL</a></li>
+	        
 				<li><a href="/categories/Netty">Netty</a></li>
 	        
 				<li><a href="/categories/raft">Raft</a></li>
@@ -121,6 +123,8 @@
 			
 				
 			
+				
+			
 			
 			
 			<nav class="header-nav">
@@ -141,13 +145,15 @@
 				<ul style="width: 70%">
 				
 				
-					<li style="width: 25%"><a href="/">主页</a></li>
+					<li style="width: 20%"><a href="/">主页</a></li>
 		        
-					<li style="width: 25%"><a href="/categories/Spark">Spark</a></li>
+					<li style="width: 20%"><a href="/categories/Spark">Spark</a></li>
 		        
-					<li style="width: 25%"><a href="/categories/Netty">Netty</a></li>
+					<li style="width: 20%"><a href="/categoties/SparkSQL">SparkSQL</a></li>
 		        
-					<li style="width: 25%"><a href="/categories/raft">Raft</a></li>
+					<li style="width: 20%"><a href="/categories/Netty">Netty</a></li>
+		        
+					<li style="width: 20%"><a href="/categories/raft">Raft</a></li>
 		        
 				</ul>
 			</nav>
@@ -223,6 +229,92 @@
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2019/02/02/raft/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-SparkSQL01" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/01/25/SparkSQL01/">DataFrame</a>
+    </h1>
+  
+
+        
+        <a href="/2019/01/25/SparkSQL01/" class="archive-article-date">
+  	<time datetime="2019-01-24T16:34:14.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-01-25</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.Why use DataFrame<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(1) RDD is hard to use</span><br><span class="line">(2) Pandas can not be used in the distributed system</span><br></pre></td></tr></table></figure></p>
+<p>2.What is DataFrame<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">DataFrame can be viewed as a table, while it does a lot of optimization </span><br><span class="line">``` </span><br><span class="line"></span><br><span class="line">3.How to create DataFrame</span><br></pre></td></tr></table></figure></p>
+<p>With a SparkSession, Application can create DataFrames from an exsiting RDD, Hive table or spark data source<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">4.Three ways to create RDD</span><br><span class="line"></span><br><span class="line">4.1 Read from json</span><br><span class="line"></span><br><span class="line">```scala</span><br><span class="line">val spark = SparkSession.builder().appName(&quot;test&quot;)</span><br><span class="line">                        .master(&quot;local[2]&quot;)</span><br><span class="line">                        .getOrCreate()</span><br><span class="line"></span><br><span class="line">val df = spark.read.json(&quot;/people.json&quot;)</span><br><span class="line">df.show</span><br></pre></td></tr></table></figure></p>
+<p>4.2 Read from Hive table<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">val spark = SparkSession.builder().appName(&quot;test&quot;)</span><br><span class="line">                        .master(&quot;local[2]&quot;)</span><br><span class="line">                        .getOrCreate()</span><br><span class="line"></span><br><span class="line">val df = spark.table(&quot;henry_emp&quot;)</span><br><span class="line"></span><br><span class="line">df.show</span><br></pre></td></tr></table></figure></p>
+<p>4.3 Convert RDD to DataFrame</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line"><span class="keyword">import</span> spark.implicits._</span><br><span class="line"><span class="keyword">val</span> df = spark.sparkContext.parallelize(</span><br><span class="line">    <span class="type">Array</span>((<span class="string">"1"</span>, <span class="string">"Henry"</span>), (<span class="string">"2"</span>, <span class="string">"Ronaldo"</span>), (<span class="string">"3"</span>, <span class="string">"kaka"</span>))</span><br><span class="line">).toDF(<span class="string">"id"</span>, <span class="string">"name"</span>)</span><br><span class="line"></span><br><span class="line">df.show</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Notice:</span><br><span class="line">    (1) must use</span><br><span class="line">            import spark.implicits._</span><br><span class="line">        otherwise</span><br><span class="line">            toDF function can not be used</span><br></pre></td></tr></table></figure>
+<p>5.DataFrame vs RDD vs Dataset</p>
+<p>5.1 From structure</p>
+<p>(1) For <code>RDD[People]</code>, RDD only knows that the type of its elements is People, but it do not know the attribute about People</p>
+<p>(2) For <code>DataFrame[People]</code> can be viewed as a table, which means that <code>row</code> can be seen as an instance of People and <code>column</code> can be seen as attributes about People.</p>
+<p>In other words, <code>DataFrame</code> get schema and combines data and schema. It is similar to Hive, which combines schema and HDFS files.</p>
+<p>(3) For optimization, the code below is an example<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="keyword">id</span>, <span class="keyword">name</span> <span class="keyword">from</span> hw</span><br></pre></td></tr></table></figure></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/SparkSQL//" class="article-tag-list-link color4">SparkSQL</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/01/25/SparkSQL01/">展开全文 >></a>
         </p>
       
 
@@ -1386,139 +1478,6 @@
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2019/01/05/spark05/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-spark04" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/01/04/spark04/">Spark On YARN如何提交运行</a>
-    </h1>
-  
-
-        
-        <a href="/2019/01/04/spark04/" class="archive-article-date">
-  	<time datetime="2019-01-03T16:34:14.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-01-04</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>1.最开始支持YARN的Spark的版本</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:left">官网原文</th>
-<th style="text-align:left">中文翻译</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left">Support for running on YARN (Hadoop NextGen) was added to Spark in version 0.6.0, and improved in subsequent releases.</td>
-<td style="text-align:left">支持运行在YARN上是在Spark 0.6.0版本被引入的</td>
-</tr>
-</tbody>
-</table>
-<table>
-<thead>
-<tr>
-<th style="text-align:left">官网原文</th>
-<th style="text-align:left">中文翻译</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left">Ensure that HADOOP_CONF_DIR or YARN_CONF_DIR points to the directory which contains the (client side) configuration files for the Hadoop cluster. These configs are used to write to HDFS and connect to the YARN ResourceManager. The configuration contained in this directory will be distributed to the YARN cluster so that all containers used by the application use the same configuration.</td>
-<td style="text-align:left">确保HADOOP_CONF_DIR或者YARN_CONF_DIR指向的是保存的的hadoop集群的客户端配置文件的文件夹。这些配置信息被写入到HDFS中并且连接YARN的ResourceManager。保存在该文件夹下的配置信息将会被分发到YARN集群上以便被Spark应用使用的所有的container都使用的是相同的配置信息</td>
-</tr>
-</tbody>
-</table>
-<table>
-<thead>
-<tr>
-<th style="text-align:left">官网原文</th>
-<th style="text-align:left">中文翻译</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left">If the configuration references Java system properties or environment variables not managed by YARN, they should also be set in the Spark application’s configuration (driver, executors, and the AM when running in client mode).</td>
-<td style="text-align:left">如果配置信息指向的是不被YARN所管理的Java系统变量或者环境变量，应该被设置与Spark应用的配置信息中(包括driver中，executors中和当运行的是cluster模式的AM中)</td>
-</tr>
-</tbody>
-</table>
-<table>
-<thead>
-<tr>
-<th style="text-align:left">官网原文</th>
-<th style="text-align:left">中文翻译</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left">There are two deploy modes that can be used to launch Spark applications on YARN. In cluster mode, the Spark driver runs inside an application master process which is managed by YARN on the cluster, and the client can go away after initiating the application. In client mode, the driver runs in the client process, and the application master is only used for requesting resources from YARN.</td>
-<td style="text-align:left">启动Spark on yarn有两种deploy-mode。在cluster模式下, spark driver运行在application master进程中, application master被集群中的YARN所管理，在应用初始化之后client就会消失。在client模式下，driver运行在client进程中，application master只是从YARN上获取资源</td>
-</tr>
-</tbody>
-</table>
-<p>注</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">在cluster模式下, client作用是提交脚本</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">在client模式下, 终端是不允许关闭的, 关闭就整个挂掉, 因为driver跑在本地</span><br></pre></td></tr></table></figure>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Spark//" class="article-tag-list-link color1">Spark</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/01/04/spark04/">展开全文 >></a>
         </p>
       
 
