@@ -8,17 +8,17 @@
   <link rel="dns-prefetch" href="http://HenryangTi.github.io">
   <title>DataFrame | HenryangTi&#39;s blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="1.Why use DataFrame 12(1) RDD is hard to use(2) Pandas can not be used in the distributed system 2.What is DataFrame 1234DataFrame can be viewed as a table, while it does a lot of optimization ``` 3.H">
+  <meta name="description" content="1.Why use DataFrame (1) RDD is hard to use (2) Pandas can not be used in the distributed system 2.What is DataFrame DataFrame can be viewed as a table, while it does a lot of optimization  3.How to cr">
 <meta property="og:type" content="article">
 <meta property="og:title" content="DataFrame">
 <meta property="og:url" content="http://HenryangTi.github.io/2019/01/25/SparkSQL01/index.html">
 <meta property="og:site_name" content="HenryangTi&#39;s blog">
-<meta property="og:description" content="1.Why use DataFrame 12(1) RDD is hard to use(2) Pandas can not be used in the distributed system 2.What is DataFrame 1234DataFrame can be viewed as a table, while it does a lot of optimization ``` 3.H">
+<meta property="og:description" content="1.Why use DataFrame (1) RDD is hard to use (2) Pandas can not be used in the distributed system 2.What is DataFrame DataFrame can be viewed as a table, while it does a lot of optimization  3.How to cr">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-07-31T23:27:58.381Z">
+<meta property="og:updated_time" content="2019-07-31T23:31:37.615Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="DataFrame">
-<meta name="twitter:description" content="1.Why use DataFrame 12(1) RDD is hard to use(2) Pandas can not be used in the distributed system 2.What is DataFrame 1234DataFrame can be viewed as a table, while it does a lot of optimization ``` 3.H">
+<meta name="twitter:description" content="1.Why use DataFrame (1) RDD is hard to use (2) Pandas can not be used in the distributed system 2.What is DataFrame DataFrame can be viewed as a table, while it does a lot of optimization  3.How to cr">
   
     <link rel="alternative" href="/atom.xml" title="HenryangTi&#39;s blog" type="application/atom+xml">
   
@@ -193,10 +193,15 @@
     <div class="article-entry" itemprop="articleBody">
       
         <p>1.Why use DataFrame</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(1) RDD is hard to use</span><br><span class="line">(2) Pandas can not be used in the distributed system</span><br></pre></td></tr></table></figure>
+<p>(1) RDD is hard to use</p>
+<p>(2) Pandas can not be used in the distributed system</p>
 <p>2.What is DataFrame</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">DataFrame can be viewed as a table, while it does a lot of optimization </span><br><span class="line">``` </span><br><span class="line"></span><br><span class="line">3.How to create DataFrame</span><br></pre></td></tr></table></figure>
-<p>With a SparkSession, Application can create DataFrames from an exsiting RDD, Hive table or spark data source<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">4.Three ways to create RDD</span><br><span class="line"></span><br><span class="line">4.1 Read from json</span><br><span class="line"></span><br><span class="line">```scala</span><br><span class="line">val spark = SparkSession.builder().appName(&quot;test&quot;)</span><br><span class="line">                        .master(&quot;local[2]&quot;)</span><br><span class="line">                        .getOrCreate()</span><br><span class="line"></span><br><span class="line">val df = spark.read.json(&quot;/people.json&quot;)</span><br><span class="line">df.show</span><br></pre></td></tr></table></figure></p>
+<p>DataFrame can be viewed as a table, while it does a lot of optimization </p>
+<p>3.How to create DataFrame</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">With a SparkSession, Application can create DataFrames from an exsiting RDD, Hive table or spark data source</span><br></pre></td></tr></table></figure>
+<p>4.Three ways to create RDD</p>
+<p>4.1 Read from json</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> spark = <span class="type">SparkSession</span>.builder().appName(<span class="string">"test"</span>)</span><br><span class="line">                        .master(<span class="string">"local[2]"</span>)</span><br><span class="line">                        .getOrCreate()</span><br><span class="line"></span><br><span class="line"><span class="keyword">val</span> df = spark.read.json(<span class="string">"/people.json"</span>)</span><br><span class="line">df.show</span><br></pre></td></tr></table></figure>
 <p>4.2 Read from Hive table<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">val spark = SparkSession.builder().appName(&quot;test&quot;)</span><br><span class="line">                        .master(&quot;local[2]&quot;)</span><br><span class="line">                        .getOrCreate()</span><br><span class="line"></span><br><span class="line">val df = spark.table(&quot;henry_emp&quot;)</span><br><span class="line"></span><br><span class="line">df.show</span><br></pre></td></tr></table></figure></p>
 <p>4.3 Convert RDD to DataFrame</p>
 <figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line"><span class="keyword">import</span> spark.implicits._</span><br><span class="line"><span class="keyword">val</span> df = spark.sparkContext.parallelize(</span><br><span class="line">    <span class="type">Array</span>((<span class="string">"1"</span>, <span class="string">"Henry"</span>), (<span class="string">"2"</span>, <span class="string">"Ronaldo"</span>), (<span class="string">"3"</span>, <span class="string">"kaka"</span>))</span><br><span class="line">).toDF(<span class="string">"id"</span>, <span class="string">"name"</span>)</span><br><span class="line"></span><br><span class="line">df.show</span><br></pre></td></tr></table></figure>
