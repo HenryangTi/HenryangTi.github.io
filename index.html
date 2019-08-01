@@ -1639,7 +1639,11 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>1.定义</p>
+        <p>1.引言</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(1) 每个RDD都是不可变的, 所以经过map操作之后得到的RDD都是新的RDD</span><br><span class="line">(2) RDD之间的依赖关系就是他们的血缘</span><br></pre></td></tr></table></figure>
+<p><img src="/img/problem1_1.png" alt="avatar"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">对于上图来说, 此时如果墨绿色的partition lost, 由于此时是map操作, 只需要找到其dependency, 找到相应的父RDD的相应的partition(红色的partition), 对其进行恢复。</span><br></pre></td></tr></table></figure>
+<p>2.定义</p>
 <table>
 <thead>
 <tr>
@@ -1658,10 +1662,10 @@
 </tr>
 </tbody>
 </table>
-<p>2.图示</p>
+<p>3.图示</p>
 <p><img src="/img/dependency.jpg" alt="avatar"></p>
 <p>注<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">(1) map、filter和union都是窄依赖</span><br><span class="line">(2) groupByKey是宽依赖</span><br><span class="line">(3) 宽依赖都具有shuffle</span><br><span class="line">(4) join操作不一定都是宽依赖</span><br></pre></td></tr></table></figure></p>
-<p>3.宽依赖与窄依赖的区别</p>
+<p>4.宽依赖与窄依赖的区别</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(1) 对于子RDD的某个partition的情况下，窄依赖直接从其父RDD恢复，而宽依赖就需要从头开始计算</span><br><span class="line">(2) 窄依赖属于同一个stage中，都是以pipeline的形式</span><br></pre></td></tr></table></figure>
 
       
