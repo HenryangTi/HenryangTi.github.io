@@ -350,6 +350,217 @@
 
 
   
+    <article id="post-spark12" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/01/14/spark12/">Spark Core常用算子解析</a>
+    </h1>
+  
+
+        
+        <a href="/2019/01/14/spark12/" class="archive-article-date">
+  	<time datetime="2019-01-13T16:34:14.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-01-14</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.collect注释与源码</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">注释原文</th>
+<th style="text-align:center">中文翻译</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">Return an array that contains all of the elements in this RDD.This method should only be used if the resulting array is expected to be small, as all the data is loaded into the driver’s memory.</td>
+<td style="text-align:center">返回一个包含RDD中所有元素的数组。该方法只能使用在结果数组是较短的, 因为所有的数据都会被load到driver的内存中, 所有数据量过大, driver内存会扛不住挂掉。</td>
+</tr>
+</tbody>
+</table>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">collect</span></span>(): <span class="type">Array</span>[<span class="type">T</span>] = withScope &#123;</span><br><span class="line">    <span class="comment">//之前说过每个action就触发一个job, 其底层就是sc.runjob</span></span><br><span class="line">    <span class="keyword">val</span> results = sc.runJob(<span class="keyword">this</span>, (iter: <span class="type">Iterator</span>[<span class="type">T</span>]) =&gt; iter.toArray)</span><br><span class="line">    <span class="comment">//将results转成可变参数</span></span><br><span class="line">    <span class="type">Array</span>.concat(results: _*)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>注意<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">每个action算子都执行了runjob函数</span><br></pre></td></tr></table></figure></p>
+<p>2.Map与MapPartition</p>
+<p>2.1 Map注释与源码</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">注释原文</th>
+<th style="text-align:center">中文翻译</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">Return a new RDD by applying a function to all elements of this RDD</td>
+<td style="text-align:center">返回一个新的RDD, 该RDD是原RDD的所有元素作用了一个函数之后得到的</td>
+</tr>
+</tbody>
+</table>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">map</span></span>[<span class="type">U</span>: <span class="type">ClassTag</span>](f: <span class="type">T</span> =&gt; <span class="type">U</span>): <span class="type">RDD</span>[<span class="type">U</span>] = withScope &#123;</span><br><span class="line">    <span class="keyword">val</span> cleanF = sc.clean(f)</span><br><span class="line">    <span class="keyword">new</span> <span class="type">MapPartitionsRDD</span>[<span class="type">U</span>, <span class="type">T</span>](<span class="keyword">this</span>, (context, pid, iter) =&gt; iter.map(cleanF))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>2.2 MapPartition注释与源码</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">注释原文</th>
+<th style="text-align:center">中文翻译</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">Return a new RDD by applying a function to each partition of this RDD</td>
+<td style="text-align:center">返回一个新的RDD, 该RDD是通过将函数作用到old RDD的每个partition得到的</td>
+</tr>
+</tbody>
+</table>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">mapPartitions</span></span>[<span class="type">U</span>: <span class="type">ClassTag</span>](</span><br><span class="line">      f: <span class="type">Iterator</span>[<span class="type">T</span>] =&gt; <span class="type">Iterator</span>[<span class="type">U</span>],</span><br><span class="line">      preservesPartitioning: <span class="type">Boolean</span> = <span class="literal">false</span>): <span class="type">RDD</span>[<span class="type">U</span>] = withScope &#123;</span><br><span class="line">    <span class="keyword">val</span> cleanedF = sc.clean(f)</span><br><span class="line">    <span class="keyword">new</span> <span class="type">MapPartitionsRDD</span>(</span><br><span class="line">      <span class="keyword">this</span>,</span><br><span class="line">      (context: <span class="type">TaskContext</span>, index: <span class="type">Int</span>, iter: <span class="type">Iterator</span>[<span class="type">T</span>]) =&gt; cleanedF(iter),</span><br><span class="line">      preservesPartitioning)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>2.3 Map VS MapPartition</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">RDD是由很多个partition构成的, 每个partition由N个元素构成。map算子是将函数作用到record上, 而mapPartition是将函数作用到partition上。</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">比如将rdd数据save到MySQL中，如果使用map方式，假设RDD有10个分区, 每个分区有100万数据, 其获得的connection为100万, 而用mapPartition所需的connection为10个。</span><br></pre></td></tr></table></figure>
+<p>MapPartition的缺点<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Map是操作单个元素, 在此操作之前的已处理过的元素就从内存中清掉，空间就出来，所以不会导致OOM, 而MapPartition，如果partition元素是100万, 内存会扛不住</span><br></pre></td></tr></table></figure></p>
+<p>即便如此，还是首选MapPartition, 性能高些，能盖住这些缺点</p>
+<p>3.foreach与foreachPartition</p>
+<p>3.1 foreach注释</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">注释原文</th>
+<th style="text-align:center">中文翻译</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">Applies a function f to all elements of this RDD</td>
+<td style="text-align:center">给RDD的所有元素应用一个函数</td>
+</tr>
+</tbody>
+</table>
+<p>3.2 foreachPartition注释</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">注释原文</th>
+<th style="text-align:center">中文翻译</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">Applies a function f to each partition of this RDD</td>
+<td style="text-align:center">给RDD的每个分区应用一个函数</td>
+</tr>
+</tbody>
+</table>
+<p>3.3 哪个更好<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">保存到数据库首选foreachPartition, 因为首先它是action, 其次它是对整个partition操作</span><br></pre></td></tr></table></figure></p>
+<p>4.textFile注释与源码</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">注释原文</th>
+<th style="text-align:center">中文翻译</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">Read a directory of text files from HDFS, a local file system (available on all nodes), or any Hadoop-supported file system URI, and return it as an RDD of Strings</td>
+<td style="text-align:center">从HDFS, 本地文件系统(如果是standalone模式, 必须每个节点的相同的目录上都有该文件), 或者任意支持Hadoop的文件系统的URI上读取文件的目录， 返回的是一个string类型的rdd</td>
+</tr>
+</tbody>
+</table>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">textFile</span></span>(</span><br><span class="line">      path: <span class="type">String</span>,</span><br><span class="line">      minPartitions: <span class="type">Int</span> = defaultMinPartitions): <span class="type">RDD</span>[<span class="type">String</span>] = withScope &#123;</span><br><span class="line">    assertNotStopped()</span><br><span class="line">    hadoopFile(path, classOf[<span class="type">TextInputFormat</span>], classOf[<span class="type">LongWritable</span>], classOf[<span class="type">Text</span>],</span><br><span class="line">      minPartitions).map(pair =&gt; pair._2.toString).setName(path)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>问题: map(pair =&gt; pair._2.toString)的作用<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">因为MR中key是偏移量, value才是所需要的, 所以只取value, 所以需要map将key拿掉</span><br></pre></td></tr></table></figure></p>
+<p>问题: 为什么默认两个分区<br><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">因为在源码中</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">defaultMinPartitions</span></span>: <span class="type">Int</span> = math.min(defaultParallelism, <span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">所以defaultMinPartitions不能大于<span class="number">2</span></span><br></pre></td></tr></table></figure></p>
+<p>4.1 textFile底层调用代码解析</p>
+<p>4.1.1 HadoopFile注释与源码</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">注释原文</th>
+<th style="text-align:center">中文翻译</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">Get an RDD for a Hadoop file with an arbitrary InputFormat</td>
+<td style="text-align:center">得到一个RDD, 该RDD是的内容是任意InputFormat的Hadoop文件</td>
+</tr>
+</tbody>
+</table>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">hadoopFile</span></span>[<span class="type">K</span>, <span class="type">V</span>](</span><br><span class="line">      path: <span class="type">String</span>,</span><br><span class="line">      inputFormatClass: <span class="type">Class</span>[_ &lt;: <span class="type">InputFormat</span>[<span class="type">K</span>, <span class="type">V</span>]],</span><br><span class="line">      keyClass: <span class="type">Class</span>[<span class="type">K</span>],</span><br><span class="line">      valueClass: <span class="type">Class</span>[<span class="type">V</span>],</span><br><span class="line">      minPartitions: <span class="type">Int</span> = defaultMinPartitions): <span class="type">RDD</span>[(<span class="type">K</span>, <span class="type">V</span>)] = withScope &#123;</span><br><span class="line">        <span class="comment">//与MR流程一致</span></span><br><span class="line">        <span class="keyword">val</span> setInputPathsFunc = (jobConf: <span class="type">JobConf</span>) =&gt; <span class="type">FileInputFormat</span>.setInputPaths(jobConf, path)</span><br><span class="line">      <span class="keyword">new</span> <span class="type">HadoopRDD</span>(</span><br><span class="line">        <span class="keyword">this</span>,</span><br><span class="line">        confBroadcast,</span><br><span class="line">        <span class="type">Some</span>(setInputPathsFunc),</span><br><span class="line">        inputFormatClass,</span><br><span class="line">        keyClass,</span><br><span class="line">        valueClass,</span><br><span class="line">        minPartitions</span><br><span class="line">      ).setName(path)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>补充说明<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(1) 通过InputFormat来读数据</span><br><span class="line">(2) keyClass， valueClass也就是在MR中设置的key的类型和value的类型</span><br></pre></td></tr></table></figure></p>
+<p>4.1.2 HadoopRDD注释</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">注释原文</th>
+<th style="text-align:center">中文翻译</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">An RDD that provides core functionality for reading data stored in Hadoop</td>
+<td style="text-align:center">是一个RDD, 该RDD提供了一些核心功能, 该功能作用是读取在存储在Hadoop上的数据</td>
+</tr>
+</tbody>
+</table>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Spark//" class="article-tag-list-link color1">Spark</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/01/14/spark12/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-spark11" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1590,107 +1801,6 @@
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2019/01/07/spark07/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-spark06" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/01/06/spark06/">宽依赖与窄依赖</a>
-    </h1>
-  
-
-        
-        <a href="/2019/01/06/spark06/" class="archive-article-date">
-  	<time datetime="2019-01-05T16:34:14.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-01-06</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>1.引言</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(1) 每个RDD都是不可变的, 所以经过map操作之后得到的RDD都是新的RDD</span><br><span class="line">(2) RDD之间的依赖关系就是他们的血缘</span><br></pre></td></tr></table></figure>
-<p><img src="/img/problem1_1.png" alt="avatar"></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">对于上图来说, 此时如果墨绿色的partition lost, 由于此时是map操作, 只需要找到其dependency, 找到相应的父RDD的相应的partition(红色的partition), 对其进行恢复。</span><br></pre></td></tr></table></figure>
-<p>2.定义</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:left"></th>
-<th style="text-align:center">定义</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left">宽依赖</td>
-<td style="text-align:center">一个父RDD只能被子RDD的partition使用一次</td>
-</tr>
-<tr>
-<td style="text-align:left">窄依赖</td>
-<td style="text-align:center">一个父RDD能够被子RDD的partition使用多次</td>
-</tr>
-</tbody>
-</table>
-<p>3.图示</p>
-<p><img src="/img/dependency.jpg" alt="avatar"></p>
-<p>注<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">(1) map、filter和union都是窄依赖</span><br><span class="line">(2) groupByKey是宽依赖</span><br><span class="line">(3) 宽依赖都具有shuffle</span><br><span class="line">(4) join操作不一定都是宽依赖</span><br></pre></td></tr></table></figure></p>
-<p>4.宽依赖与窄依赖的区别</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(1) 对于子RDD的某个partition的情况下，窄依赖直接从其父RDD恢复，而宽依赖就需要从头开始计算</span><br><span class="line">(2) 窄依赖属于同一个stage中，都是以pipeline的形式</span><br></pre></td></tr></table></figure>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Spark//" class="article-tag-list-link color1">Spark</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/01/06/spark06/">展开全文 >></a>
         </p>
       
 
