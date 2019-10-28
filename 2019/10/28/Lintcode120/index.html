@@ -6,23 +6,19 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="http://HenryangTi.github.io">
-  <title>Spark集群工作方式 | HenryangTi&#39;s blog</title>
+  <title>LintCode120-Word Ladder | HenryangTi&#39;s blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="1.术语 (1) Application    含义 中文翻译     User program built on Spark. Consists of a driver program and executors on the cluster. 构建在Spark上的用户程序。在集群上由一个driver程序和多个executors程序组成的    (2) Application jar    含义">
+  <meta name="description" content="Lintcode120 解题步骤12对于一个单词的每个字母, 就是将某位置上字母替换为其他25个字母, 出现25个新单词, 作为图的下一层这样构建好图之后, 再使用BFS即可 注意1遍历时不需要再遍历之前已经遍历过的">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Spark集群工作方式">
-<meta property="og:url" content="http://HenryangTi.github.io/2019/01/02/spark02/index.html">
+<meta property="og:title" content="LintCode120-Word Ladder">
+<meta property="og:url" content="http://HenryangTi.github.io/2019/10/28/Lintcode120/index.html">
 <meta property="og:site_name" content="HenryangTi&#39;s blog">
-<meta property="og:description" content="1.术语 (1) Application    含义 中文翻译     User program built on Spark. Consists of a driver program and executors on the cluster. 构建在Spark上的用户程序。在集群上由一个driver程序和多个executors程序组成的    (2) Application jar    含义">
+<meta property="og:description" content="Lintcode120 解题步骤12对于一个单词的每个字母, 就是将某位置上字母替换为其他25个字母, 出现25个新单词, 作为图的下一层这样构建好图之后, 再使用BFS即可 注意1遍历时不需要再遍历之前已经遍历过的">
 <meta property="og:locale" content="default">
-<meta property="og:image" content="http://henryangti.github.io/img/spark02_1.png">
-<meta property="og:image" content="http://henryangti.github.io/img/spark02_2.png">
-<meta property="og:image" content="http://henryangti.github.io/img/cluster-overview.png">
-<meta property="og:updated_time" content="2019-08-04T08:17:59.984Z">
+<meta property="og:updated_time" content="2019-10-28T02:36:04.530Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Spark集群工作方式">
-<meta name="twitter:description" content="1.术语 (1) Application    含义 中文翻译     User program built on Spark. Consists of a driver program and executors on the cluster. 构建在Spark上的用户程序。在集群上由一个driver程序和多个executors程序组成的    (2) Application jar    含义">
-<meta name="twitter:image" content="http://henryangti.github.io/img/spark02_1.png">
+<meta name="twitter:title" content="LintCode120-Word Ladder">
+<meta name="twitter:description" content="Lintcode120 解题步骤12对于一个单词的每个字母, 就是将某位置上字母替换为其他25个字母, 出现25个新单词, 作为图的下一层这样构建好图之后, 再使用BFS即可 注意1遍历时不需要再遍历之前已经遍历过的">
   
     <link rel="alternative" href="/atom.xml" title="HenryangTi&#39;s blog" type="application/atom+xml">
   
@@ -194,294 +190,29 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-spark02" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-Lintcode120" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      Spark集群工作方式
+      LintCode120-Word Ladder
     </h1>
   
 
         
-        <a href="/2019/01/02/spark02/" class="archive-article-date">
-  	<time datetime="2019-01-01T16:34:14.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-01-02</time>
+        <a href="/2019/10/28/Lintcode120/" class="archive-article-date">
+  	<time datetime="2019-10-27T16:34:14.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-10-28</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>1.术语</p>
-<p>(1) Application</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:left">含义</th>
-<th style="text-align:left">中文翻译</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left">User program built on Spark. Consists of a driver program and executors on the cluster.</td>
-<td style="text-align:left">构建在Spark上的用户程序。在集群上由一个driver程序和多个executors程序组成的</td>
-</tr>
-</tbody>
-</table>
-<p>(2) Application jar</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:left">含义</th>
-<th style="text-align:left">中文翻译</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left">A jar containing the user’s Spark application</td>
-<td style="text-align:left">包含Spark应用的jar包</td>
-</tr>
-</tbody>
-</table>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">如果项目是maven项目, 该jar包就是点击idea的maven插件之后再target目录下生成的*.jar文件</span><br></pre></td></tr></table></figure>
-<p><img src="/img/spark02_1.png" alt="avatar"></p>
-<p><img src="/img/spark02_2.png" alt="avatar"></p>
-<p>(3) Driver program</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:left">含义</th>
-<th style="text-align:left">中文翻译</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left">The process running the main() function of the application and creating the SparkContext</td>
-<td style="text-align:left">运行main方法的进程, 该进程创建了SparkContext</td>
-</tr>
-</tbody>
-</table>
-<p>Example<br><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">object</span> <span class="title">TestApp</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">main</span></span>(args:<span class="type">Array</span>[<span class="type">String</span>]):<span class="type">Unit</span>=&#123;</span><br><span class="line">        <span class="keyword">val</span> sparkConf = <span class="keyword">new</span> <span class="type">SparkConf</span>()</span><br><span class="line">        sparkConf.setAppName(<span class="string">"TestApp"</span>).setMaster(<span class="string">"local[2]"</span>)</span><br><span class="line">        <span class="keyword">val</span> sc = <span class="keyword">new</span> <span class="type">SparkContext</span>(sparkConf)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">运行上述代码的进程就是driver program</span><br></pre></td></tr></table></figure>
-<p>(4) Cluster manager    </p>
-<table>
-<thead>
-<tr>
-<th style="text-align:left">含义</th>
-<th style="text-align:left">中文翻译</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left">An external service for acquiring resources on the cluster (e.g. standalone manager, Mesos, YARN)</td>
-<td style="text-align:left">在集群上获取资源的外部服务(standalone manager, Mesos, YARN就是Cluster manager)</td>
-</tr>
-</tbody>
-</table>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cluster manager的作用是user&apos;s application的代码都是一样的, 为了要是application跑在不同的集群上, 肯定需要有不同的cluster manager帮助程序在不同的集群上申请资源</span><br></pre></td></tr></table></figure>
-<p>(5) Deploy mode</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:left">含义</th>
-<th style="text-align:left">中文翻译</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left">Distinguishes where the driver process runs. In “cluster” mode, the framework launches the driver inside of the cluster. In “client” mode, the submitter launches the driver outside of the cluster.</td>
-<td style="text-align:left">分辨driver进程运行在哪。在cluster模式下, 框架会在集群内部启动driver程序。在client模式下, submitter会在集群外部启动driver进程</td>
-</tr>
-</tbody>
-</table>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">也就是说在client模式下, driver进程是运行在本地机器(也就是spark-submitter进程所在的机器)， 因此在client模式下我们可以看见spark启动时产生的日志信息</span><br></pre></td></tr></table></figure>
-<p>(6) Worker node</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:left">含义</th>
-<th style="text-align:left">中文翻译</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left">Any node that can run application code in the cluster</td>
-<td style="text-align:left">在cluster上运行应用代码的任意节点</td>
-</tr>
-</tbody>
-</table>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">如果cluster manager为yarn的话, worker node就是NodeManager</span><br></pre></td></tr></table></figure>
-<p>(7) Executor</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:left">含义</th>
-<th style="text-align:left">中文翻译</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left">A process launched for an application on a worker node, that runs tasks and keeps data in memory or disk storage across them. Each application has its own executors.</td>
-<td style="text-align:left">为在worker node上运行的application启动的进程, 该进程上可以运行task或者存储数据。每个应用有自己的一堆executors</td>
-</tr>
-</tbody>
-</table>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">在yarn上, executor是运行在container中</span><br></pre></td></tr></table></figure>
-<p>(8) Task</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:left">含义</th>
-<th style="text-align:left">中文翻译</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left">A unit of work that will be sent to one executor</td>
-<td style="text-align:left">发送给一个executor的工作单元</td>
-</tr>
-</tbody>
-</table>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">在一个executor上可以运行多个task</span><br></pre></td></tr></table></figure>
-<p>(9) Job</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:left">含义</th>
-<th style="text-align:left">中文翻译</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left">A parallel computation consisting of multiple tasks that gets spawned in response to a Spark action (e.g. save, collect)</td>
-<td style="text-align:left">一个并行的计算，由多个task构成, 每个Spark action(save, collect)都会产生一个job</td>
-</tr>
-</tbody>
-</table>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">注意:</span><br><span class="line">    每个action都会触发一个job，transformation不会触发</span><br></pre></td></tr></table></figure>
-<p>(10) stage</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:left">含义</th>
-<th style="text-align:left">中文翻译</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left">Each job gets divided into smaller sets of tasks called stages that depend on each other (similar to the map and reduce stages in MapReduce)</td>
-<td style="text-align:left">每个job都会被多个task的集合, 每个集合都是一个stage(就像MapReudce的map stage和reduce stage)</td>
-</tr>
-</tbody>
-</table>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">多个stage之间是依赖关系</span><br><span class="line"></span><br><span class="line">Example:</span><br><span class="line">    对于stage A和stageB来说, stage B需要等待stage A结束后才开始执行</span><br></pre></td></tr></table></figure>
-<p>2.Spark集群的工作流程</p>
-<p><img src="/img/cluster-overview.png" alt="avatar"></p>
-<table>
-<thead>
-<tr>
-<th style="text-align:left">官网原文</th>
-<th style="text-align:left">中文翻译</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left">Spark applications run as independent sets of processes on a cluster, coordinated by the SparkContext object in your main program (called the driver program).</td>
-<td style="text-align:left">Spark应用程序在一个集群上以一组独立的进程的方式来运行，它是被主程序(driver program)的SparkContext来调度的</td>
-</tr>
-</tbody>
-</table>
-<table>
-<thead>
-<tr>
-<th style="text-align:left">官网原文</th>
-<th style="text-align:left">中文翻译</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left">Specifically, to run on a cluster, the SparkContext can connect to several types of cluster managers (either Spark’s own standalone cluster manager, Mesos or YARN), which allocate resources across applications. Once connected, Spark acquires executors on nodes in the cluster, which are processes that run computations and store data for your application.</td>
-<td style="text-align:left">详细的来说, 为了在cluster上运行, SparkContext对象能够连接很多类型的cluster manager(eg. spark自身的standalone manager, Mesos或者YARN)，cluster manager作用就是分配资源。一旦连接, Spark获取在集群上的node的executor(运行application的task并且存储application的数据)</td>
-</tr>
-</tbody>
-</table>
-<table>
-<thead>
-<tr>
-<th style="text-align:left">官网原文</th>
-<th style="text-align:left">中文翻译</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left">Next, it sends your application code (defined by JAR or Python files passed to SparkContext) to the executors. Finally, SparkContext sends tasks to the executors to run.</td>
-<td style="text-align:left">接下来, SparkContext发送应用代码(包含在jar包内)给那些executors。最终, SparkContext发送多个task给那些executor来运行task</td>
-</tr>
-</tbody>
-</table>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">为什么要先发送代码:</span><br><span class="line">    当Executor接收LauchTask的请求后会通过网络拉取jar包, 先发送jar包，到LauchTask时就省去通过网络拉取jar包这一环节</span><br></pre></td></tr></table></figure>
-<p>3.几点注意</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:left">官网原文</th>
-<th style="text-align:left">中文翻译</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left">Each application gets its own executor processes, which stay up for the duration of the whole application and run tasks in multiple threads. This has the benefit of isolating applications from each other, on both the scheduling side (each driver schedules its own tasks) and executor side (tasks from different applications run in different JVMs). However, it also means that data cannot be shared across different Spark applications (instances of SparkContext) without writing it to an external storage syste</td>
-<td style="text-align:left">每个应用都有自己的executor进程，只要application存在，executor就存在，并且可以以多线程的方式在Executor上运行task。分离应用的方式有很多好处, 不管是在调度端(每个driver调度它自己的多个task)还是在executor端(不同应用的那些task运行在不同的JVM上)。但是，这也就意味着在没有外部存储的情况下不能跨不同的Spark应用(SparkContext实例)来共享数据</td>
-</tr>
-</tbody>
-</table>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">数据不能共享的原因是每个application都有独立的executor</span><br><span class="line">这种情况就导致了alluxio的产生</span><br></pre></td></tr></table></figure>
-<table>
-<thead>
-<tr>
-<th style="text-align:left">官网原文</th>
-<th style="text-align:left">中文翻译</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left">Spark is agnostic to the underlying cluster manager. As long as it can acquire executor processes, and these communicate with each other, it is relatively easy to run it even on a cluster manager that also supports other applications (e.g. Mesos/YARN).</td>
-<td style="text-align:left">Spark对于底层的cluster manager是无感知的。只要它能够获取executor进程，SparkContext就可以与Executor进行通信, 这是一个非常容易的方式在支持其他应用的Cluster Manager(Mesos/YARN)上运行Spark应用程序</td>
-</tr>
-</tbody>
-</table>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">也就是说Spark Application可以运行在很多地方, Spark 的user&apos;s application也不需要知道其代码具体提交到哪里运行</span><br></pre></td></tr></table></figure>
-<table>
-<thead>
-<tr>
-<th style="text-align:left">官网原文</th>
-<th style="text-align:left">中文翻译</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left">The driver program must listen for and accept incoming connections from its executors throughout its lifetime  As such, the driver program must be network addressable from the worker nodes.</td>
-<td style="text-align:left">因为driver程序在其生命周期中会一直监听和接受发送的连接，所以driver程序对于worker node来说是在网络上能够查找并且连接的</td>
-</tr>
-</tbody>
-</table>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">与executor保持通信的原因是driver program必须要保证与它相关的所有executor是健康的, 如果某个executor是failure, 那么它必须要在其他的节点上再启动exexutor</span><br></pre></td></tr></table></figure>
-<table>
-<thead>
-<tr>
-<th style="text-align:left">官网原文</th>
-<th style="text-align:left">中文翻译</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left">Because the driver schedules tasks on the cluster, it should be run close to the worker nodes, preferably on the same local area network. If you’d like to send requests to the cluster remotely, it’s better to open an RPC to the driver and have it submit operations from nearby than to run a driver far away from the worker nodes.</td>
-<td style="text-align:left">因为driver在集群上调度tasks, 它运行的机器要靠近worker nodes，最好是在同一个局域网下。如果你在远离集群的地方向集群发送request， 最好是给driver打开一个RPC，让driver在靠近集群的地方发送操作比在远离worker node的运行driver program效果更好</td>
-</tr>
-</tbody>
-</table>
+        <p>Lintcode120</p>
+<p>解题步骤<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">对于一个单词的每个字母, 就是将某位置上字母替换为其他25个字母, 出现25个新单词, 作为图的下一层</span><br><span class="line">这样构建好图之后, 再使用BFS即可</span><br></pre></td></tr></table></figure></p>
+<p>注意<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">遍历时不需要再遍历之前已经遍历过的</span><br></pre></td></tr></table></figure></p>
 
       
 
@@ -517,7 +248,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="/categories/Spark//" class="article-tag-list-link color1">Spark</a>
+        			<a href="/categories/Lintcode//" class="article-tag-list-link color4">Lintcode</a>
         		</li>
       		
 		</ul>
@@ -572,7 +303,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http://HenryangTi.github.io/2019/01/02/spark02/" alt="微信分享二维码">
+      <img src="//pan.baidu.com/share/qrcode?url=http://HenryangTi.github.io/2019/10/28/Lintcode120/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -586,18 +317,9 @@
   
 <nav id="article-nav">
   
-    <a href="/2019/01/03/spark03/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          Spark On YARN
-        
-      </div>
-    </a>
   
-  
-    <a href="/2019/01/01/hello-world/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">Spark简介</div>
+    <a href="/2019/09/27/problem1/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">HDFS遇到的坑(一)</div>
       <i class="icon-circle-right"></i>
     </a>
   
