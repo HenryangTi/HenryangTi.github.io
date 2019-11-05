@@ -360,6 +360,192 @@
 
 
   
+    <article id="post-Flume02" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/06/02/Flume02/">Flume各种source以及Example</a>
+    </h1>
+  
+
+        
+        <a href="/2019/06/02/Flume02/" class="archive-article-date">
+  	<time datetime="2019-06-02T02:42:01.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-06-02</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.Flume架构</p>
+<p>1.1 基本架构</p>
+<p><img src="/img/flumeAgent.png" alt="34bcc677a69bd5311cd23a875aba7620"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Agent另外一种理解:</span><br><span class="line">    Agent可以理解为Flume的配置文件, 因为其source、channel与sink都在配置文件上</span><br></pre></td></tr></table></figure>
+<p>1.2 复杂架构</p>
+<p><img src="/img/flumeAgent.png" alt="34bcc677a69bd5311cd23a875aba7620"></p>
+<p>2.配置Agent</p>
+<p>2.1 官网描述</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">官网原文</th>
+<th style="text-align:center">中文翻译</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">Flume agent configuration is stored in a local configuration file. This is a text file that follows the Java properties file format.</td>
+<td style="text-align:center">Flume agent的配置存储与本地配置文件中, 这是textFile, 其格式是java配置文件格式</td>
+</tr>
+</tbody>
+</table>
+<p>2.2 Example</p>
+<p><img src="/img/flumeConfig.png" alt="0739f011ab7973451dcce28f0b3a5847"></p>
+<p>2.2.1 Example所用到的组件简要解析</p>
+<p>2.2.1.1 NetCat Source</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">Property Name</th>
+<th style="text-align:center">Default</th>
+<th style="text-align:center">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">channels</td>
+<td style="text-align:center">–</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">type</td>
+<td style="text-align:center">–</td>
+<td style="text-align:center">The component type name, needs to be netcat</td>
+</tr>
+<tr>
+<td style="text-align:center">bind</td>
+<td style="text-align:center">–</td>
+<td style="text-align:center">Host name or IP address to bind to</td>
+</tr>
+<tr>
+<td style="text-align:center">port</td>
+<td style="text-align:center">–</td>
+<td style="text-align:center">Port # to bind to</td>
+</tr>
+</tbody>
+</table>
+<p>2.2.1.2 Memory Channel</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">Property Name</th>
+<th style="text-align:center">Default</th>
+<th style="text-align:center">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">type</td>
+<td style="text-align:center">–</td>
+<td style="text-align:center">The component type name, needs to be memory</td>
+</tr>
+<tr>
+<td style="text-align:center">capacity</td>
+<td style="text-align:center">100</td>
+<td style="text-align:center">The maximum number of events(一条记录可以理解为一个event) stored in the channel</td>
+</tr>
+<tr>
+<td style="text-align:center">transactionCapacity</td>
+<td style="text-align:center">100</td>
+<td style="text-align:center">The maximum number of events the channel will take from a source or give to a sink per transaction(也就是说存储到100条记录时, 会move)</td>
+</tr>
+</tbody>
+</table>
+<p>2.2.1.3 Logger Sink</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">Property Name</th>
+<th style="text-align:center">Default</th>
+<th style="text-align:center">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">channel</td>
+<td style="text-align:center">–</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">type</td>
+<td style="text-align:center">–</td>
+<td style="text-align:center">The component type name, needs to be logger</td>
+</tr>
+</tbody>
+</table>
+<p>2.2.2 运行Flume</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(1) 在Flume_Home/conf下创建Example.conf文件, 将上图的配置放于该配置文件中</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(2) 使用如下命令来启动:：</span><br><span class="line">        flume-ng agent --name a1 --conf $FLUME_HOME/conf --conf-file $FLUME_HOME/conf/Example.conf -Dflume.root.logger=INFO,console</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">(3) 启动后，log日志:</span><br><span class="line">        Reloading configuration file:/home/hadoop/app/apache-flume-1.6.0-cdh5.7.0-bin/conf/Example.conf</span><br><span class="line">        说明使用的配置文件是自定义的配置文件</span><br><span class="line">        </span><br><span class="line">        k1 Agent: a1</span><br><span class="line">        Creating channels</span><br><span class="line">        Creating instance of channel c1 type memory</span><br><span class="line">        Creating instance of source r1, type netcat</span><br><span class="line">        Creating instance of sink: k1, type: logger</span><br><span class="line">        说明已经按照配置文件创建好了实例</span><br><span class="line">        </span><br><span class="line">        Created serverSocket:sun.nio.ch.ServerSocketChannelImpl[/127.0.0.1:44444]</span><br><span class="line">        说明已经监听44444端口</span><br></pre></td></tr></table></figure>
+<p>2.2.3 测试是否运行成功</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">打开telnet, 并在命令行输入如下:</span><br><span class="line">    </span><br><span class="line">    telnet localhost 44444</span><br><span class="line">    </span><br><span class="line">    henry</span><br></pre></td></tr></table></figure>
+<p>flume上的日志显示为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2019-05-31 10:04:42,083 (SinkRunner-PollingRunner-DefaultSinkProcessor) [INFO - org.apache.flume.sink.LoggerSink.process(LoggerSink.java:94)] Event: &#123; headers:&#123;&#125; body: 68 65 6E 72 79 0D                               henry. &#125;</span><br></pre></td></tr></table></figure></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Flume//" class="article-tag-list-link color1">Flume</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/06/02/Flume02/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-Flume01" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1640,86 +1826,9 @@
 
 
   
-    <article id="post-Netty01" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/01/10/Netty01/">Netty 应用场景</a>
-    </h1>
-  
-
-        
-        <a href="/2019/01/10/Netty01/" class="archive-article-date">
-  	<time datetime="2019-01-09T16:34:14.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-01-10</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>1.Http服务器<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(1) 类似于tomcat一样处理请求与响应，但是Netty并没有实现servlet标准(请求格式的样子，如何获得请求参数等)，但是netty使用方式比tomcat更加靠近底层，其运行效率或吞吐量比tomcat更高</span><br><span class="line"></span><br><span class="line">(2) netty没有提供请求路由，因为netty的设计者使其遵循更加靠近底层的设计策略，更加靠近底层可以使开发人员对其进行任意组合</span><br></pre></td></tr></table></figure></p>
-<p>2.socket开发(应用最为广泛的领域)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">可以认为是RPC的一种方式， Netty可以接触到比HTTP更底层的socket，使客户端与服务器端使用socket进行调用，用户可以在Netty上定义自己的协议, 这也就是为什么Netty是异步的，时间驱动的协议化的客户端与服务端的网络开发框架, 而且其在微服务上使用比用http调用效率更高</span><br></pre></td></tr></table></figure></p>
-<p>3.支持长连接<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(1) 当浏览器与服务器进行交互时， HTTP协议是无状态的，基于请求相应模式的，但是无法保证长时间连接, 当实时聊天或消息推送时，绝大多数情况下需使用websocket(一直保持连接)，不仅客户端可以向服务端发送请求，服务端也可以向客户端发送推送</span><br><span class="line"></span><br><span class="line">(2) 在HTTP1.0/1.1时代想要实现长连接，需要使用轮循或commit方法，但是其弊端是很多时候进行的轮询是空轮询，并没有实际的数据返回，然而由于HTTP要求，发送请求需要携带相关的header信息，对于业务来说，header信息是没有任何意义的, 而对于websocket来说，一旦连接建立好，无论客户端向服务端发送请求，还是服务端推送给客户端，只需要发送数据本身，不需要发送header信息，也就是传送的全部信息都是有意义的数据</span><br></pre></td></tr></table></figure></p>
-<p>4.自定义协议<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">开发人员定义请求头，请求长度等信息，只要定义好的，Netty就可以对其进行编码解码，完成之后就可以发送给对方</span><br></pre></td></tr></table></figure></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Netty//" class="article-tag-list-link color1">Netty</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/01/10/Netty01/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
-      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
+      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
     </nav>
   
 
