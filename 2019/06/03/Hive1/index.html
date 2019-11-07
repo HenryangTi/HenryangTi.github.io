@@ -6,15 +6,28 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="http://HenryangTi.github.io">
-  <title>Archives: 2019/2 | HenryangTi&#39;s blog</title>
+  <title>部署Hive | HenryangTi&#39;s blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="HenryangTi&#39;s blog">
-<meta property="og:url" content="http://HenryangTi.github.io/archives/2019/02/index.html">
+  <meta name="description" content="1.准备版本注意事项1如果Hadoop是CDH版本，那么Hive的CDH版本号必须要与Hadoop的版本保持一致 2.步骤 2.1 解压tar包到/home/hadoop/app下1tar -zxvf hive-1.1.0-cdh5.7.0.tar.gz -C /home/hadoop/app/ 2.2 Hive根目录下文件夹含义  2.3 配置环境变量12345678(1) 编译~/.bash_">
+<meta property="og:type" content="article">
+<meta property="og:title" content="部署Hive">
+<meta property="og:url" content="http://HenryangTi.github.io/2019/06/03/Hive1/index.html">
 <meta property="og:site_name" content="HenryangTi&#39;s blog">
+<meta property="og:description" content="1.准备版本注意事项1如果Hadoop是CDH版本，那么Hive的CDH版本号必须要与Hadoop的版本保持一致 2.步骤 2.1 解压tar包到/home/hadoop/app下1tar -zxvf hive-1.1.0-cdh5.7.0.tar.gz -C /home/hadoop/app/ 2.2 Hive根目录下文件夹含义  2.3 配置环境变量12345678(1) 编译~/.bash_">
 <meta property="og:locale" content="default">
+<meta property="og:image" content="http://henryangti.github.io/img/Hive_dir.png">
+<meta property="og:image" content="http://henryangti.github.io/img/hive-env.png">
+<meta property="og:image" content="http://henryangti.github.io/img/hive-site1_1.png">
+<meta property="og:image" content="http://henryangti.github.io/img/hive-site2.png">
+<meta property="og:image" content="http://henryangti.github.io/img/mysql.png">
+<meta property="og:image" content="http://henryangti.github.io/img/mysql2.png">
+<meta property="og:image" content="http://henryangti.github.io/img/hive.png">
+<meta property="og:image" content="http://henryangti.github.io/img/hive1.png">
+<meta property="og:updated_time" content="2019-11-07T02:27:20.557Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="HenryangTi&#39;s blog">
+<meta name="twitter:title" content="部署Hive">
+<meta name="twitter:description" content="1.准备版本注意事项1如果Hadoop是CDH版本，那么Hive的CDH版本号必须要与Hadoop的版本保持一致 2.步骤 2.1 解压tar包到/home/hadoop/app下1tar -zxvf hive-1.1.0-cdh5.7.0.tar.gz -C /home/hadoop/app/ 2.2 Hive根目录下文件夹含义  2.3 配置环境变量12345678(1) 编译~/.bash_">
+<meta name="twitter:image" content="http://henryangti.github.io/img/Hive_dir.png">
   
     <link rel="alternative" href="/atom.xml" title="HenryangTi&#39;s blog" type="application/atom+xml">
   
@@ -198,60 +211,198 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-Hive1" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2019" class="archive-year">2019</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/02/02/raft/" class="archive-article-date">
-  	<time datetime="2019-02-01T16:34:14.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-02-02</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/02/02/raft/">Raft论文</a>
+    <h1 class="article-title" itemprop="name">
+      部署Hive
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
-          
+        
+        <a href="/2019/06/03/Hive1/" class="archive-article-date">
+  	<time datetime="2019-06-03T03:42:01.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-06-03</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.准备版本注意事项<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">如果Hadoop是CDH版本，那么Hive的CDH版本号必须要与Hadoop的版本保持一致</span><br></pre></td></tr></table></figure></p>
+<p>2.步骤</p>
+<p>2.1 解压tar包到/home/hadoop/app下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -zxvf hive-1.1.0-cdh5.7.0.tar.gz -C /home/hadoop/app/</span><br></pre></td></tr></table></figure></p>
+<p>2.2 Hive根目录下文件夹含义</p>
+<p><img src="/img/Hive_dir.png" alt="cfc6d293463f9de22bf26e42b1c4a17f"></p>
+<p>2.3 配置环境变量<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">(1) 编译~/.bash_profile</span><br><span class="line">    </span><br><span class="line">        添加export HIVE_HOME=/home/hadoop/app/hive-1.1.0-cdh5.7.0</span><br><span class="line">        添加PATH=$HIVE_HOME/bin:$PATH</span><br><span class="line">        </span><br><span class="line">(2) 生效.bash_profile</span><br><span class="line">        </span><br><span class="line">        source ～/.bash_profile</span><br></pre></td></tr></table></figure></p>
+<p>2.4 配置Hive</p>
+<p>2.4.1 编辑$HIVE_HOME/conf/hive-env.sh<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">编辑HADOOP_HOME=/home/hadoop/app/hadoop-2.6.0-cdh5.7.0</span><br></pre></td></tr></table></figure></p>
+<p><img src="/img/hive-env.png" alt="62d3a568dfa867240474c93156d39e87"></p>
+<p>2.4.2 配置hive-site.xml</p>
+<p><img src="/img/hive-site1_1.png" alt="a8b13d3d97d2283f4bb18db122b4ef76"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">MySQL的URL参数解释:</span><br><span class="line"></span><br><span class="line">    createDatabaseIfNotExist=true:</span><br><span class="line">        如果数据库中没用ruoze_d5,就会创建</span><br><span class="line">    </span><br><span class="line">    characterEncoding=UTF-8:</span><br><span class="line">        数据库编码设置为utf-8</span><br></pre></td></tr></table></figure>
+<p><img src="/img/hive-site2.png" alt="28d51e8ec9a41406794fdbcfafe0936a"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">由于Hive元数据是保存在JDBC上, 该参数是配置JDBC的driver</span><br></pre></td></tr></table></figure>
+<p>2.4.3 拷贝MySQL驱动到$HIVE_HOME/lib</p>
+<p><img src="/img/mysql.png" alt="e3820e0edbe8b6c3aa0c8a02894f3be7"></p>
+<p>2.4.4 执行$HIVE_HOME/bin/hive脚本<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">此时进入mysql执行show databases命令，显示ruoze_d5数据库已经被创建</span><br></pre></td></tr></table></figure></p>
+<p><img src="/img/mysql2.png" alt="76dffe26427e143efca8d411bd3c5e80"></p>
+<p><code>出现如下所示就可说明配置成功</code></p>
+<p><img src="/img/hive.png" alt="a5791304e363e28d5be9c0c65bf36187"></p>
+<p>3.Hive中的元数据信息</p>
+<p>3.1 步骤<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">进入MySQL中, 选择ruoze_d5数据库，查询该库下所有的表。</span><br></pre></td></tr></table></figure></p>
+<p><img src="/img/hive1.png" alt="c36abfc7cd6213d64fca2dadf5463f3b"></p>
+
+      
+
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
 	<div class="article-category tagcloud">
 		<i class="icon-book icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="/categories/raft//" class="article-tag-list-link color5">raft</a>
+        			<a href="/categories/Hive//" class="article-tag-list-link color5">Hive</a>
         		</li>
       		
 		</ul>
 	</div>
 
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://HenryangTi.github.io/2019/06/03/Hive1/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
+  
+<nav id="article-nav">
+  
+    <a href="/2019/09/27/problem1/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          HDFS遇到的坑(一)
+        
+      </div>
+    </a>
   
   
-    </div></section>
+    <a href="/2019/06/02/Flume02/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Flume各种source以及Example</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+  
+  
   
 
-    
+  
+
+  
+
+  
 
 
           </div>
@@ -274,8 +425,8 @@
 	var yiliaConfig = {
 		mathjax: true,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
