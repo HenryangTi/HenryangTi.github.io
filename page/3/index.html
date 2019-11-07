@@ -200,6 +200,101 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-spark03" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/01/03/spark03/">Spark On YARN</a>
+    </h1>
+  
+
+        
+        <a href="/2019/01/03/spark03/" class="archive-article-date">
+  	<time datetime="2019-01-02T16:34:14.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-01-03</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.YARN的产生背景</p>
+<p>在YARN还未出现的时候, 如果既要使用Hadoop又要使用Spark的话，那就必须要启动Hadoop集群和Spark集群</p>
+<p>但是此时会带来如下问题:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(1) 由于每个框架的高峰期与低谷期的时间不同，那么这样就会导致了一个问题, 就是资源利用率特别低</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(2) 管理起来很繁琐, 因为MapReduce是跑在Hadoop集群上的, Spark是跑在Standalone之上的</span><br></pre></td></tr></table></figure>
+<p>所以此时我们需要统一的资源管理与调度, YARN也就随之诞生</p>
+<p>2.回顾MapReduce在YARN上的执行流程</p>
+<p><img src="/img/yarn.png" alt="avatar"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(1) 用户(client)向Resource Manager提交应用程序(job), 将job提交到Resource Manager的Application Manager中</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(2) Resource Manager会与Node Manager进行RPC通信, 要求其启动一个container来运行application master</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(3) Application Master向Application Manager进行注册(此时就可以通过web界面查看其状态)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(4) Application Master使用RPC协议并采用轮询的方式向Resource Scheduler申请和领取资源列表</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(5) 一旦Application Master申请到资源后, 就会与对应的NM进行通信, 要求其启动任务</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(6) 容器中的task与Application Master进行通信, 失败也可重启</span><br></pre></td></tr></table></figure>
+<p>3.对应的Spark的执行流程图</p>
+<p><img src="/img/sparkOnYarn.png" alt="avatar"></p>
+<p>4.MapReduce VS Spark</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">在MapReduce中，每个Task都是在自己的进程中，MapTask和ReduceTask全部都是进程，当Task完成后进程也就结束</span><br><span class="line"></span><br><span class="line">而在Spark中，在一个executor中并行的运行多个task，该进程在整个Spark Application的生命周期内会一直存在，也就是说即使没有job运行, 该进程(executor)仍然存在</span><br><span class="line"></span><br><span class="line">所以当执行完每个task后，不需要创建和销毁进程，不想MapReduce会执行完Task后会销毁进程，耗费资源</span><br></pre></td></tr></table></figure>
+<p>Spark的优势<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(1) 处理速度提升, 因为很多作业拿到进程后就可以直接启动线程, 这样启动速度是非常快的, 而且可以直接处理数据, 不需要等待创建进程</span><br><span class="line">(2) 基于内存，一个stage内都是pipeline的，不会与disk进行交互，速度快</span><br></pre></td></tr></table></figure></p>
+<p>5.几点注意事项</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(1) 当Spark Application启动后会先访问cluster manager，因为需要根据cluster manager来申请资源，cluster manager是pluggable, 用户不需要关注application是运行在那个集群上的</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(2) 如果Cluster Manager是YARN的话, 那么没有Worker Node这一概念，YARN的executors都运行在Node Manager中的Container中，而Worker Node存在于Cluster Manager为standalone</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(3) container的内存大于executor的内存</span><br></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Spark//" class="article-tag-list-link color1">Spark</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/01/03/spark03/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-spark02" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     

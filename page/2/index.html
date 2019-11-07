@@ -200,6 +200,417 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-spark11" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/01/13/spark11/">Cache和Persist</a>
+    </h1>
+  
+
+        
+        <a href="/2019/01/13/spark11/" class="archive-article-date">
+  	<time datetime="2019-01-12T16:34:14.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-01-13</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.简介</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">官网原文</th>
+<th style="text-align:center">中文翻译</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">One of the most important capabilities in Spark is persisting (or caching) a dataset in memory across operations.When you persist an RDD, each node stores any partitions of it that it computes in memory and reuses them in other actions on that dataset (or datasets derived from it).This allows future actions to be much faster (often by more than 10x)</td>
+<td style="text-align:center">Spark中最重要的能力是缓存一个在内存中的数据集，该数据集可被很多操作使用。当你持久化一个RDD时, 每个节点存储RDD的任意分区，这样在内存中RDD可以进行计算或者作用于该数据集上的其他action中重新使用被cache的RDD。这个允许未来的action速度更快(经常差不多是原来的10倍速度)</td>
+</tr>
+<tr>
+<td style="text-align:center">You can mark an RDD to be persisted using the persist() or cache() methods on it</td>
+<td style="text-align:center">可以使用persist()或者cache()方法来持久化RDD</td>
+</tr>
+</tbody>
+</table>
+<p>2.存储级别</p>
+<p>2.1 存储级别注释及源码</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">注释原文</th>
+<th style="text-align:center">中文翻译</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">Various <code>org.apache.spark.storage.StorageLevel</code> defined and utility functions for creating new storage levels.</td>
+<td style="text-align:center">定义各种各样的存储级别</td>
+</tr>
+</tbody>
+</table>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> <span class="type">NONE</span> = <span class="keyword">new</span> <span class="type">StorageLevel</span>(<span class="literal">false</span>, <span class="literal">false</span>, <span class="literal">false</span>, <span class="literal">false</span>)</span><br><span class="line"><span class="keyword">val</span> <span class="type">DISK_ONLY</span> = <span class="keyword">new</span> <span class="type">StorageLevel</span>(<span class="literal">true</span>, <span class="literal">false</span>, <span class="literal">false</span>, <span class="literal">false</span>)</span><br><span class="line"><span class="keyword">val</span> <span class="type">DISK_ONLY_2</span> = <span class="keyword">new</span> <span class="type">StorageLevel</span>(<span class="literal">true</span>, <span class="literal">false</span>, <span class="literal">false</span>, <span class="literal">false</span>, <span class="number">2</span>)</span><br><span class="line"><span class="keyword">val</span> <span class="type">MEMORY_ONLY</span> = <span class="keyword">new</span> <span class="type">StorageLevel</span>(<span class="literal">false</span>, <span class="literal">true</span>, <span class="literal">false</span>, <span class="literal">true</span>)</span><br><span class="line"><span class="keyword">val</span> <span class="type">MEMORY_ONLY_2</span> = <span class="keyword">new</span> <span class="type">StorageLevel</span>(<span class="literal">false</span>, <span class="literal">true</span>, <span class="literal">false</span>, <span class="literal">true</span>, <span class="number">2</span>)</span><br><span class="line"><span class="keyword">val</span> <span class="type">MEMORY_ONLY_SER</span> = <span class="keyword">new</span> <span class="type">StorageLevel</span>(<span class="literal">false</span>, <span class="literal">true</span>, <span class="literal">false</span>, <span class="literal">false</span>)</span><br><span class="line"><span class="keyword">val</span> <span class="type">MEMORY_ONLY_SER_2</span> = <span class="keyword">new</span> <span class="type">StorageLevel</span>(<span class="literal">false</span>, <span class="literal">true</span>, <span class="literal">false</span>, <span class="literal">false</span>, <span class="number">2</span>)</span><br><span class="line"><span class="keyword">val</span> <span class="type">MEMORY_AND_DISK</span> = <span class="keyword">new</span> <span class="type">StorageLevel</span>(<span class="literal">true</span>, <span class="literal">true</span>, <span class="literal">false</span>, <span class="literal">true</span>)</span><br><span class="line"><span class="keyword">val</span> <span class="type">MEMORY_AND_DISK_2</span> = <span class="keyword">new</span> <span class="type">StorageLevel</span>(<span class="literal">true</span>, <span class="literal">true</span>, <span class="literal">false</span>, <span class="literal">true</span>, <span class="number">2</span>)</span><br><span class="line"><span class="keyword">val</span> <span class="type">MEMORY_AND_DISK_SER</span> = <span class="keyword">new</span> <span class="type">StorageLevel</span>(<span class="literal">true</span>, <span class="literal">true</span>, <span class="literal">false</span>, <span class="literal">false</span>)</span><br><span class="line"><span class="keyword">val</span> <span class="type">MEMORY_AND_DISK_SER_2</span> = <span class="keyword">new</span> <span class="type">StorageLevel</span>(<span class="literal">true</span>, <span class="literal">true</span>, <span class="literal">false</span>, <span class="literal">false</span>, <span class="number">2</span>)</span><br><span class="line"><span class="keyword">val</span> <span class="type">OFF_HEAP</span> = <span class="keyword">new</span> <span class="type">StorageLevel</span>(<span class="literal">true</span>, <span class="literal">true</span>, <span class="literal">true</span>, <span class="literal">false</span>, <span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+<p>2.2 StorageLevel构造器的参数意义<br><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">StorageLevel</span> <span class="title">private</span>(<span class="params"></span></span></span><br><span class="line"><span class="class"><span class="params">    //是否使用磁盘</span></span></span><br><span class="line"><span class="class"><span class="params">    private var _useDisk: <span class="type">Boolean</span>,</span></span></span><br><span class="line"><span class="class"><span class="params">    private var _useMemory: <span class="type">Boolean</span>,</span></span></span><br><span class="line"><span class="class"><span class="params">    private var _useOffHeap: <span class="type">Boolean</span>,</span></span></span><br><span class="line"><span class="class"><span class="params">    private var _deserialized: <span class="type">Boolean</span>,</span></span></span><br><span class="line"><span class="class"><span class="params">    //副本因子, 缓存几个副本</span></span></span><br><span class="line"><span class="class"><span class="params">    private var _replication: <span class="type">Int</span> = 1</span>)</span></span><br><span class="line"><span class="class">  <span class="keyword">extends</span> <span class="title">Externalizable</span> </span>&#123;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>2.3 以MEMORY_ONLY为例解释StorageLevel构造器的参数</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> <span class="type">MEMORY_ONLY</span> = <span class="keyword">new</span> <span class="type">StorageLevel</span>(<span class="literal">false</span>, <span class="literal">true</span>, <span class="literal">false</span>, <span class="literal">true</span>)</span><br></pre></td></tr></table></figure>
+<p>解释参数对应的值<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">不使用磁盘</span><br><span class="line">使用内存</span><br><span class="line">不用堆外空间</span><br><span class="line">使用反序列化</span><br><span class="line">1副本</span><br></pre></td></tr></table></figure></p>
+<p>2.4 其他种类的StorageLevel源码</p>
+<p>2.4.1 DISK_ONLY</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> <span class="type">DISK_ONLY</span> = <span class="keyword">new</span> <span class="type">StorageLevel</span>(<span class="literal">true</span>, <span class="literal">false</span>, <span class="literal">false</span>, <span class="literal">false</span>)</span><br></pre></td></tr></table></figure>
+<p>2.4.2 MEMORY_ONLY_SER</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> <span class="type">MEMORY_ONLY_SER</span> = <span class="keyword">new</span> <span class="type">StorageLevel</span>(<span class="literal">false</span>, <span class="literal">true</span>, <span class="literal">false</span>, <span class="literal">false</span>)</span><br></pre></td></tr></table></figure>
+<p>2.5 取消缓存<br><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lines.unpersist()</span><br></pre></td></tr></table></figure></p>
+<p>3.cache与persist的区别</p>
+<p>3.1 cache注释及源码</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">注释原文</th>
+<th style="text-align:center">中文翻译</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">Persist this RDD with the default storage level (<code>MEMORY_ONLY</code>)</td>
+<td style="text-align:center">使用默认存储级别(MEMORY_ONLY)持久化RDD</td>
+</tr>
+</tbody>
+</table>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">persist</span></span>(): <span class="keyword">this</span>.<span class="keyword">type</span> = persist(<span class="type">StorageLevel</span>.<span class="type">MEMORY_ONLY</span>)</span><br></pre></td></tr></table></figure>
+<p>3.2 persist源码<br><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">persist</span></span>(): <span class="keyword">this</span>.<span class="keyword">type</span> = persist(<span class="type">StorageLevel</span>.<span class="type">MEMORY_ONLY</span>)</span><br></pre></td></tr></table></figure></p>
+<p>3.3 总结<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cache时persist的其中一个特例，是存储级别为MEMORY_ONLY时的persist</span><br></pre></td></tr></table></figure></p>
+<p>4.测试</p>
+<p>4.1 测试代码</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> lines = sc.textFile(<span class="string">"hdfs://hadoop:9000/helloworld.txt"</span>)</span><br><span class="line">lines.cache</span><br></pre></td></tr></table></figure>
+<p>4.2 Web UI上显示</p>
+<p>4.2.1 cahce操作</p>
+<p><img src="/img/cache2.png" alt="avatatr"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">此时storage是显示没有进行任何存储</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">此时就会非常奇怪，明明使用了cache，那么为什么什么都没显示。其原因就是cache是lazy的，只有其对应的rdd执行了action操作，cache操作才会执行</span><br></pre></td></tr></table></figure>
+<p>使用下述代码进行测试<br><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lines.collect</span><br></pre></td></tr></table></figure></p>
+<p>此时wen ui上如下图所示</p>
+<p><img src="/img/cache3.png" alt="avatatr"></p>
+<p>4.2.2 缓存之后文件大小</p>
+<p>测试代码<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">val lines = sc.textFile(&quot;hdfs://hadoop:9000/helloworld.txt&quot;)</span><br><span class="line">lines.cache</span><br><span class="line">lines.collect</span><br></pre></td></tr></table></figure></p>
+<p>此时在web ui下的输出如下表</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">Job Id</th>
+<th style="text-align:center">Description</th>
+<th style="text-align:center">submitted</th>
+<th style="text-align:center">Duration</th>
+<th style="text-align:center">Stages:Succeeded/Total</th>
+<th style="text-align:center">Tasks:Succeeded/Total</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">1</td>
+<td style="text-align:center">collect at <console>:26</console></td>
+<td style="text-align:center">2019/01/12 13:08:27</td>
+<td style="text-align:center">75ms</td>
+<td style="text-align:center">1/1</td>
+<td style="text-align:center">2/2</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">Job Id</th>
+<th style="text-align:center">Description</th>
+<th style="text-align:center">submitted</th>
+<th style="text-align:center">Duration</th>
+<th style="text-align:center">Tasks:Succeeded/Total</th>
+<th style="text-align:center">Input</th>
+<th style="text-align:center">Output</th>
+<th style="text-align:center">Shuffle Read</th>
+<th style="text-align:center">Shuffle write</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">1</td>
+<td style="text-align:center">collect at <console>:26</console></td>
+<td style="text-align:center">2019/01/12 13:08:27</td>
+<td style="text-align:center">61ms</td>
+<td style="text-align:center">2/2</td>
+<td style="text-align:center">41.0B</td>
+<td style="text-align:center"></td>
+<td style="text-align:center"></td>
+</tr>
+</tbody>
+</table>
+<p>而在Storage界面看</p>
+<p><img src="/img/cache3.png" alt="avatatr"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">缓存的数据为224B, 而真正数据大小为41.0B</span><br><span class="line"></span><br><span class="line">所以，采用默认机制的条件下, 缓存的数据会比原始数据大</span><br></pre></td></tr></table></figure>
+<p>4.2.3 何时使用cache的数据</p>
+<p>当第一次执行如下代码后<br><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> lines = sc.textFile(<span class="string">"hdfs://hadoop:9000/helloworld.txt"</span>)</span><br><span class="line">lines.cache</span><br><span class="line">lines.collect</span><br></pre></td></tr></table></figure></p>
+<p>再执行下面代码<br><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lines.collect</span><br></pre></td></tr></table></figure></p>
+<p>此时web ui输出如下表所示</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">Job Id</th>
+<th style="text-align:center">Description</th>
+<th style="text-align:center">submitted</th>
+<th style="text-align:center">Duration</th>
+<th style="text-align:center">Tasks:Succeeded/Total</th>
+<th style="text-align:center">Input</th>
+<th style="text-align:center">Output</th>
+<th style="text-align:center">Shuffle Read</th>
+<th style="text-align:center">Shuffle write</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">1</td>
+<td style="text-align:center">collect at <console>:26</console></td>
+<td style="text-align:center">2019/01/12 13:08:27</td>
+<td style="text-align:center">61ms</td>
+<td style="text-align:center">2/2</td>
+<td style="text-align:center">224.0B</td>
+<td style="text-align:center"></td>
+<td style="text-align:center"></td>
+</tr>
+</tbody>
+</table>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">此时数据是从cache中读取出来的</span><br></pre></td></tr></table></figure>
+<p>4.2.4 查看cache的Storage level</p>
+<p>Web UI上显示为</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">ID</th>
+<th style="text-align:center">RDD Name</th>
+<th style="text-align:center">Storage Level</th>
+<th style="text-align:center">Cached Partitions</th>
+<th style="text-align:center">Fraction Cached</th>
+<th style="text-align:center">Size in Memory</th>
+<th style="text-align:center">Size on Disk</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">3</td>
+<td style="text-align:center">hdfs://hadoop:9000/helloworld.txt</td>
+<td style="text-align:center">Memory Deserialized 1x Replicated</td>
+<td style="text-align:center">2</td>
+<td style="text-align:center">100%</td>
+<td style="text-align:center">224.0B</td>
+<td style="text-align:center">0.0B</td>
+</tr>
+</tbody>
+</table>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">从上表中可以看出其Storage Level为Memory Deserialized 1x Replicated(内存不序列化1副本)</span><br></pre></td></tr></table></figure>
+<p>4.2.5 修改存储级别</p>
+<p>测试代码为<br><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lines.persist(<span class="type">StorageLevel</span>.<span class="type">MEMORY_AND_DISK_SER_2</span>).collect</span><br></pre></td></tr></table></figure></p>
+<p>之前再Web UI的Storage界面上显示为</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">ID</th>
+<th style="text-align:center">RDD Name</th>
+<th style="text-align:center">Storage Level</th>
+<th style="text-align:center">Cached Partitions</th>
+<th style="text-align:center">Fraction Cached</th>
+<th style="text-align:center">Size in Memory</th>
+<th style="text-align:center">Size on Disk</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">3</td>
+<td style="text-align:center">hdfs://hadoop:9000/helloworld.txt</td>
+<td style="text-align:center">Memory Deserialized 1x Replicated</td>
+<td style="text-align:center">2</td>
+<td style="text-align:center">100%</td>
+<td style="text-align:center">224.0B</td>
+<td style="text-align:center">0.0B</td>
+</tr>
+</tbody>
+</table>
+<p>现在Web UI上的Storage界面上显示为</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">ID</th>
+<th style="text-align:center">RDD Name</th>
+<th style="text-align:center">Storage Level</th>
+<th style="text-align:center">Cached Partitions</th>
+<th style="text-align:center">Fraction Cached</th>
+<th style="text-align:center">Size in Memory</th>
+<th style="text-align:center">Size on Disk</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">3</td>
+<td style="text-align:center">hdfs://hadoop:9000/helloworld.txt</td>
+<td style="text-align:center">Memory Serialized 2x Replicated</td>
+<td style="text-align:center">2</td>
+<td style="text-align:center">100%</td>
+<td style="text-align:center">224.0B</td>
+<td style="text-align:center">0.0B</td>
+</tr>
+</tbody>
+</table>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">此时其Storage Level已发生改变</span><br></pre></td></tr></table></figure>
+<p>5.几种默认存储级别的官网描述</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">Storage Level</th>
+<th style="text-align:center">Meaning</th>
+<th style="text-align:center">Meaning的中文翻译</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">MEMORY_ONLY</td>
+<td style="text-align:center">Store RDD as deserialized Java objects in the JVM. If the RDD does not fit in memory, some partitions will not be cached and will be recomputed on the fly each time they’re needed. This is the default level.</td>
+<td style="text-align:center">在JVM中以不序列化的Java对象存储RDD。如果RDD在not fit in 内存(也就是说该RDD中的partition的数据存储不了)，一些partition将不会被cache住, 并且将会在每次需要的时候重新计算。这是默认的级别。</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">Storage Level</th>
+<th style="text-align:center">Meaning</th>
+<th style="text-align:center">Meaning的中文翻译</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">MEMORY_AND_DISK</td>
+<td style="text-align:center">Store RDD as deserialized Java objects in the JVM. If the RDD does not fit in memory, store the partitions that don’t fit on disk, and read them from there when they’re needed.</td>
+<td style="text-align:center">在JVM中以不序列化的Java对象存储RDD。如果RDD不能fit in 内存, 在disk上存储不能fit的partition，实用的时候再读出来。</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">Storage Level</th>
+<th style="text-align:center">Meaning</th>
+<th style="text-align:center">Meaning的中文翻译</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">MEMORY_ONLY_SER</td>
+<td style="text-align:center">Store RDD as serialized Java objects (one byte array per partition). This is generally more space-efficient than deserialized objects, especially when using a fast serializer, but more CPU-intensive to read.</td>
+<td style="text-align:center">以序列化的方式存储RDD(每个partition一个字节数组)。该方式比不序列化的对象更加节省空间, 特别是使用快速的serializer, 但是读取的时候增加对CPU性能的消耗。</td>
+</tr>
+</tbody>
+</table>
+<p>6.序列化优缺点<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">序列化后能够节省内存空间，但是序列化耗费CPU</span><br></pre></td></tr></table></figure></p>
+<p>7.如何选择Storage Level</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">官网原文</th>
+<th style="text-align:center">中文翻译</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">Spark’s storage levels are meant to provide different trade-offs between memory usage and CPU efficiency</td>
+<td style="text-align:center">Spark的存储级别的选择意味着是在内存使用和CPU效率之间做一个平衡</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">官网原文</th>
+<th style="text-align:center">中文翻译</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">We recommend going through the following process to select one：If your RDDs fit comfortably with the default storage level (MEMORY_ONLY), leave them that way.This is the most CPU-efficient option, allowing operations on the RDDs to run as fast as possible.If not, try using MEMORY_ONLY_SER and selecting a fast serialization library to make the objects much more space-efficient, but still reasonably fast to access. (Java and Scala).Don’t spill to disk unless the functions that computed your datasets are expensive, or they filter a large amount of the data.Otherwise, recomputing a partition may be as fast as reading it from disk.Use the replicated storage levels if you want fast fault recovery (e.g. if using Spark to serve requests from a web application).All the storage levels provide full fault tolerance by recomputing lost data, but the replicated ones let you continue running tasks on the RDD without waiting to recompute a lost partition.</td>
+<td style="text-align:center">我们推荐选择的时候采取如下步骤：如果你的RDD能够很好的适用默认的存储级别(MEMORY_ONLY), 就不需要改变。这是最省CPU的选择, 允许RDD上的操作运行的尽可能快。如果第一种(默认的)不行, 尝试使用MEMORY_ONLY_SER模式, 并且使用一个快速的序列化库, 这样可以使对象更加节省空间, 但是访问速度还是可以的。不要将RDD存储到磁盘上, 除非从数据集计算出RDD的函数是花费巨大的, 或者该函数过滤了大数据。重新计算一个分区可能比从磁盘中读RDD速度更快。如果你想快速容错, 可以使用副本的存储级别。所有的存储级别通过丢失数据后重新计算的方式提供了一个完整的容错机制, 但是副本的方式可以让你继续在RDD上运行task, 不需要等待重新计算丢失的partition</td>
+</tr>
+</tbody>
+</table>
+<p>注意<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(1) Persist的参数不要选择和disk有关的</span><br><span class="line">(2) Storage Level推荐MEMORY_ONLY和MEMORY_ONLY_SER</span><br></pre></td></tr></table></figure></p>
+<p>8.移除缓存</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">官网原文</th>
+<th style="text-align:center">中文翻译</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">Spark automatically monitors cache usage on each node and drops out old data partitions in a least-recently-used (LRU) fashion.If you would like to manually remove an RDD instead of waiting for it to fall out of the cache, use the RDD.unpersist() method.</td>
+<td style="text-align:center">Spark自动监测每个节点上cache的使用量, 以LRU的风格删除old数据。如果想要手工清除RDD使用RDD.unpersist()</td>
+</tr>
+</tbody>
+</table>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Spark//" class="article-tag-list-link color1">Spark</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/01/13/spark11/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-spark10" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1471,101 +1882,6 @@
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2019/01/04/spark04/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-spark03" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/01/03/spark03/">Spark On YARN</a>
-    </h1>
-  
-
-        
-        <a href="/2019/01/03/spark03/" class="archive-article-date">
-  	<time datetime="2019-01-02T16:34:14.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-01-03</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>1.YARN的产生背景</p>
-<p>在YARN还未出现的时候, 如果既要使用Hadoop又要使用Spark的话，那就必须要启动Hadoop集群和Spark集群</p>
-<p>但是此时会带来如下问题:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(1) 由于每个框架的高峰期与低谷期的时间不同，那么这样就会导致了一个问题, 就是资源利用率特别低</span><br></pre></td></tr></table></figure></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(2) 管理起来很繁琐, 因为MapReduce是跑在Hadoop集群上的, Spark是跑在Standalone之上的</span><br></pre></td></tr></table></figure>
-<p>所以此时我们需要统一的资源管理与调度, YARN也就随之诞生</p>
-<p>2.回顾MapReduce在YARN上的执行流程</p>
-<p><img src="/img/yarn.png" alt="avatar"></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(1) 用户(client)向Resource Manager提交应用程序(job), 将job提交到Resource Manager的Application Manager中</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(2) Resource Manager会与Node Manager进行RPC通信, 要求其启动一个container来运行application master</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(3) Application Master向Application Manager进行注册(此时就可以通过web界面查看其状态)</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(4) Application Master使用RPC协议并采用轮询的方式向Resource Scheduler申请和领取资源列表</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(5) 一旦Application Master申请到资源后, 就会与对应的NM进行通信, 要求其启动任务</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(6) 容器中的task与Application Master进行通信, 失败也可重启</span><br></pre></td></tr></table></figure>
-<p>3.对应的Spark的执行流程图</p>
-<p><img src="/img/sparkOnYarn.png" alt="avatar"></p>
-<p>4.MapReduce VS Spark</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">在MapReduce中，每个Task都是在自己的进程中，MapTask和ReduceTask全部都是进程，当Task完成后进程也就结束</span><br><span class="line"></span><br><span class="line">而在Spark中，在一个executor中并行的运行多个task，该进程在整个Spark Application的生命周期内会一直存在，也就是说即使没有job运行, 该进程(executor)仍然存在</span><br><span class="line"></span><br><span class="line">所以当执行完每个task后，不需要创建和销毁进程，不想MapReduce会执行完Task后会销毁进程，耗费资源</span><br></pre></td></tr></table></figure>
-<p>Spark的优势<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(1) 处理速度提升, 因为很多作业拿到进程后就可以直接启动线程, 这样启动速度是非常快的, 而且可以直接处理数据, 不需要等待创建进程</span><br><span class="line">(2) 基于内存，一个stage内都是pipeline的，不会与disk进行交互，速度快</span><br></pre></td></tr></table></figure></p>
-<p>5.几点注意事项</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(1) 当Spark Application启动后会先访问cluster manager，因为需要根据cluster manager来申请资源，cluster manager是pluggable, 用户不需要关注application是运行在那个集群上的</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(2) 如果Cluster Manager是YARN的话, 那么没有Worker Node这一概念，YARN的executors都运行在Node Manager中的Container中，而Worker Node存在于Cluster Manager为standalone</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(3) container的内存大于executor的内存</span><br></pre></td></tr></table></figure>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Spark//" class="article-tag-list-link color1">Spark</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/01/03/spark03/">展开全文 >></a>
         </p>
       
 
