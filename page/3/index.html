@@ -212,6 +212,120 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-spark09" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/01/09/spark09/">grouppByKey与reduceByKey</a>
+    </h1>
+  
+
+        
+        <a href="/2019/01/09/spark09/" class="archive-article-date">
+  	<time datetime="2019-01-08T16:34:14.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-01-09</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.groupByKey与reduceByKey的数据结构</p>
+<p>1.1 reduceByKey的数据结构</p>
+<p>首先使用代码进行测试<br><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sc.textFile(<span class="string">"hdfs://hadoop:9000/data.txt"</span>).flatMap(_.split(<span class="string">"\t"</span>)).map((_, <span class="number">1</span>)).reduceByKey(_+_)</span><br></pre></td></tr></table></figure></p>
+<p>输出结果为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">org.apache.spark.rdd.RDD[(String, Int)] = ShuffledRDD[9]</span><br></pre></td></tr></table></figure></p>
+<p>可以看出来，reduceByKey的返回值为key-value形式的RDD, 而且是(String, Int)类型的</p>
+<p>1.2 groupByKey的数据结构</p>
+<p>首先使用代码进行测试<br><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sc.textFile(<span class="string">"hdfs://hadoop:9000/data.txt"</span>).flatMap(_.split(<span class="string">"\t"</span>)).map((_, <span class="number">1</span>)).groupByKey</span><br></pre></td></tr></table></figure></p>
+<p>输出结果结果为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">org.apache.spark.rdd.RDD[(String, Iterable[Int])] = ShuffledRDD[14]</span><br></pre></td></tr></table></figure></p>
+<p>可以看出来，groupByKey的返回值也是key-value类型的RDD，但是其key为String类型，value是Iterable[Int]类型的</p>
+<p>1.2.1 Iterable[Int]</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Iterable[Int]就是类似于一个tuple，tuple里的元素都是Int类型</span><br><span class="line">Example: (1, 1, 1, 1, 1, 1)</span><br></pre></td></tr></table></figure>
+<p>它和MapReduce有些类似<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">reduce</span><span class="params">(K2 key, Iterator&lt;V2&gt; values, OutputCollector&lt;K3, V3&gt; output, Reporter reporter)</span> <span class="keyword">throws</span> IOException</span>;</span><br></pre></td></tr></table></figure></p>
+<p>类似于MapReduce的reduce函数中的参数values, 其数据结构就类似于(1, 1, 1, 1, 1, 1)</p>
+<p>1.2.2 groupByKey Example</p>
+<p>代码<br><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sc.textFile(<span class="string">"hdfs://hadoop:9000/data.txt"</span>).flatMap(_.split(<span class="string">"\t"</span>)).map((_, <span class="number">1</span>)).groupByKey.collect.foreach(println)</span><br></pre></td></tr></table></figure></p>
+<p>其输出结果为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">(zhangsan,CompactBuffer(1))</span><br><span class="line">(2,CompactBuffer(1))</span><br><span class="line">(wangwu,CompactBuffer(1))</span><br><span class="line">(3,CompactBuffer(1))</span><br><span class="line">(lisi,CompactBuffer(1))</span><br><span class="line">(1,CompactBuffer(1))</span><br></pre></td></tr></table></figure></p>
+<p>从这可以看出groupByKey的返回值是key-value的RDD，其key为String类型，value是Iterate[Int]类型的，也就是CompactBuffer(Int)</p>
+<p>2.使用reduceByKey和groupByKey进行WordCount</p>
+<p>2.1 使用reduceByKey进行WordCount</p>
+<p>代码<br><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sc.textFile(<span class="string">"hdfs://hadoop:9000/data.txt"</span>).flatMap(_.split(<span class="string">"\t"</span>)).map((_,<span class="number">1</span>)).reduceByKey(_+_).collect</span><br></pre></td></tr></table></figure></p>
+<p>在web ui上显示结果如下图</p>
+<p><img src="/img/spark09/reduceByKeyShuffle.png" alt="avatar"></p>
+<p>2.2 使用groupByKey进行WordCount</p>
+<p>代码<br><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sc.textFile(<span class="string">"hdfs://hadoop:9000/data.txt"</span>).flatMap(_.split(<span class="string">"\t"</span>)).map((_, <span class="number">1</span>)).groupByKey.map(x =&gt; (x._1, x._2.sum)).collect.foreach(println)</span><br></pre></td></tr></table></figure></p>
+<p>在web ui上显示结果如下图</p>
+<p><img src="/img/spark09/groupByKeyShuffle.png" alt="avatar"></p>
+<p>2.3 总结</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">通过groupByKey和reduceByKey进行wordCount的web ui图，我们可以看出groupByKey过程中shuffle的数据比reduceByKey过程中shuffle的数据要多</span><br></pre></td></tr></table></figure>
+<p>3.groupByKey的shuffle数据比reduceByKey的shuffle数据多的原因</p>
+<p><img src="/img/spark09/groupByKey.png" alt="avatar"></p>
+<p><img src="/img/spark09/reduceByKey.png" alt="avatar"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">因为groupByKey将全部数据都进行shuffle，而reduceByKey使用类似于MapReduce的combiner，先进行本地聚合再进行shuffle，所以数据会少些</span><br></pre></td></tr></table></figure>
+<p>4.通过源码验证</p>
+<p>4.1 reduceByKey源码</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">reduceByKey</span></span>(func: (<span class="type">V</span>, <span class="type">V</span>) =&gt; <span class="type">V</span>): <span class="type">RDD</span>[(<span class="type">K</span>, <span class="type">V</span>)] = self.withScope &#123;</span><br><span class="line">    reduceByKey(defaultPartitioner(self), func)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">reduceByKey</span></span>(partitioner: <span class="type">Partitioner</span>, func: (<span class="type">V</span>, <span class="type">V</span>) =&gt; <span class="type">V</span>): <span class="type">RDD</span>[(<span class="type">K</span>, <span class="type">V</span>)] = self.withScope &#123;</span><br><span class="line">    combineByKeyWithClassTag[<span class="type">V</span>]((v: <span class="type">V</span>) =&gt; v, func, func, partitioner)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">combineByKeyWithClassTag</span></span>[<span class="type">C</span>](</span><br><span class="line">      <span class="comment">//创建combiner</span></span><br><span class="line">      createCombiner: <span class="type">V</span> =&gt; <span class="type">C</span>,</span><br><span class="line">      mergeValue: (<span class="type">C</span>, <span class="type">V</span>) =&gt; <span class="type">C</span>,</span><br><span class="line">      mergeCombiners: (<span class="type">C</span>, <span class="type">C</span>) =&gt; <span class="type">C</span>,</span><br><span class="line">      partitioner: <span class="type">Partitioner</span>,</span><br><span class="line">      <span class="comment">//map端是否预聚合</span></span><br><span class="line">      mapSideCombine: <span class="type">Boolean</span> = <span class="literal">true</span>,</span><br><span class="line">      serializer: <span class="type">Serializer</span> = <span class="literal">null</span>)(<span class="keyword">implicit</span> ct: <span class="type">ClassTag</span>[<span class="type">C</span>]): <span class="type">RDD</span>[(<span class="type">K</span>, <span class="type">C</span>)] = self.withScope &#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>通过源码可以看出reduceByKey是需要在map端进行预聚合</p>
+<p>4.2 groupByKey源码</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">groupByKey</span></span>(partitioner: <span class="type">Partitioner</span>): <span class="type">RDD</span>[(<span class="type">K</span>, <span class="type">Iterable</span>[<span class="type">V</span>])] = self.withScope &#123;</span><br><span class="line">  <span class="comment">// groupByKey shouldn't use map side combine because map side combine does not</span></span><br><span class="line">  <span class="comment">// reduce the amount of data shuffled and requires all map side data be inserted</span></span><br><span class="line">  <span class="comment">// into a hash table, leading to more objects in the old gen.</span></span><br><span class="line">  <span class="keyword">val</span> createCombiner = (v: <span class="type">V</span>) =&gt; <span class="type">CompactBuffer</span>(v)</span><br><span class="line">  <span class="keyword">val</span> mergeValue = (buf: <span class="type">CompactBuffer</span>[<span class="type">V</span>], v: <span class="type">V</span>) =&gt; buf += v</span><br><span class="line">  <span class="keyword">val</span> mergeCombiners = (c1: <span class="type">CompactBuffer</span>[<span class="type">V</span>], c2: <span class="type">CompactBuffer</span>[<span class="type">V</span>]) =&gt; c1 ++= c2</span><br><span class="line">  <span class="comment">//底层也走combineByKeyWithClassTag函数, 但是mapSideCombine = false</span></span><br><span class="line">  <span class="comment">//也就意味着不在map端聚合</span></span><br><span class="line">  <span class="keyword">val</span> bufs = combineByKeyWithClassTag[<span class="type">CompactBuffer</span>[<span class="type">V</span>]](</span><br><span class="line">    createCombiner, mergeValue, mergeCombiners, partitioner, mapSideCombine = <span class="literal">false</span>)</span><br><span class="line">  bufs.asInstanceOf[<span class="type">RDD</span>[(<span class="type">K</span>, <span class="type">Iterable</span>[<span class="type">V</span>])]]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>通过源码可看出groupByKey不在map端聚合</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Spark//" class="article-tag-list-link color1">Spark</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/01/09/spark09/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-spark08" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     

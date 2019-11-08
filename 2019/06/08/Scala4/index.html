@@ -6,15 +6,22 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="http://HenryangTi.github.io">
-  <title>HenryangTi&#39;s blog</title>
+  <title>Scala面对对象之基本概念与占位符 | HenryangTi&#39;s blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="HenryangTi&#39;s blog">
-<meta property="og:url" content="http://HenryangTi.github.io/index.html">
+  <meta name="description" content="1.类 1.1 相关知识123(1) 使用class关键字来定义类(2) 类是某一种或者某一类东西的抽象(3) class需要new出来后才能使用 1.2 类需要先new出object, 才能进行方法调用 1.2.1 Example1 123456789101112131415161718192021object ClassDemo &amp;#123;  def main(args: Array[Str">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Scala面对对象之基本概念与占位符">
+<meta property="og:url" content="http://HenryangTi.github.io/2019/06/08/Scala4/index.html">
 <meta property="og:site_name" content="HenryangTi&#39;s blog">
+<meta property="og:description" content="1.类 1.1 相关知识123(1) 使用class关键字来定义类(2) 类是某一种或者某一类东西的抽象(3) class需要new出来后才能使用 1.2 类需要先new出object, 才能进行方法调用 1.2.1 Example1 123456789101112131415161718192021object ClassDemo &amp;#123;  def main(args: Array[Str">
 <meta property="og:locale" content="default">
+<meta property="og:image" content="http://henryangti.github.io/img/error1.png">
+<meta property="og:image" content="http://henryangti.github.io/img/example1.png">
+<meta property="og:updated_time" content="2019-11-08T05:56:06.213Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="HenryangTi&#39;s blog">
+<meta name="twitter:title" content="Scala面对对象之基本概念与占位符">
+<meta name="twitter:description" content="1.类 1.1 相关知识123(1) 使用class关键字来定义类(2) 类是某一种或者某一类东西的抽象(3) class需要new出来后才能使用 1.2 类需要先new出object, 才能进行方法调用 1.2.1 Example1 123456789101112131415161718192021object ClassDemo &amp;#123;  def main(args: Array[Str">
+<meta name="twitter:image" content="http://henryangti.github.io/img/error1.png">
   
     <link rel="alternative" href="/atom.xml" title="HenryangTi&#39;s blog" type="application/atom+xml">
   
@@ -210,334 +217,14 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-    <article id="post-Leetcode449" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+            <article id="post-Scala4" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/11/06/Leetcode449/">Leetcode449-Serialize and Deserialize BST</a>
-    </h1>
-  
-
-        
-        <a href="/2019/11/06/Leetcode449/" class="archive-article-date">
-  	<time datetime="2019-11-06T07:34:14.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-06</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>1.解题步骤<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">对于serialize过程来说，其实就是简单的BST，使用BST模版可以解决，但是需要注意的是它需要Null，所以使用不抛弃Null的BST模版</span><br><span class="line">当然对于传进来的参数也需要进行判断</span><br></pre></td></tr></table></figure></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">对于deserialize来说, 首先先根据字符串变成TreeNode数组, 然后使用快慢指针, 慢指针指向parent, 快指针指向child，最后就将tree构建好</span><br><span class="line">当然参数也是需要注意的</span><br></pre></td></tr></table></figure>
-<p><img src="/img/Lintcode449.png" alt="成功输出"></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Lintcode//" class="article-tag-list-link color4">Lintcode</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/11/06/Leetcode449/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Lintcode120" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/10/28/Lintcode120/">LintCode120-Word Ladder</a>
-    </h1>
-  
-
-        
-        <a href="/2019/10/28/Lintcode120/" class="archive-article-date">
-  	<time datetime="2019-10-27T16:34:14.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-10-28</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>解题步骤<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">对于一个单词的每个字母, 就是将某位置上字母替换为其他25个字母, 出现25个新单词, 作为图的下一层</span><br><span class="line">这样构建好图之后, 再使用BFS即可</span><br></pre></td></tr></table></figure></p>
-<p>注意<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">遍历时不需要再遍历之前已经遍历过的</span><br></pre></td></tr></table></figure></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Lintcode//" class="article-tag-list-link color4">Lintcode</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/10/28/Lintcode120/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-problem1" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/09/27/problem1/">HDFS遇到的坑(一)</a>
-    </h1>
-  
-
-        
-        <a href="/2019/09/27/problem1/" class="archive-article-date">
-  	<time datetime="2019-09-26T16:34:14.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-09-27</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>今天遇到了一个坑，解决后特意来总结一下</p>
-<p>其代码简化之后就是连接HDFS上，在相应文件夹下创建相应文件，向该文件内写数据</p>
-<p>其代码如下</p>
-<p><img src="/img/aaa.png" alt="avatar"></p>
-<p>但是此时报了一个错</p>
-<p><img src="/img/2019092706.png" alt="avatar"></p>
-<p>解决的经过</p>
-<li>经过网上各种搜索引擎搜索无果后，决定尝试自己解决问题，首先想到是不是ip和host映射配置错误，但是仔细一对比发现正确，失败</li>
-
-<p>之后想到了是否与HDFS配置有关，于是乎去linux上查询HDFS的相关配置，之后无意的情况下在HDFS的core-site.xml文件发现这样一个配置</p>
-<p><img src="/img/2019092707.png" alt="avatar"></p>
-<p>这时突然感觉到像在沙漠中发现了一篇绿洲，看着键盘上一层头发，我决定抽出一张纸把键盘收拾干净再继续向下执行。</p>
-<p>接下来我想到代码中的hotname是hadoop000，而集群上的hostname是hadoop，是否是这出现了问题呢？我赶紧将本地环境的hosts文件修改好，并将代码改为如下</p>
-<p><img src="/img/2019092708.png" alt="avatar"></p>
-<p>此时继续运行，发现成功</p>
-<p><img src="/img/2019092709.png" alt="avatar"></p>
-<p>此时去HDFS上查看，发现已经成功写入</p>
-<p><img src="/img/2019092710.png" alt="avatar"></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/problem//" class="article-tag-list-link color3">problem</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/09/27/problem1/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Leetcode207" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/06/22/Leetcode207/">Leetcode207 - course schedule</a>
-    </h1>
-  
-
-        
-        <a href="/2019/06/22/Leetcode207/" class="archive-article-date">
-  	<time datetime="2019-06-22T01:34:14.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-06-22</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>题解与注意事项<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">这道题可以转换为拓扑排序的问题。因为每个课程都有其前置课程, 可以将其看作为一个图。</span><br><span class="line">为了使用模板, 我们先要构建一个Graph, 构建Graph时需要注意的是, Graph中的每个元素都是GraphNode对象, 不要将其看成GraphNode.label</span><br></pre></td></tr></table></figure></p>
-<p>代码<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> deque</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">canFinish</span><span class="params">(self, numCourses: int, prerequisites: List[List[int]])</span>:</span></span><br><span class="line">        graph = self.combineGraph(numCourses, prerequisites)</span><br><span class="line">        indegree_dict = self.constructIndegree(graph)</span><br><span class="line">        </span><br><span class="line">        order = []</span><br><span class="line">        start_node = [node <span class="keyword">for</span> node <span class="keyword">in</span> indegree_dict <span class="keyword">if</span> indegree_dict[node] == <span class="number">0</span>]</span><br><span class="line">        </span><br><span class="line">        queue = deque(start_node)</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">while</span> queue:</span><br><span class="line">            node = queue.popleft()</span><br><span class="line">            order.append(node)</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">for</span> neighbor <span class="keyword">in</span> node.neighbors:</span><br><span class="line">                indegree_dict[neighbor] -= <span class="number">1</span></span><br><span class="line">                <span class="keyword">if</span> indegree_dict[neighbor] == <span class="number">0</span>:</span><br><span class="line">                    queue.append(neighbor)</span><br><span class="line">        <span class="keyword">if</span> len(order) ==  numCourses:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="literal">False</span></span><br><span class="line">        </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">constructIndegree</span><span class="params">(self, graph)</span>:</span></span><br><span class="line">        indegree_dict = &#123;node:<span class="number">0</span> <span class="keyword">for</span> node <span class="keyword">in</span> graph&#125;</span><br><span class="line">        <span class="keyword">for</span> node <span class="keyword">in</span> graph:</span><br><span class="line">            <span class="keyword">for</span> neighbor <span class="keyword">in</span> node.neighbors:</span><br><span class="line">                indegree_dict[neighbor] += <span class="number">1</span></span><br><span class="line">        <span class="keyword">return</span> indegree_dict</span><br><span class="line">        </span><br><span class="line">        </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">combineGraph</span><span class="params">(self, num_courses, prerequisites)</span>:</span></span><br><span class="line">        <span class="comment">#将每门课从数字类型转换为GraphNode类型</span></span><br><span class="line">        graph_node_list = []</span><br><span class="line">        <span class="keyword">for</span> node_label <span class="keyword">in</span> range(num_courses):</span><br><span class="line">            graph_node_list.append(GraphNode(node_label))</span><br><span class="line">        graph_node_dict = &#123;node:[] <span class="keyword">for</span> node <span class="keyword">in</span> graph_node_list&#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">#根据prerequisites将node与其neighbors的关系找出</span></span><br><span class="line">        <span class="keyword">for</span> index <span class="keyword">in</span> prerequisites:</span><br><span class="line">           graph_node_dict[graph_node_list[index[<span class="number">1</span>]]].append(graph_node_list[index[<span class="number">0</span>]])</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span> key <span class="keyword">in</span> graph_node_dict:</span><br><span class="line">            key.neighbors = graph_node_dict[key]</span><br><span class="line">        <span class="keyword">return</span> graph_node_list    </span><br><span class="line">        </span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">GraphNode</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, label)</span>:</span></span><br><span class="line">        self.label = label</span><br><span class="line">        self.neighbors = []</span><br></pre></td></tr></table></figure></p>
-<p><img src="/img/Successful207.png" alt="证明"></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Lintcode//" class="article-tag-list-link color4">Lintcode</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/06/22/Leetcode207/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Scala4" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/06/08/Scala4/">Scala面对对象之基本概念与占位符</a>
+    <h1 class="article-title" itemprop="name">
+      Scala面对对象之基本概念与占位符
     </h1>
   
 
@@ -601,82 +288,26 @@
       
 
       
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Scala//" class="article-tag-list-link color1">Scala</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/06/08/Scala4/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
         </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Scala03" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/06/07/Scala03/">函数柯里化(currying)</a>
-    </h1>
-  
-
-        
-        <a href="/2019/06/07/Scala03/" class="archive-article-date">
-  	<time datetime="2019-06-07T01:28:01.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-06-07</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>1.函数柯里化代表什么<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">eg. sum(x:Int, y:Int) ==&gt; sum(x:Int)(y:Int)</span><br></pre></td></tr></table></figure></p>
-<p>2.Example</p>
-<p><img src="/img/20191003107.png" alt="0bffd0269e6f537be89474d836150e35"></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sum函数是一般写法, ad函数是函数的currying</span><br></pre></td></tr></table></figure>
-
-      
-
       
     </div>
     <div class="article-info article-info-index">
@@ -696,16 +327,84 @@
 
 
       
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/06/07/Scala03/">展开全文 >></a>
-        </p>
-      
 
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
+        </div>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://HenryangTi.github.io/2019/06/08/Scala4/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
       
       <div class="clearfix"></div>
     </div>
   </div>
 </article>
+
+  
+<nav id="article-nav">
+  
+    <a href="/2019/06/22/Leetcode207/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          Leetcode207 - course schedule
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/06/07/Scala03/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">函数柯里化(currying)</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
 
 <aside class="wrap-side-operation">
     <div class="mod-side-operation">
@@ -725,459 +424,14 @@
 
 
 
-
-  
-    <article id="post-Scala02" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/06/06/Scala02/">Scala高阶函数之fold、max、min、count、flatten、flatMap</a>
-    </h1>
-  
-
-        
-        <a href="/2019/06/06/Scala02/" class="archive-article-date">
-  	<time datetime="2019-06-06T07:33:01.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-06-06</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>0.注意<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">很多Example中用到的l ==&gt; List(1,2,3,4,5,6,7,8)</span><br></pre></td></tr></table></figure></p>
-<p>1.fold</p>
-<p>1.1 Example</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">l.fold(<span class="number">10</span>)(_ + _)</span><br></pre></td></tr></table></figure>
-<p>输出为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">46</span><br></pre></td></tr></table></figure></p>
-<p>1.2 分析fold执行流程</p>
-<p>1.2.1 测试代码<br><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">l.fold(<span class="number">10</span>)((x: <span class="type">Int</span>, y: <span class="type">Int</span>) =&gt; &#123;</span><br><span class="line">  println(x + <span class="string">" + "</span> + y)</span><br><span class="line">  x + y</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure></p>
-<p>输出为</p>
-<p><img src="/img/output2.png" alt="0aadcd09a25423df9072b85461f209e0"></p>
-<p>1.3 fold源代码</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">fold</span></span>[<span class="type">A1</span> &gt;: <span class="type">A</span>](z: <span class="type">A1</span>)(op: (<span class="type">A1</span>, <span class="type">A1</span>) =&gt; <span class="type">A1</span>): <span class="type">A1</span> = foldLeft(z)(op)</span><br></pre></td></tr></table></figure>
-<p>解释<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fold函数有两个入参</span><br></pre></td></tr></table></figure></p>
-<p>2.max</p>
-<p>2.1 Example<br><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">l.max</span><br></pre></td></tr></table></figure></p>
-<p>输出为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">res1: Int = 8</span><br></pre></td></tr></table></figure></p>
-<p>3.min</p>
-<p>3.1 Example</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">l.min</span><br></pre></td></tr></table></figure>
-<p>输出为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">res3: Int = 1</span><br></pre></td></tr></table></figure></p>
-<p>4.count</p>
-<p>4.1 Example(求大于3的count)</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">l.count(_ &gt; <span class="number">3</span>)</span><br></pre></td></tr></table></figure>
-<p>输出为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">res4: Int = 5</span><br></pre></td></tr></table></figure></p>
-<p>5.flatten</p>
-<p>5.1 Example</p>
-<p>5.1.1 Example1</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> xs = <span class="type">List</span>(<span class="type">Set</span>(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>),<span class="type">Set</span>(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>)).flatten</span><br></pre></td></tr></table></figure>
-<p>输出为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">xs == List(1, 2, 3, 1, 2, 3)</span><br></pre></td></tr></table></figure></p>
-<p>5.1.2 Example2</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> a = <span class="type">List</span>(<span class="type">List</span>(<span class="number">1</span>,<span class="number">2</span>), <span class="type">List</span>(<span class="number">3</span>, <span class="number">4</span>), <span class="type">List</span>(<span class="number">5</span>,<span class="number">6</span>))</span><br><span class="line">a.flatten</span><br></pre></td></tr></table></figure>
-<p>输出为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">res6: List[Int] = List(1, 2, 3, 4, 5, 6)</span><br></pre></td></tr></table></figure></p>
-<p>注意<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">a的数据结构为:</span><br><span class="line">    a: List[List[Int]] = List(List(1, 2), List(3, 4), List(5, 6))</span><br></pre></td></tr></table></figure></p>
-<p>5.1.3 Example3</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> a = <span class="type">List</span>(<span class="type">List</span>(<span class="number">1</span>,<span class="number">2</span>), <span class="type">List</span>(<span class="number">3</span>, <span class="number">4</span>), <span class="type">List</span>(<span class="number">5</span>,<span class="number">6</span>))</span><br><span class="line"><span class="keyword">val</span> b = a.flatten</span><br><span class="line">b.map(_ * <span class="number">2</span>)</span><br></pre></td></tr></table></figure>
-<p>输出为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">res6: List[Int] = List(2, 4, 6, 8, 10, 12)</span><br></pre></td></tr></table></figure></p>
-<p>5.2 常见错误</p>
-<p>5.2.1 Example</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> a = <span class="type">List</span>(<span class="type">List</span>(<span class="number">1</span>,<span class="number">2</span>), <span class="type">List</span>(<span class="number">3</span>, <span class="number">4</span>), <span class="type">List</span>(<span class="number">5</span>,<span class="number">6</span>))</span><br><span class="line">a.map(_ * <span class="number">2</span>)</span><br></pre></td></tr></table></figure>
-<p>输出为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;console&gt;:13: error: value * is not a member of List[Int]</span><br><span class="line">       a.map(_ * 2)</span><br></pre></td></tr></table></figure></p>
-<p>原因<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">map(_ * 2)的下划线&quot;_&quot;代表的是a中的元素, 而a中元素数据类型为List[Int]</span><br></pre></td></tr></table></figure></p>
-<ol start="6">
-<li>flatMap</li>
-</ol>
-<p>6.1 简介<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">flatMap可以理解为flatten + map</span><br></pre></td></tr></table></figure></p>
-<p>6.2 Example</p>
-<p>6.2.1 Example1</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">a.flatMap(_.map( _ * <span class="number">2</span> ))</span><br></pre></td></tr></table></figure>
-<p>输出为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">res9: List[Int] = List(2, 4, 6, 8, 10, 12)</span><br></pre></td></tr></table></figure></p>
-<p>6.2.2 Example2</p>
-<p>6.2.2.1 代码<br><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">object</span> <span class="title">HdfsWordCount</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">main</span></span>(args: <span class="type">Array</span>[<span class="type">String</span>]) &#123;</span><br><span class="line">    <span class="keyword">if</span> (args.length &lt; <span class="number">1</span>) &#123;</span><br><span class="line">      <span class="type">System</span>.err.println(<span class="string">"Usage: HdfsWordCount &lt;directory&gt;"</span>)</span><br><span class="line">      <span class="type">System</span>.exit(<span class="number">1</span>)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="type">StreamingExamples</span>.setStreamingLogLevels()</span><br><span class="line">    <span class="keyword">val</span> sparkConf = <span class="keyword">new</span> <span class="type">SparkConf</span>().setAppName(<span class="string">"HdfsWordCount"</span>)</span><br><span class="line">    <span class="comment">// Create the context</span></span><br><span class="line">    <span class="keyword">val</span> ssc = <span class="keyword">new</span> <span class="type">StreamingContext</span>(sparkConf, <span class="type">Seconds</span>(<span class="number">2</span>))</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Create the FileInputDStream on the directory and use the</span></span><br><span class="line">    <span class="comment">// stream to count words in new files created</span></span><br><span class="line">    <span class="keyword">val</span> lines = ssc.textFileStream(args(<span class="number">0</span>))</span><br><span class="line">    <span class="keyword">val</span> words = lines.flatMap(_.split(<span class="string">" "</span>))</span><br><span class="line">    <span class="keyword">val</span> wordCounts = words.map(x =&gt; (x, <span class="number">1</span>)).reduceByKey(_ + _)</span><br><span class="line">    wordCounts.print()</span><br><span class="line">    ssc.start()</span><br><span class="line">    ssc.awaitTermination()</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>6.2.2.2 Example2的重要代码</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> lines = ssc.textFileStream(args(<span class="number">0</span>))</span><br><span class="line"><span class="keyword">val</span> words = lines.flatMap(_.split(<span class="string">" "</span>))</span><br><span class="line"><span class="keyword">val</span> wordCounts = words.map(x =&gt; (x, <span class="number">1</span>)).reduceByKey(_ + _)</span><br></pre></td></tr></table></figure>
-<p>6.2.2.3 代码解释<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(1) ssc.textFileStream(args(0))表示读进来的文件;lines形式为List[List[String]]</span><br></pre></td></tr></table></figure></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(2) 在执行完lines.flatMap(_.split(&quot; &quot;))，words的类型为List[String]</span><br></pre></td></tr></table></figure>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Scala//" class="article-tag-list-link color1">Scala</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/06/06/Scala02/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Scala01" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/06/05/Scala01/">Scala面对对象之抽象类</a>
-    </h1>
-  
-
-        
-        <a href="/2019/06/05/Scala01/" class="archive-article-date">
-  	<time datetime="2019-06-05T05:33:01.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-06-05</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>1.定义<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">一个类中, 其方法没有具体实现, 其属性也是只有定义</span><br></pre></td></tr></table></figure></p>
-<p>2.Example</p>
-<p>2.1 Example1<br><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">A</span></span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">speak</span></span></span><br><span class="line"><span class="function">&#125;</span></span><br></pre></td></tr></table></figure></p>
-<p>3.常见错误</p>
-<p>3.1 错误一</p>
-<p><img src="/img/2019090312.png" alt="5bd2cbf10d3c3b5f1c67280ac6c6b8de"></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">如果一个类中的方法没有实现，只有定义，那么该类就是抽象类，使用abstract修饰</span><br></pre></td></tr></table></figure>
-<p>3.2 错误二</p>
-<p><img src="/img/2019090313.png" alt="32a0150fdd3b3f200c147384d2b544d4"><br><img src="/img/error5.png" alt="0cdbe92f6521a633e85c17af58296617"></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">抽象类不能直接直接被实例化, 而是通过子类(不能还是抽象的)来实例化</span><br></pre></td></tr></table></figure>
-<p>4.Spark源码中的体现</p>
-<p>4.1 MemoryManager与其子类StaticMemoryManager</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span>[spark] <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">MemoryManager</span>(<span class="params"></span></span></span><br><span class="line"><span class="class"><span class="params">    conf: <span class="type">SparkConf</span>,</span></span></span><br><span class="line"><span class="class"><span class="params">    numCores: <span class="type">Int</span>,</span></span></span><br><span class="line"><span class="class"><span class="params">    onHeapStorageMemory: <span class="type">Long</span>,</span></span></span><br><span class="line"><span class="class"><span class="params">    onHeapExecutionMemory: <span class="type">Long</span></span>) <span class="keyword">extends</span> <span class="title">Logging</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">maxOffHeapStorageMemory</span></span>: <span class="type">Long</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span>[spark] <span class="class"><span class="keyword">class</span> <span class="title">StaticMemoryManager</span>(<span class="params"></span></span></span><br><span class="line"><span class="class"><span class="params">    conf: <span class="type">SparkConf</span>,</span></span></span><br><span class="line"><span class="class"><span class="params">    maxOnHeapExecutionMemory: <span class="type">Long</span>,</span></span></span><br><span class="line"><span class="class"><span class="params">    override val maxOnHeapStorageMemory: <span class="type">Long</span>,</span></span></span><br><span class="line"><span class="class"><span class="params">    numCores: <span class="type">Int</span></span>)</span></span><br><span class="line"><span class="class">  <span class="keyword">extends</span> <span class="title">MemoryManager</span>(<span class="params"></span></span></span><br><span class="line"><span class="class"><span class="params">    conf,</span></span></span><br><span class="line"><span class="class"><span class="params">    numCores,</span></span></span><br><span class="line"><span class="class"><span class="params">    maxOnHeapStorageMemory,</span></span></span><br><span class="line"><span class="class"><span class="params">    maxOnHeapExecutionMemory</span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">def</span> <span class="title">maxOffHeapStorageMemory</span></span>: <span class="type">Long</span> = <span class="number">0</span>L</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Scala//" class="article-tag-list-link color1">Scala</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/06/05/Scala01/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Conc" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/06/04/Conc/">Java并发之thread</a>
-    </h1>
-  
-
-        
-        <a href="/2019/06/04/Conc/" class="archive-article-date">
-  	<time datetime="2019-06-04T04:42:05.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-06-04</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>1.Thread类与Runnable接口的关系</p>
-<p>提到并发，我们首先想到的概念就是线程, 在Java中与线程有关的组件就是Thread类和Runnable接口, 那么有人会产生疑问，Thread类与Runnable接口是否有关呢？为了说明此问题，我们来查看一下Thread类的源码</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Thread</span> <span class="keyword">implements</span> <span class="title">Runnable</span> </span>&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>从上面我们看见Thread类实现了Runnable接口</p>
-<p>2.Thread类详解</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">既然Thread是如此重要，那么我们来看下其源码注释</span><br></pre></td></tr></table></figure>
-<p>2.1 Thread类源码注释</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">A thread is a thread of execution in a program. The Java Virtual Machine allows an application to have multiple threads of execution running concurrently.</span><br><span class="line"></span><br><span class="line">一个thread就是程序中的一个执行线程。JVM允许应用能够同时运行多个执行线程。</span><br></pre></td></tr></table></figure>
-<p>2.2 优先级</p>
-<p>2.2.1 为什么需要优先级<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">既然每个Thread对象都代表一个线程，那么它就会拥有线程的一些特性。</span><br><span class="line"></span><br><span class="line">在我看来，线程最重要的特性就是优先级，在synchronized的时候, 如果某个线程想要去获取到对象的锁，那么它就需要与其它线程进行竞争，那么线程是依靠什么特性与其它线程进行竞争的呢？</span><br><span class="line"></span><br><span class="line">此特性就是优先级。</span><br></pre></td></tr></table></figure></p>
-<p>2.2.2 优先级的作用<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">每个线程都是有优先级的, 优先级高的线程会先被执行</span><br></pre></td></tr></table></figure></p>
-<p>2.2.3 优先级与子线程<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">在一个线程内创建新的线程, 那么新的线程优先级会与其父线程的优先级相同。</span><br><span class="line"></span><br><span class="line">Eg.</span><br><span class="line"></span><br><span class="line">在ThreadA中创建了ThreadB, ThreadB的优先级是与ThreadA的优先级相同</span><br></pre></td></tr></table></figure></p>
-<p>2.3 daemon线程</p>
-<p>2.3.1 daemon线程的作用<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">JVM启动时会生成一个daemon进程来调用main方法</span><br></pre></td></tr></table></figure></p>
-<p>2.3.2 什么时候创建的线程为daemon线程</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">只有daemon线程创建的线程才是daemon线程</span><br></pre></td></tr></table></figure>
-<p>2.4 线程的消亡</p>
-<p>2.4.1 线程消亡的两种方式</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">某类的runtime.exit()方法被调用, 并且安全管理器允许该方法被调用</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">所有的非daemon线程都被消亡</span><br></pre></td></tr></table></figure>
-<p>2.4.2 什么时候非daemon线程都消亡</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">方法调用回到了run方法</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">exception抛出到run方法之外</span><br></pre></td></tr></table></figure>
-<p>2.5 两种线程创建的方式</p>
-<p>2.5.1 继承Thread的方式创建线程</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ThreadClass</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        PrimeThread p = <span class="keyword">new</span> PrimeThread(<span class="number">143</span>);</span><br><span class="line">        p.start();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">PrimeThread</span> <span class="keyword">extends</span> <span class="title">Thread</span></span>&#123;</span><br><span class="line">    <span class="keyword">long</span> minPrime;</span><br><span class="line">    PrimeThread(<span class="keyword">long</span> minPrime)&#123;</span><br><span class="line">        <span class="keyword">this</span>.minPrime = minPrime;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">第一种方式是创建一个Thread的子类, 并且不仅仅写一个extends就完事, 而是需要重写run方法, 这样子类可以被分配一个线程。</span><br></pre></td></tr></table></figure>
-<p>2.5.2 实现Runnable接口创建线程</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PrimeRun</span> <span class="keyword">implements</span> <span class="title">Runnable</span></span>&#123;</span><br><span class="line">    <span class="keyword">long</span> minPrime;</span><br><span class="line">    PrimeRun(<span class="keyword">long</span> minPrime)&#123;</span><br><span class="line">        <span class="keyword">this</span>.minPrime = minPrime;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"hhh"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        PrimeRun p = <span class="keyword">new</span> PrimeRun(<span class="number">143</span>);</span><br><span class="line">        <span class="keyword">new</span> Thread(p).start();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">任何实现Runnable的类可以创建线程, 并不仅仅写个implements就可以, 还需要实现run方法, 这样的话就可以该类的实例分配一个线程, 然后调用start方法启动</span><br></pre></td></tr></table></figure>
-<p>2.6 线程的名字</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">在一个系统中存在很多的线程, 我们应该给每个线程其名字, 这个名字可以由我们自己起，当然如果我们没有起的话, 系统会帮助我们给其起个名字</span><br></pre></td></tr></table></figure>
-<p>3.总结</p>
-<p><img src="/img/conc.png" alt></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Concurrent//" class="article-tag-list-link color1">Concurrent</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/06/04/Conc/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Hive2" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/06/04/Hive2/">Hive DML之导入数据、导出数据、查询、聚合函数和分组函数</a>
-    </h1>
-  
-
-        
-        <a href="/2019/06/04/Hive2/" class="archive-article-date">
-  	<time datetime="2019-06-04T04:42:01.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-06-04</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>1.导入数据</p>
-<p><img src="/img/2019092801.jpg" alt="d53fb36d85b284f5f137ff391029b00d"></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">（1）采用load data将数据加载到Hive表中</span><br><span class="line"> (2) 如果数据再Hive客户端所在的linux机器上的某个目录下，采用local；如果数据在HDFS上就不使用local，直接使用inpath + 路径</span><br><span class="line"> (3) 采用overwrite表示数据将会被重写(先将数据删掉再重写)，如果不是overwrite的话，那就是append；但是由于每次作业都需要保证其原子性，所以append在生产上不使用；也就是说每次重跑数据肯定是会被重写</span><br></pre></td></tr></table></figure>
-<ol start="2">
-<li>导出数据</li>
-</ol>
-<p><img src="/img/2019092802.png" alt="05b2c08802923b8cba88d967cee1b2ab"></p>
-<p>3.查询数据</p>
-<p>3.1 指定字段查询</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> empno, ename <span class="keyword">from</span> ozil_study;</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">（1）在工作中不要使用*来查询，尤其对于列式存储来说使用*和指定列名在性能上差距会很大</span><br></pre></td></tr></table></figure>
-<p>3.2 带限制条件的指定字段查询</p>
-<p>3.2.1 比较符号</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> empno, ename <span class="keyword">from</span> henry_study <span class="keyword">where</span> deptno = <span class="number">10</span>;</span><br></pre></td></tr></table></figure>
-<p><img src="/img/1.png" alt="58b693bf2ff4f6f208420d17a1343a61"></p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> empno, ename <span class="keyword">from</span> ozil_study <span class="keyword">where</span> empno &gt; <span class="number">7500</span>;</span><br></pre></td></tr></table></figure>
-<p><img src="/img/2019092808.png" alt="6de3346d94ad50d14405625b6b33558c"></p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> ozil_study <span class="keyword">where</span> comm != <span class="number">0.0</span>;</span><br></pre></td></tr></table></figure>
-<p><img src="/img/2019092814.png" alt="915904963bb0a01c225ec0816322622e"></p>
-<p>3.2.2 between</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> ozil_study <span class="keyword">where</span> sal <span class="keyword">between</span> <span class="number">800</span> <span class="keyword">and</span> <span class="number">1600</span>;</span><br></pre></td></tr></table></figure>
-<p><img src="/img/2019092809.png" alt="42b53b945b6eec5292538736c668c656"></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">between是左闭右闭区间</span><br></pre></td></tr></table></figure>
-<p>3.2.3 in与not in<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> ozil_study <span class="keyword">where</span> ename <span class="keyword">in</span> (<span class="string">"SMITH"</span>, <span class="string">"ALLEN"</span>);</span><br></pre></td></tr></table></figure></p>
-<p><img src="/img/2019092810.png" alt="46ed66681e3d2f30a5866ed255d4f3c5"></p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> ozil_study <span class="keyword">where</span> ename <span class="keyword">not</span> <span class="keyword">in</span> (<span class="string">"SMITH"</span>, <span class="string">"ALLEN"</span>);</span><br></pre></td></tr></table></figure>
-<p><img src="/img/2019092811.png" alt="1b6211125f29828c3145fe0cbedd9a04"></p>
-<p>3.2.3 is null与is not null</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> ozil_study <span class="keyword">where</span> comm <span class="keyword">is</span> <span class="literal">null</span>;</span><br></pre></td></tr></table></figure>
-<p><img src="/img/2019092812.png" alt="881514e1d2baa0e3d43d4b2264a14779"></p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> ozil_study <span class="keyword">where</span> comm <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">null</span>;</span><br></pre></td></tr></table></figure>
-<p><img src="/img/2019092813.png" alt="45d54ba2b4d95d55a55d06638d45a2d1"></p>
-<p> 4.聚合函数</p>
-<p> 4.1 常用聚合函数<br> <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">max、min、sum、avg、count</span><br></pre></td></tr></table></figure></p>
-<p> 4.2 聚合函数的含义<br> <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">多进一出，比如求最大值就是进来很多条数据，出去只有一条最大的数据；当然如果有两条数据相同，都是最大的，也有可能是多进多出</span><br></pre></td></tr></table></figure></p>
-<p> 4.3 Example</p>
-<p> 4.3.1 需求一: 求部门编号为10的部门有多少人<br> <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="keyword">count</span>(<span class="number">1</span>) <span class="keyword">from</span> ozil_study <span class="keyword">where</span> deptno = <span class="number">10</span>;</span><br></pre></td></tr></table></figure></p>
-<p>4.3.2 需求二: 求该表中最大工资、最小工资、平均工资与工资总和</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="keyword">max</span>(sal), <span class="keyword">min</span>(sal), <span class="keyword">avg</span>(sal), <span class="keyword">sum</span>(sal) <span class="keyword">from</span> ozil_study;</span><br></pre></td></tr></table></figure>
-<p><img src="/img/2019092821.png" alt="0b240d4804ad2540dabd174a44c95bf2"></p>
-<p>5.分组函数: group by(sql语句的关键)</p>
-<p>5.2 Example</p>
-<p>5.2.1 需求一: 求一个部门的平均工资(先按照部门来分组，之后再求平均工资)</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> deptno, <span class="keyword">avg</span>(sal) <span class="keyword">from</span> ozil_study <span class="keyword">group</span> <span class="keyword">by</span> deptno;</span><br></pre></td></tr></table></figure>
-<p><img src="/img/2019092823.png" alt="263f7df44ee7cc00a6540198c3b2c6d1"></p>
-<p>注意<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">出现在select中的字段，要么出现在group by子句中，要么出现在聚合函数中</span><br></pre></td></tr></table></figure></p>
-<p><img src="/img/2019092824.png" alt="d0993778182a054d68e52ca3fc1aa1af"></p>
-<p>5.2.2 需求二： 求每个部门的工作岗位的最高工资(先按部门进行分组，部门里再按岗位进行分组)</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> deptno,  job, <span class="keyword">max</span>(sal) <span class="keyword">from</span> ozil_study <span class="keyword">group</span> <span class="keyword">by</span> deptno, job;</span><br></pre></td></tr></table></figure>
-<p><img src="/img/2019092825.png" alt="228ead03949281edf6296b0893910396"></p>
-<p>5.2.3 需求三: 求每个部门的平均薪水大于2000的部门</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> deptno, <span class="keyword">avg</span>(sal) <span class="keyword">from</span> ozil_study <span class="keyword">group</span> <span class="keyword">by</span> deptno <span class="keyword">having</span> <span class="keyword">avg</span>(sal) &gt; <span class="number">2000</span></span><br></pre></td></tr></table></figure>
-<p><img src="/img/2019092826.png" alt="1830a0dd65074971aa100a46bcc42f09"></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Hive//" class="article-tag-list-link color5">Hive</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/06/04/Hive2/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
   
   
-    <nav id="page-nav">
-      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
-    </nav>
+  
+
+  
+
+  
+
   
 
 
@@ -1200,8 +454,8 @@
     <script>
 	var yiliaConfig = {
 		mathjax: true,
-		isHome: true,
-		isPost: false,
+		isHome: false,
+		isPost: true,
 		isArchive: false,
 		isTag: false,
 		isCategory: false,
