@@ -6,15 +6,21 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="http://HenryangTi.github.io">
-  <title>Category: Scala | HenryangTi&#39;s blog</title>
+  <title>Scala高阶函数之fold、max、min、count、flatten、flatMap | HenryangTi&#39;s blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="HenryangTi&#39;s blog">
-<meta property="og:url" content="http://HenryangTi.github.io/categories/Scala/index.html">
+  <meta name="description" content="0.注意1很多Example中用到的l ==&amp;gt; List(1,2,3,4,5,6,7,8) 1.fold 1.1 Example 1l.fold(10)(_ + _) 输出为146 1.2 分析fold执行流程 1.2.1 测试代码1234l.fold(10)((x: Int, y: Int) =&amp;gt; &amp;#123;  println(x + &quot; + &quot; + y)  x + y&amp;#125;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Scala高阶函数之fold、max、min、count、flatten、flatMap">
+<meta property="og:url" content="http://HenryangTi.github.io/2019/06/06/Scala02/index.html">
 <meta property="og:site_name" content="HenryangTi&#39;s blog">
+<meta property="og:description" content="0.注意1很多Example中用到的l ==&amp;gt; List(1,2,3,4,5,6,7,8) 1.fold 1.1 Example 1l.fold(10)(_ + _) 输出为146 1.2 分析fold执行流程 1.2.1 测试代码1234l.fold(10)((x: Int, y: Int) =&amp;gt; &amp;#123;  println(x + &quot; + &quot; + y)  x + y&amp;#125;">
 <meta property="og:locale" content="default">
+<meta property="og:image" content="http://henryangti.github.io/img/output2.png">
+<meta property="og:updated_time" content="2019-11-08T05:43:47.756Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="HenryangTi&#39;s blog">
+<meta name="twitter:title" content="Scala高阶函数之fold、max、min、count、flatten、flatMap">
+<meta name="twitter:description" content="0.注意1很多Example中用到的l ==&amp;gt; List(1,2,3,4,5,6,7,8) 1.fold 1.1 Example 1l.fold(10)(_ + _) 输出为146 1.2 分析fold执行流程 1.2.1 测试代码1234l.fold(10)((x: Int, y: Int) =&amp;gt; &amp;#123;  println(x + &quot; + &quot; + y)  x + y&amp;#125;">
+<meta name="twitter:image" content="http://henryangti.github.io/img/output2.png">
   
     <link rel="alternative" href="/atom.xml" title="HenryangTi&#39;s blog" type="application/atom+xml">
   
@@ -210,37 +216,110 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
+            <article id="post-Scala02" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
   
+    <h1 class="article-title" itemprop="name">
+      Scala高阶函数之fold、max、min、count、flatten、flatMap
+    </h1>
   
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2019" class="archive-year">2019</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/06/06/Scala02/" class="archive-article-date">
+
+        
+        <a href="/2019/06/06/Scala02/" class="archive-article-date">
   	<time datetime="2019-06-06T07:33:01.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-06-06</time>
 </a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/06/06/Scala02/">Scala高阶函数之fold、max、min、count、flatten、flatMap</a>
-    </h1>
-  
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>0.注意<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">很多Example中用到的l ==&gt; List(1,2,3,4,5,6,7,8)</span><br></pre></td></tr></table></figure></p>
+<p>1.fold</p>
+<p>1.1 Example</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">l.fold(<span class="number">10</span>)(_ + _)</span><br></pre></td></tr></table></figure>
+<p>输出为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">46</span><br></pre></td></tr></table></figure></p>
+<p>1.2 分析fold执行流程</p>
+<p>1.2.1 测试代码<br><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">l.fold(<span class="number">10</span>)((x: <span class="type">Int</span>, y: <span class="type">Int</span>) =&gt; &#123;</span><br><span class="line">  println(x + <span class="string">" + "</span> + y)</span><br><span class="line">  x + y</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure></p>
+<p>输出为</p>
+<p><img src="/img/output2.png" alt="0aadcd09a25423df9072b85461f209e0"></p>
+<p>1.3 fold源代码</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">fold</span></span>[<span class="type">A1</span> &gt;: <span class="type">A</span>](z: <span class="type">A1</span>)(op: (<span class="type">A1</span>, <span class="type">A1</span>) =&gt; <span class="type">A1</span>): <span class="type">A1</span> = foldLeft(z)(op)</span><br></pre></td></tr></table></figure>
+<p>解释<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fold函数有两个入参</span><br></pre></td></tr></table></figure></p>
+<p>2.max</p>
+<p>2.1 Example<br><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">l.max</span><br></pre></td></tr></table></figure></p>
+<p>输出为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">res1: Int = 8</span><br></pre></td></tr></table></figure></p>
+<p>3.min</p>
+<p>3.1 Example</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">l.min</span><br></pre></td></tr></table></figure>
+<p>输出为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">res3: Int = 1</span><br></pre></td></tr></table></figure></p>
+<p>4.count</p>
+<p>4.1 Example(求大于3的count)</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">l.count(_ &gt; <span class="number">3</span>)</span><br></pre></td></tr></table></figure>
+<p>输出为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">res4: Int = 5</span><br></pre></td></tr></table></figure></p>
+<p>5.flatten</p>
+<p>5.1 Example</p>
+<p>5.1.1 Example1</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> xs = <span class="type">List</span>(<span class="type">Set</span>(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>),<span class="type">Set</span>(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>)).flatten</span><br></pre></td></tr></table></figure>
+<p>输出为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">xs == List(1, 2, 3, 1, 2, 3)</span><br></pre></td></tr></table></figure></p>
+<p>5.1.2 Example2</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> a = <span class="type">List</span>(<span class="type">List</span>(<span class="number">1</span>,<span class="number">2</span>), <span class="type">List</span>(<span class="number">3</span>, <span class="number">4</span>), <span class="type">List</span>(<span class="number">5</span>,<span class="number">6</span>))</span><br><span class="line">a.flatten</span><br></pre></td></tr></table></figure>
+<p>输出为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">res6: List[Int] = List(1, 2, 3, 4, 5, 6)</span><br></pre></td></tr></table></figure></p>
+<p>注意<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">a的数据结构为:</span><br><span class="line">    a: List[List[Int]] = List(List(1, 2), List(3, 4), List(5, 6))</span><br></pre></td></tr></table></figure></p>
+<p>5.1.3 Example3</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> a = <span class="type">List</span>(<span class="type">List</span>(<span class="number">1</span>,<span class="number">2</span>), <span class="type">List</span>(<span class="number">3</span>, <span class="number">4</span>), <span class="type">List</span>(<span class="number">5</span>,<span class="number">6</span>))</span><br><span class="line"><span class="keyword">val</span> b = a.flatten</span><br><span class="line">b.map(_ * <span class="number">2</span>)</span><br></pre></td></tr></table></figure>
+<p>输出为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">res6: List[Int] = List(2, 4, 6, 8, 10, 12)</span><br></pre></td></tr></table></figure></p>
+<p>5.2 常见错误</p>
+<p>5.2.1 Example</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> a = <span class="type">List</span>(<span class="type">List</span>(<span class="number">1</span>,<span class="number">2</span>), <span class="type">List</span>(<span class="number">3</span>, <span class="number">4</span>), <span class="type">List</span>(<span class="number">5</span>,<span class="number">6</span>))</span><br><span class="line">a.map(_ * <span class="number">2</span>)</span><br></pre></td></tr></table></figure>
+<p>输出为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;console&gt;:13: error: value * is not a member of List[Int]</span><br><span class="line">       a.map(_ * 2)</span><br></pre></td></tr></table></figure></p>
+<p>原因<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">map(_ * 2)的下划线&quot;_&quot;代表的是a中的元素, 而a中元素数据类型为List[Int]</span><br></pre></td></tr></table></figure></p>
+<ol start="6">
+<li>flatMap</li>
+</ol>
+<p>6.1 简介<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">flatMap可以理解为flatten + map</span><br></pre></td></tr></table></figure></p>
+<p>6.2 Example</p>
+<p>6.2.1 Example1</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">a.flatMap(_.map( _ * <span class="number">2</span> ))</span><br></pre></td></tr></table></figure>
+<p>输出为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">res9: List[Int] = List(2, 4, 6, 8, 10, 12)</span><br></pre></td></tr></table></figure></p>
+<p>6.2.2 Example2</p>
+<p>6.2.2.1 代码<br><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">object</span> <span class="title">HdfsWordCount</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">main</span></span>(args: <span class="type">Array</span>[<span class="type">String</span>]) &#123;</span><br><span class="line">    <span class="keyword">if</span> (args.length &lt; <span class="number">1</span>) &#123;</span><br><span class="line">      <span class="type">System</span>.err.println(<span class="string">"Usage: HdfsWordCount &lt;directory&gt;"</span>)</span><br><span class="line">      <span class="type">System</span>.exit(<span class="number">1</span>)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="type">StreamingExamples</span>.setStreamingLogLevels()</span><br><span class="line">    <span class="keyword">val</span> sparkConf = <span class="keyword">new</span> <span class="type">SparkConf</span>().setAppName(<span class="string">"HdfsWordCount"</span>)</span><br><span class="line">    <span class="comment">// Create the context</span></span><br><span class="line">    <span class="keyword">val</span> ssc = <span class="keyword">new</span> <span class="type">StreamingContext</span>(sparkConf, <span class="type">Seconds</span>(<span class="number">2</span>))</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Create the FileInputDStream on the directory and use the</span></span><br><span class="line">    <span class="comment">// stream to count words in new files created</span></span><br><span class="line">    <span class="keyword">val</span> lines = ssc.textFileStream(args(<span class="number">0</span>))</span><br><span class="line">    <span class="keyword">val</span> words = lines.flatMap(_.split(<span class="string">" "</span>))</span><br><span class="line">    <span class="keyword">val</span> wordCounts = words.map(x =&gt; (x, <span class="number">1</span>)).reduceByKey(_ + _)</span><br><span class="line">    wordCounts.print()</span><br><span class="line">    ssc.start()</span><br><span class="line">    ssc.awaitTermination()</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>6.2.2.2 Example2的重要代码</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> lines = ssc.textFileStream(args(<span class="number">0</span>))</span><br><span class="line"><span class="keyword">val</span> words = lines.flatMap(_.split(<span class="string">" "</span>))</span><br><span class="line"><span class="keyword">val</span> wordCounts = words.map(x =&gt; (x, <span class="number">1</span>)).reduceByKey(_ + _)</span><br></pre></td></tr></table></figure>
+<p>6.2.2.3 代码解释<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(1) ssc.textFileStream(args(0))表示读进来的文件;lines形式为List[List[String]]</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(2) 在执行完lines.flatMap(_.split(&quot; &quot;))，words的类型为List[String]</span><br></pre></td></tr></table></figure>
 
-        <div class="article-info info-on-right">
-          
-          
+      
+
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
 	<div class="article-category tagcloud">
 		<i class="icon-book icon"></i>
 		<ul class="article-tag-list">
@@ -253,55 +332,113 @@
 	</div>
 
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://HenryangTi.github.io/2019/06/06/Scala02/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/06/05/Scala01/" class="archive-article-date">
-  	<time datetime="2019-06-05T05:33:01.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-06-05</time>
-</a>
+<nav id="article-nav">
+  
+    <a href="/2019/06/22/Leetcode207/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          Leetcode207 - course schedule
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/06/05/Scala01/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Scala面对对象之抽象类</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/06/05/Scala01/">Scala面对对象之抽象类</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Scala//" class="article-tag-list-link color1">Scala</a>
-        		</li>
-      		
-		</ul>
-	</div>
+        
+        
+    </div>
+</aside>
 
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
+
   
   
-    </div></section>
   
 
-    
+  
+
+  
+
+  
 
 
           </div>
@@ -324,10 +461,10 @@
 	var yiliaConfig = {
 		mathjax: true,
 		isHome: false,
-		isPost: false,
+		isPost: true,
 		isArchive: false,
 		isTag: false,
-		isCategory: true,
+		isCategory: false,
 		open_in_new: false,
 		toc_hide_index: true,
 		root: "/",

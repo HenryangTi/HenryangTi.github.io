@@ -212,6 +212,93 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-Flume01" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/06/01/Flume01/">Flume部署</a>
+    </h1>
+  
+
+        
+        <a href="/2019/06/01/Flume01/" class="archive-article-date">
+  	<time datetime="2019-06-01T01:32:01.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-06-01</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.Flume系统要求<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">1. Java Runtime Environment - Java 1.6 or later (Java 1.7 Recommended)</span><br><span class="line">2. Memory - Sufficient memory for configurations used by sources, channels(占用的内存较多, 如果sink及之后的组件 failure就会导致数据大量堆积到channle中, 所以要</span><br><span class="line">对其进行监控) or sinks</span><br><span class="line">3. Disk Space - Sufficient disk space for configurations used by channels or sinks</span><br><span class="line">4. Directory Permissions - Read/Write permissions for directories used by agent(可以理解为flume), 如果flume没有读写权限, 就不需要再进行收集操作了, 因为采集之&gt;后都无法写出去</span><br></pre></td></tr></table></figure></p>
+<p>2.Flume部署步骤</p>
+<p>2.1 下载flume的tar包<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget http://archive.cloudera.com/cdh5/cdh/5/flume-ng-1.6.0-cdh5.7.0.tar.gz</span><br></pre></td></tr></table></figure></p>
+<p>2.2 解压tar包</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar zxvf flume-ng-1.6.0-cdh5.7.0.tar.gz</span><br></pre></td></tr></table></figure>
+<p>2.3 查看flume根目录的结构</p>
+<p><img src="/img/flume1.png" alt="72827a355505b4e6e37c3147ffb63227"></p>
+<p>2.4 配置文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">在$Flume_Home/conf文件夹下找到flume-env.sh文件</span><br></pre></td></tr></table></figure>
+<p><img src="/img/flume2.png" alt="24cbf97e47fe5965214e4cfdc91ee9e4"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">按照下图配置</span><br></pre></td></tr></table></figure>
+<p><img src="/img/flume3.png" alt="78dc229c1a9ec79f233b0ade2602e5bd"></p>
+<p>2.5 运行Flume所需的参数</p>
+<p><img src="/img/flume4.png" alt="2b3e846c61bfd895fdace8eb595ec0ed"></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Flume//" class="article-tag-list-link color1">Flume</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/06/01/Flume01/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-raft" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1714,135 +1801,6 @@
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2019/01/08/spark08/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-spark07" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/01/07/spark07/">key-value pair</a>
-    </h1>
-  
-
-        
-        <a href="/2019/01/07/spark07/" class="archive-article-date">
-  	<time datetime="2019-01-06T16:34:14.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-01-07</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>1.官网对于key-value pair的描述</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:left">官网原文</th>
-<th style="text-align:left">中文翻译</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left">While most Spark operations work on RDDs containing any type of objects, a few special operations are only available on RDDs of key-value pairs. The most common ones are distributed “shuffle” operations, such as grouping or aggregating the elements by a key.</td>
-<td style="text-align:left">尽管大多数的Spark算子都能操作包含任意对象的RDD，一小部分特殊的算子只能作用于包含key-value pair类型的RDD。最常见的就是带有shuffle操作的，比如grouping操作和aggregating操作</td>
-</tr>
-</tbody>
-</table>
-<table>
-<thead>
-<tr>
-<th style="text-align:left">官网原文</th>
-<th style="text-align:left">中文翻译</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left">In Scala, these operations are automatically available on RDDs containing Tuple2 objects (the built-in tuples in the language, created by simply writing (a, b)). The key-value pair operations are available in the PairRDDFunctions class, which automatically wraps around an RDD of tuples.</td>
-<td style="text-align:left">在scala中，这些操作在Tuple2对象的RDD上可以使用(Tuple2对象是语言本身自带的内置tuple，形式为（a,b） )。key-value pair算子的操作都能从PairRDDFunctions获得，会自动包装成tuple的RDD</td>
-</tr>
-</tbody>
-</table>
-<p>2.PairRDDFunctions类</p>
-<p>2.1 PairRDDFunctions注释</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:left">注释原文</th>
-<th style="text-align:left">中文翻译</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left">functions available on RDDs of (key, value) pairs through an implicit conversion</td>
-<td style="text-align:left">通过隐式转换的方式使用这些函数, 函数在(key, value)的RDD上使用</td>
-</tr>
-</tbody>
-</table>
-<p>2.2 在源码中如何体现该隐式转换的</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">implicit</span> <span class="function"><span class="keyword">def</span> <span class="title">rddToPairRDDFunctions</span></span>[<span class="type">K</span>, <span class="type">V</span>](rdd: <span class="type">RDD</span>[(<span class="type">K</span>, <span class="type">V</span>)])</span><br><span class="line">  (<span class="keyword">implicit</span> kt: <span class="type">ClassTag</span>[<span class="type">K</span>], vt: <span class="type">ClassTag</span>[<span class="type">V</span>], ord: <span class="type">Ordering</span>[<span class="type">K</span>] = <span class="literal">null</span>): <span class="type">PairRDDFunctions</span>[<span class="type">K</span>, <span class="type">V</span>] = &#123;</span><br><span class="line">  <span class="keyword">new</span> <span class="type">PairRDDFunctions</span>(rdd)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">从代码可以，rddToPairRDDFunctions入参为RDD类型，返回类型为PairRDDFunctions类型</span><br></pre></td></tr></table></figure>
-<p>2.3 Example</p>
-<p>示例代码<br><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rdd.map((_,<span class="number">1</span>)).reduceByKey(_+_).collect().foreach(println)</span><br></pre></td></tr></table></figure></p>
-<p>map函数源码为</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">map</span></span>[<span class="type">U</span>: <span class="type">ClassTag</span>](f: <span class="type">T</span> =&gt; <span class="type">U</span>): <span class="type">RDD</span>[<span class="type">U</span>] = withScope &#123;</span><br><span class="line">  <span class="keyword">val</span> cleanF = sc.clean(f)</span><br><span class="line">  <span class="keyword">new</span> <span class="type">MapPartitionsRDD</span>[<span class="type">U</span>, <span class="type">T</span>](<span class="keyword">this</span>, (context, pid, iter) =&gt; iter.map(cleanF))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">从map函数源码可以看出map函数的返回值为RDD，并且由于map((_,1)), 说明其输出为包含tuple的RDD</span><br></pre></td></tr></table></figure>
-<p>示例代码经过map操作后经过的操作如下图所示</p>
-<p><img src="/img/keyValue1.png" alt="avatar"><br><img src="/img/keyValue2.png" alt="avatar"><br><img src="/img/keyValue3.png" alt="avatar"></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">从上图可以看出, 在示例代码经过map函数后，会自动走到rddToPairRDDFunctions函数，将RDD转化为PairRDDFunctions, 然后才能进行reduceByKey操作</span><br></pre></td></tr></table></figure>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Spark//" class="article-tag-list-link color1">Spark</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/01/07/spark07/">展开全文 >></a>
         </p>
       
 
