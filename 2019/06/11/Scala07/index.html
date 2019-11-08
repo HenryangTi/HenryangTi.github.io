@@ -6,15 +6,27 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="http://HenryangTi.github.io">
-  <title>HenryangTi&#39;s blog</title>
+  <title>Scala之option | HenryangTi&#39;s blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="HenryangTi&#39;s blog">
-<meta property="og:url" content="http://HenryangTi.github.io/page/2/index.html">
+  <meta name="description" content="1.Option源码  1Option是一个抽象类所以我们要选择其子类 2.Option的子类 2.1 Option子类有哪些  2.2 Some与None的源码  3.Example 3.1 Map的get方法返回值为some  3.2 如何取得some中的值  3.3 取不存在的值  3.4 None值就不能再用get以及其解决方法  4.Option顶层元素 1Any">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Scala之option">
+<meta property="og:url" content="http://HenryangTi.github.io/2019/06/11/Scala07/index.html">
 <meta property="og:site_name" content="HenryangTi&#39;s blog">
+<meta property="og:description" content="1.Option源码  1Option是一个抽象类所以我们要选择其子类 2.Option的子类 2.1 Option子类有哪些  2.2 Some与None的源码  3.Example 3.1 Map的get方法返回值为some  3.2 如何取得some中的值  3.3 取不存在的值  3.4 None值就不能再用get以及其解决方法  4.Option顶层元素 1Any">
 <meta property="og:locale" content="default">
+<meta property="og:image" content="http://henryangti.github.io/img/2019100351.png">
+<meta property="og:image" content="http://henryangti.github.io/img/2019100352.png">
+<meta property="og:image" content="http://henryangti.github.io/img/2019100355.png">
+<meta property="og:image" content="http://henryangti.github.io/img/2019100356.png">
+<meta property="og:image" content="http://henryangti.github.io/img/2019100357.png">
+<meta property="og:image" content="http://henryangti.github.io/img/2019100358.png">
+<meta property="og:image" content="http://henryangti.github.io/img/2019100361.png">
+<meta property="og:updated_time" content="2019-11-08T06:25:56.185Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="HenryangTi&#39;s blog">
+<meta name="twitter:title" content="Scala之option">
+<meta name="twitter:description" content="1.Option源码  1Option是一个抽象类所以我们要选择其子类 2.Option的子类 2.1 Option子类有哪些  2.2 Some与None的源码  3.Example 3.1 Map的get方法返回值为some  3.2 如何取得some中的值  3.3 取不存在的值  3.4 None值就不能再用get以及其解决方法  4.Option顶层元素 1Any">
+<meta name="twitter:image" content="http://henryangti.github.io/img/2019100351.png">
   
     <link rel="alternative" href="/atom.xml" title="HenryangTi&#39;s blog" type="application/atom+xml">
   
@@ -210,45 +222,69 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-    <article id="post-Scala01" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+            <article id="post-Scala07" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/06/05/Scala01/">Scala面对对象之抽象类</a>
+    <h1 class="article-title" itemprop="name">
+      Scala之option
     </h1>
   
 
         
-        <a href="/2019/06/05/Scala01/" class="archive-article-date">
-  	<time datetime="2019-06-05T05:33:01.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-06-05</time>
+        <a href="/2019/06/11/Scala07/" class="archive-article-date">
+  	<time datetime="2019-06-11T05:22:23.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-06-11</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>1.定义<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">一个类中, 其方法没有具体实现, 其属性也是只有定义</span><br></pre></td></tr></table></figure></p>
-<p>2.Example</p>
-<p>2.1 Example1<br><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">A</span></span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">speak</span></span></span><br><span class="line"><span class="function">&#125;</span></span><br></pre></td></tr></table></figure></p>
-<p>3.常见错误</p>
-<p>3.1 错误一</p>
-<p><img src="/img/2019090312.png" alt="5bd2cbf10d3c3b5f1c67280ac6c6b8de"></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">如果一个类中的方法没有实现，只有定义，那么该类就是抽象类，使用abstract修饰</span><br></pre></td></tr></table></figure>
-<p>3.2 错误二</p>
-<p><img src="/img/2019090313.png" alt="32a0150fdd3b3f200c147384d2b544d4"><br><img src="/img/error5.png" alt="0cdbe92f6521a633e85c17af58296617"></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">抽象类不能直接直接被实例化, 而是通过子类(不能还是抽象的)来实例化</span><br></pre></td></tr></table></figure>
-<p>4.Spark源码中的体现</p>
-<p>4.1 MemoryManager与其子类StaticMemoryManager</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span>[spark] <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">MemoryManager</span>(<span class="params"></span></span></span><br><span class="line"><span class="class"><span class="params">    conf: <span class="type">SparkConf</span>,</span></span></span><br><span class="line"><span class="class"><span class="params">    numCores: <span class="type">Int</span>,</span></span></span><br><span class="line"><span class="class"><span class="params">    onHeapStorageMemory: <span class="type">Long</span>,</span></span></span><br><span class="line"><span class="class"><span class="params">    onHeapExecutionMemory: <span class="type">Long</span></span>) <span class="keyword">extends</span> <span class="title">Logging</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">maxOffHeapStorageMemory</span></span>: <span class="type">Long</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span>[spark] <span class="class"><span class="keyword">class</span> <span class="title">StaticMemoryManager</span>(<span class="params"></span></span></span><br><span class="line"><span class="class"><span class="params">    conf: <span class="type">SparkConf</span>,</span></span></span><br><span class="line"><span class="class"><span class="params">    maxOnHeapExecutionMemory: <span class="type">Long</span>,</span></span></span><br><span class="line"><span class="class"><span class="params">    override val maxOnHeapStorageMemory: <span class="type">Long</span>,</span></span></span><br><span class="line"><span class="class"><span class="params">    numCores: <span class="type">Int</span></span>)</span></span><br><span class="line"><span class="class">  <span class="keyword">extends</span> <span class="title">MemoryManager</span>(<span class="params"></span></span></span><br><span class="line"><span class="class"><span class="params">    conf,</span></span></span><br><span class="line"><span class="class"><span class="params">    numCores,</span></span></span><br><span class="line"><span class="class"><span class="params">    maxOnHeapStorageMemory,</span></span></span><br><span class="line"><span class="class"><span class="params">    maxOnHeapExecutionMemory</span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">def</span> <span class="title">maxOffHeapStorageMemory</span></span>: <span class="type">Long</span> = <span class="number">0</span>L</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+        <p>1.Option源码</p>
+<p><img src="/img/2019100351.png" alt="5219cb95707e093bafcaa16b6e8d3412"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Option是一个抽象类所以我们要选择其子类</span><br></pre></td></tr></table></figure>
+<p>2.Option的子类</p>
+<p>2.1 Option子类有哪些</p>
+<p><img src="/img/2019100352.png" alt="72e3a22b4f948432cde159f200c70b87"></p>
+<p>2.2 Some与None的源码</p>
+<p><img src="/img/2019100355.png" alt="96b6767bb673b69520bd11e79fffe102"></p>
+<p>3.Example</p>
+<p>3.1 Map的get方法返回值为some</p>
+<p><img src="/img/2019100356.png" alt="169e50ac7c8a7e3594cef638b9374686"></p>
+<p>3.2 如何取得some中的值</p>
+<p><img src="/img/2019100357.png" alt="c525ddf20eac5c664cb12357bba9d85e"></p>
+<p>3.3 取不存在的值</p>
+<p><img src="/img/2019100358.png" alt="5778efc6455c1b0d37f25c19e01f09ba"></p>
+<p>3.4 None值就不能再用get以及其解决方法</p>
+<p><img src="/img/2019100361.png" alt="8566c5b67f19da7d6ddcd5bff0ff2411"></p>
+<p>4.Option顶层元素</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Any</span><br></pre></td></tr></table></figure>
 
       
 
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
       
     </div>
     <div class="article-info article-info-index">
@@ -268,16 +304,84 @@
 
 
       
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/06/05/Scala01/">展开全文 >></a>
-        </p>
-      
 
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
+        </div>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://HenryangTi.github.io/2019/06/11/Scala07/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
       
       <div class="clearfix"></div>
     </div>
   </div>
 </article>
+
+  
+<nav id="article-nav">
+  
+    <a href="/2019/06/22/Leetcode207/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          Leetcode207 - course schedule
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/06/10/Scala6/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Scala之变长参数</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
 
 <aside class="wrap-side-operation">
     <div class="mod-side-operation">
@@ -297,1416 +401,14 @@
 
 
 
-
-  
-    <article id="post-Conc" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/06/04/Conc/">Java并发之thread</a>
-    </h1>
-  
-
-        
-        <a href="/2019/06/04/Conc/" class="archive-article-date">
-  	<time datetime="2019-06-04T04:42:05.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-06-04</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>1.Thread类与Runnable接口的关系</p>
-<p>提到并发，我们首先想到的概念就是线程, 在Java中与线程有关的组件就是Thread类和Runnable接口, 那么有人会产生疑问，Thread类与Runnable接口是否有关呢？为了说明此问题，我们来查看一下Thread类的源码</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Thread</span> <span class="keyword">implements</span> <span class="title">Runnable</span> </span>&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>从上面我们看见Thread类实现了Runnable接口</p>
-<p>2.Thread类详解</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">既然Thread是如此重要，那么我们来看下其源码注释</span><br></pre></td></tr></table></figure>
-<p>2.1 Thread类源码注释</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">A thread is a thread of execution in a program. The Java Virtual Machine allows an application to have multiple threads of execution running concurrently.</span><br><span class="line"></span><br><span class="line">一个thread就是程序中的一个执行线程。JVM允许应用能够同时运行多个执行线程。</span><br></pre></td></tr></table></figure>
-<p>2.2 优先级</p>
-<p>2.2.1 为什么需要优先级<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">既然每个Thread对象都代表一个线程，那么它就会拥有线程的一些特性。</span><br><span class="line"></span><br><span class="line">在我看来，线程最重要的特性就是优先级，在synchronized的时候, 如果某个线程想要去获取到对象的锁，那么它就需要与其它线程进行竞争，那么线程是依靠什么特性与其它线程进行竞争的呢？</span><br><span class="line"></span><br><span class="line">此特性就是优先级。</span><br></pre></td></tr></table></figure></p>
-<p>2.2.2 优先级的作用<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">每个线程都是有优先级的, 优先级高的线程会先被执行</span><br></pre></td></tr></table></figure></p>
-<p>2.2.3 优先级与子线程<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">在一个线程内创建新的线程, 那么新的线程优先级会与其父线程的优先级相同。</span><br><span class="line"></span><br><span class="line">Eg.</span><br><span class="line"></span><br><span class="line">在ThreadA中创建了ThreadB, ThreadB的优先级是与ThreadA的优先级相同</span><br></pre></td></tr></table></figure></p>
-<p>2.3 daemon线程</p>
-<p>2.3.1 daemon线程的作用<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">JVM启动时会生成一个daemon进程来调用main方法</span><br></pre></td></tr></table></figure></p>
-<p>2.3.2 什么时候创建的线程为daemon线程</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">只有daemon线程创建的线程才是daemon线程</span><br></pre></td></tr></table></figure>
-<p>2.4 线程的消亡</p>
-<p>2.4.1 线程消亡的两种方式</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">某类的runtime.exit()方法被调用, 并且安全管理器允许该方法被调用</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">所有的非daemon线程都被消亡</span><br></pre></td></tr></table></figure>
-<p>2.4.2 什么时候非daemon线程都消亡</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">方法调用回到了run方法</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">exception抛出到run方法之外</span><br></pre></td></tr></table></figure>
-<p>2.5 两种线程创建的方式</p>
-<p>2.5.1 继承Thread的方式创建线程</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ThreadClass</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        PrimeThread p = <span class="keyword">new</span> PrimeThread(<span class="number">143</span>);</span><br><span class="line">        p.start();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">PrimeThread</span> <span class="keyword">extends</span> <span class="title">Thread</span></span>&#123;</span><br><span class="line">    <span class="keyword">long</span> minPrime;</span><br><span class="line">    PrimeThread(<span class="keyword">long</span> minPrime)&#123;</span><br><span class="line">        <span class="keyword">this</span>.minPrime = minPrime;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">第一种方式是创建一个Thread的子类, 并且不仅仅写一个extends就完事, 而是需要重写run方法, 这样子类可以被分配一个线程。</span><br></pre></td></tr></table></figure>
-<p>2.5.2 实现Runnable接口创建线程</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PrimeRun</span> <span class="keyword">implements</span> <span class="title">Runnable</span></span>&#123;</span><br><span class="line">    <span class="keyword">long</span> minPrime;</span><br><span class="line">    PrimeRun(<span class="keyword">long</span> minPrime)&#123;</span><br><span class="line">        <span class="keyword">this</span>.minPrime = minPrime;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"hhh"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        PrimeRun p = <span class="keyword">new</span> PrimeRun(<span class="number">143</span>);</span><br><span class="line">        <span class="keyword">new</span> Thread(p).start();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">任何实现Runnable的类可以创建线程, 并不仅仅写个implements就可以, 还需要实现run方法, 这样的话就可以该类的实例分配一个线程, 然后调用start方法启动</span><br></pre></td></tr></table></figure>
-<p>2.6 线程的名字</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">在一个系统中存在很多的线程, 我们应该给每个线程其名字, 这个名字可以由我们自己起，当然如果我们没有起的话, 系统会帮助我们给其起个名字</span><br></pre></td></tr></table></figure>
-<p>3.总结</p>
-<p><img src="/img/conc.png" alt></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Concurrent//" class="article-tag-list-link color1">Concurrent</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/06/04/Conc/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Hive2" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/06/04/Hive2/">Hive DML之导入数据、导出数据、查询、聚合函数和分组函数</a>
-    </h1>
-  
-
-        
-        <a href="/2019/06/04/Hive2/" class="archive-article-date">
-  	<time datetime="2019-06-04T04:42:01.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-06-04</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>1.导入数据</p>
-<p><img src="/img/2019092801.jpg" alt="d53fb36d85b284f5f137ff391029b00d"></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">（1）采用load data将数据加载到Hive表中</span><br><span class="line"> (2) 如果数据再Hive客户端所在的linux机器上的某个目录下，采用local；如果数据在HDFS上就不使用local，直接使用inpath + 路径</span><br><span class="line"> (3) 采用overwrite表示数据将会被重写(先将数据删掉再重写)，如果不是overwrite的话，那就是append；但是由于每次作业都需要保证其原子性，所以append在生产上不使用；也就是说每次重跑数据肯定是会被重写</span><br></pre></td></tr></table></figure>
-<ol start="2">
-<li>导出数据</li>
-</ol>
-<p><img src="/img/2019092802.png" alt="05b2c08802923b8cba88d967cee1b2ab"></p>
-<p>3.查询数据</p>
-<p>3.1 指定字段查询</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> empno, ename <span class="keyword">from</span> ozil_study;</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">（1）在工作中不要使用*来查询，尤其对于列式存储来说使用*和指定列名在性能上差距会很大</span><br></pre></td></tr></table></figure>
-<p>3.2 带限制条件的指定字段查询</p>
-<p>3.2.1 比较符号</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> empno, ename <span class="keyword">from</span> henry_study <span class="keyword">where</span> deptno = <span class="number">10</span>;</span><br></pre></td></tr></table></figure>
-<p><img src="/img/1.png" alt="58b693bf2ff4f6f208420d17a1343a61"></p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> empno, ename <span class="keyword">from</span> ozil_study <span class="keyword">where</span> empno &gt; <span class="number">7500</span>;</span><br></pre></td></tr></table></figure>
-<p><img src="/img/2019092808.png" alt="6de3346d94ad50d14405625b6b33558c"></p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> ozil_study <span class="keyword">where</span> comm != <span class="number">0.0</span>;</span><br></pre></td></tr></table></figure>
-<p><img src="/img/2019092814.png" alt="915904963bb0a01c225ec0816322622e"></p>
-<p>3.2.2 between</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> ozil_study <span class="keyword">where</span> sal <span class="keyword">between</span> <span class="number">800</span> <span class="keyword">and</span> <span class="number">1600</span>;</span><br></pre></td></tr></table></figure>
-<p><img src="/img/2019092809.png" alt="42b53b945b6eec5292538736c668c656"></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">between是左闭右闭区间</span><br></pre></td></tr></table></figure>
-<p>3.2.3 in与not in<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> ozil_study <span class="keyword">where</span> ename <span class="keyword">in</span> (<span class="string">"SMITH"</span>, <span class="string">"ALLEN"</span>);</span><br></pre></td></tr></table></figure></p>
-<p><img src="/img/2019092810.png" alt="46ed66681e3d2f30a5866ed255d4f3c5"></p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> ozil_study <span class="keyword">where</span> ename <span class="keyword">not</span> <span class="keyword">in</span> (<span class="string">"SMITH"</span>, <span class="string">"ALLEN"</span>);</span><br></pre></td></tr></table></figure>
-<p><img src="/img/2019092811.png" alt="1b6211125f29828c3145fe0cbedd9a04"></p>
-<p>3.2.3 is null与is not null</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> ozil_study <span class="keyword">where</span> comm <span class="keyword">is</span> <span class="literal">null</span>;</span><br></pre></td></tr></table></figure>
-<p><img src="/img/2019092812.png" alt="881514e1d2baa0e3d43d4b2264a14779"></p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> ozil_study <span class="keyword">where</span> comm <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">null</span>;</span><br></pre></td></tr></table></figure>
-<p><img src="/img/2019092813.png" alt="45d54ba2b4d95d55a55d06638d45a2d1"></p>
-<p> 4.聚合函数</p>
-<p> 4.1 常用聚合函数<br> <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">max、min、sum、avg、count</span><br></pre></td></tr></table></figure></p>
-<p> 4.2 聚合函数的含义<br> <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">多进一出，比如求最大值就是进来很多条数据，出去只有一条最大的数据；当然如果有两条数据相同，都是最大的，也有可能是多进多出</span><br></pre></td></tr></table></figure></p>
-<p> 4.3 Example</p>
-<p> 4.3.1 需求一: 求部门编号为10的部门有多少人<br> <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="keyword">count</span>(<span class="number">1</span>) <span class="keyword">from</span> ozil_study <span class="keyword">where</span> deptno = <span class="number">10</span>;</span><br></pre></td></tr></table></figure></p>
-<p>4.3.2 需求二: 求该表中最大工资、最小工资、平均工资与工资总和</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="keyword">max</span>(sal), <span class="keyword">min</span>(sal), <span class="keyword">avg</span>(sal), <span class="keyword">sum</span>(sal) <span class="keyword">from</span> ozil_study;</span><br></pre></td></tr></table></figure>
-<p><img src="/img/2019092821.png" alt="0b240d4804ad2540dabd174a44c95bf2"></p>
-<p>5.分组函数: group by(sql语句的关键)</p>
-<p>5.2 Example</p>
-<p>5.2.1 需求一: 求一个部门的平均工资(先按照部门来分组，之后再求平均工资)</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> deptno, <span class="keyword">avg</span>(sal) <span class="keyword">from</span> ozil_study <span class="keyword">group</span> <span class="keyword">by</span> deptno;</span><br></pre></td></tr></table></figure>
-<p><img src="/img/2019092823.png" alt="263f7df44ee7cc00a6540198c3b2c6d1"></p>
-<p>注意<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">出现在select中的字段，要么出现在group by子句中，要么出现在聚合函数中</span><br></pre></td></tr></table></figure></p>
-<p><img src="/img/2019092824.png" alt="d0993778182a054d68e52ca3fc1aa1af"></p>
-<p>5.2.2 需求二： 求每个部门的工作岗位的最高工资(先按部门进行分组，部门里再按岗位进行分组)</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> deptno,  job, <span class="keyword">max</span>(sal) <span class="keyword">from</span> ozil_study <span class="keyword">group</span> <span class="keyword">by</span> deptno, job;</span><br></pre></td></tr></table></figure>
-<p><img src="/img/2019092825.png" alt="228ead03949281edf6296b0893910396"></p>
-<p>5.2.3 需求三: 求每个部门的平均薪水大于2000的部门</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> deptno, <span class="keyword">avg</span>(sal) <span class="keyword">from</span> ozil_study <span class="keyword">group</span> <span class="keyword">by</span> deptno <span class="keyword">having</span> <span class="keyword">avg</span>(sal) &gt; <span class="number">2000</span></span><br></pre></td></tr></table></figure>
-<p><img src="/img/2019092826.png" alt="1830a0dd65074971aa100a46bcc42f09"></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Hive//" class="article-tag-list-link color5">Hive</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/06/04/Hive2/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Hive1" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/06/03/Hive1/">部署Hive</a>
-    </h1>
-  
-
-        
-        <a href="/2019/06/03/Hive1/" class="archive-article-date">
-  	<time datetime="2019-06-03T03:42:01.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-06-03</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>1.准备版本注意事项<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">如果Hadoop是CDH版本，那么Hive的CDH版本号必须要与Hadoop的版本保持一致</span><br></pre></td></tr></table></figure></p>
-<p>2.步骤</p>
-<p>2.1 解压tar包到/home/hadoop/app下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -zxvf hive-1.1.0-cdh5.7.0.tar.gz -C /home/hadoop/app/</span><br></pre></td></tr></table></figure></p>
-<p>2.2 Hive根目录下文件夹含义</p>
-<p><img src="/img/Hive_dir.png" alt="cfc6d293463f9de22bf26e42b1c4a17f"></p>
-<p>2.3 配置环境变量<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">(1) 编译~/.bash_profile</span><br><span class="line">    </span><br><span class="line">        添加export HIVE_HOME=/home/hadoop/app/hive-1.1.0-cdh5.7.0</span><br><span class="line">        添加PATH=$HIVE_HOME/bin:$PATH</span><br><span class="line">        </span><br><span class="line">(2) 生效.bash_profile</span><br><span class="line">        </span><br><span class="line">        source ～/.bash_profile</span><br></pre></td></tr></table></figure></p>
-<p>2.4 配置Hive</p>
-<p>2.4.1 编辑$HIVE_HOME/conf/hive-env.sh<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">编辑HADOOP_HOME=/home/hadoop/app/hadoop-2.6.0-cdh5.7.0</span><br></pre></td></tr></table></figure></p>
-<p><img src="/img/hive-env.png" alt="62d3a568dfa867240474c93156d39e87"></p>
-<p>2.4.2 配置hive-site.xml</p>
-<p><img src="/img/hive-site1_1.png" alt="a8b13d3d97d2283f4bb18db122b4ef76"></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">MySQL的URL参数解释:</span><br><span class="line"></span><br><span class="line">    createDatabaseIfNotExist=true:</span><br><span class="line">        如果数据库中没用ruoze_d5,就会创建</span><br><span class="line">    </span><br><span class="line">    characterEncoding=UTF-8:</span><br><span class="line">        数据库编码设置为utf-8</span><br></pre></td></tr></table></figure>
-<p><img src="/img/hive-site2.png" alt="28d51e8ec9a41406794fdbcfafe0936a"></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">由于Hive元数据是保存在JDBC上, 该参数是配置JDBC的driver</span><br></pre></td></tr></table></figure>
-<p>2.4.3 拷贝MySQL驱动到$HIVE_HOME/lib</p>
-<p><img src="/img/mysql.png" alt="e3820e0edbe8b6c3aa0c8a02894f3be7"></p>
-<p>2.4.4 执行$HIVE_HOME/bin/hive脚本<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">此时进入mysql执行show databases命令，显示ruoze_d5数据库已经被创建</span><br></pre></td></tr></table></figure></p>
-<p><img src="/img/mysql2.png" alt="76dffe26427e143efca8d411bd3c5e80"></p>
-<p><code>出现如下所示就可说明配置成功</code></p>
-<p><img src="/img/hive.png" alt="a5791304e363e28d5be9c0c65bf36187"></p>
-<p>3.Hive中的元数据信息</p>
-<p>3.1 步骤<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">进入MySQL中, 选择ruoze_d5数据库，查询该库下所有的表。</span><br></pre></td></tr></table></figure></p>
-<p><img src="/img/hive1.png" alt="c36abfc7cd6213d64fca2dadf5463f3b"></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Hive//" class="article-tag-list-link color5">Hive</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/06/03/Hive1/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Flume02" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/06/02/Flume02/">Flume各种source以及Example</a>
-    </h1>
-  
-
-        
-        <a href="/2019/06/02/Flume02/" class="archive-article-date">
-  	<time datetime="2019-06-02T02:42:01.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-06-02</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>1.Flume架构</p>
-<p>1.1 基本架构</p>
-<p><img src="/img/flumeAgent.png" alt="34bcc677a69bd5311cd23a875aba7620"></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Agent另外一种理解:</span><br><span class="line">    Agent可以理解为Flume的配置文件, 因为其source、channel与sink都在配置文件上</span><br></pre></td></tr></table></figure>
-<p>1.2 复杂架构</p>
-<p><img src="/img/flumeAgent.png" alt="34bcc677a69bd5311cd23a875aba7620"></p>
-<p>2.配置Agent</p>
-<p>2.1 官网描述</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:center">官网原文</th>
-<th style="text-align:center">中文翻译</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">Flume agent configuration is stored in a local configuration file. This is a text file that follows the Java properties file format.</td>
-<td style="text-align:center">Flume agent的配置存储与本地配置文件中, 这是textFile, 其格式是java配置文件格式</td>
-</tr>
-</tbody>
-</table>
-<p>2.2 Example</p>
-<p><img src="/img/flumeConfig.png" alt="0739f011ab7973451dcce28f0b3a5847"></p>
-<p>2.2.1 Example所用到的组件简要解析</p>
-<p>2.2.1.1 NetCat Source</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:center">Property Name</th>
-<th style="text-align:center">Default</th>
-<th style="text-align:center">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">channels</td>
-<td style="text-align:center">–</td>
-<td style="text-align:center"></td>
-</tr>
-<tr>
-<td style="text-align:center">type</td>
-<td style="text-align:center">–</td>
-<td style="text-align:center">The component type name, needs to be netcat</td>
-</tr>
-<tr>
-<td style="text-align:center">bind</td>
-<td style="text-align:center">–</td>
-<td style="text-align:center">Host name or IP address to bind to</td>
-</tr>
-<tr>
-<td style="text-align:center">port</td>
-<td style="text-align:center">–</td>
-<td style="text-align:center">Port # to bind to</td>
-</tr>
-</tbody>
-</table>
-<p>2.2.1.2 Memory Channel</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:center">Property Name</th>
-<th style="text-align:center">Default</th>
-<th style="text-align:center">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">type</td>
-<td style="text-align:center">–</td>
-<td style="text-align:center">The component type name, needs to be memory</td>
-</tr>
-<tr>
-<td style="text-align:center">capacity</td>
-<td style="text-align:center">100</td>
-<td style="text-align:center">The maximum number of events(一条记录可以理解为一个event) stored in the channel</td>
-</tr>
-<tr>
-<td style="text-align:center">transactionCapacity</td>
-<td style="text-align:center">100</td>
-<td style="text-align:center">The maximum number of events the channel will take from a source or give to a sink per transaction(也就是说存储到100条记录时, 会move)</td>
-</tr>
-</tbody>
-</table>
-<p>2.2.1.3 Logger Sink</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:center">Property Name</th>
-<th style="text-align:center">Default</th>
-<th style="text-align:center">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">channel</td>
-<td style="text-align:center">–</td>
-<td style="text-align:center"></td>
-</tr>
-<tr>
-<td style="text-align:center">type</td>
-<td style="text-align:center">–</td>
-<td style="text-align:center">The component type name, needs to be logger</td>
-</tr>
-</tbody>
-</table>
-<p>2.2.2 运行Flume</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(1) 在Flume_Home/conf下创建Example.conf文件, 将上图的配置放于该配置文件中</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(2) 使用如下命令来启动:：</span><br><span class="line">        flume-ng agent --name a1 --conf $FLUME_HOME/conf --conf-file $FLUME_HOME/conf/Example.conf -Dflume.root.logger=INFO,console</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">(3) 启动后，log日志:</span><br><span class="line">        Reloading configuration file:/home/hadoop/app/apache-flume-1.6.0-cdh5.7.0-bin/conf/Example.conf</span><br><span class="line">        说明使用的配置文件是自定义的配置文件</span><br><span class="line">        </span><br><span class="line">        k1 Agent: a1</span><br><span class="line">        Creating channels</span><br><span class="line">        Creating instance of channel c1 type memory</span><br><span class="line">        Creating instance of source r1, type netcat</span><br><span class="line">        Creating instance of sink: k1, type: logger</span><br><span class="line">        说明已经按照配置文件创建好了实例</span><br><span class="line">        </span><br><span class="line">        Created serverSocket:sun.nio.ch.ServerSocketChannelImpl[/127.0.0.1:44444]</span><br><span class="line">        说明已经监听44444端口</span><br></pre></td></tr></table></figure>
-<p>2.2.3 测试是否运行成功</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">打开telnet, 并在命令行输入如下:</span><br><span class="line">    </span><br><span class="line">    telnet localhost 44444</span><br><span class="line">    </span><br><span class="line">    henry</span><br></pre></td></tr></table></figure>
-<p>flume上的日志显示为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2019-05-31 10:04:42,083 (SinkRunner-PollingRunner-DefaultSinkProcessor) [INFO - org.apache.flume.sink.LoggerSink.process(LoggerSink.java:94)] Event: &#123; headers:&#123;&#125; body: 68 65 6E 72 79 0D                               henry. &#125;</span><br></pre></td></tr></table></figure></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Flume//" class="article-tag-list-link color1">Flume</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/06/02/Flume02/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Flume01" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/06/01/Flume01/">Flume部署</a>
-    </h1>
-  
-
-        
-        <a href="/2019/06/01/Flume01/" class="archive-article-date">
-  	<time datetime="2019-06-01T01:32:01.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-06-01</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>1.Flume系统要求<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">1. Java Runtime Environment - Java 1.6 or later (Java 1.7 Recommended)</span><br><span class="line">2. Memory - Sufficient memory for configurations used by sources, channels(占用的内存较多, 如果sink及之后的组件 failure就会导致数据大量堆积到channle中, 所以要</span><br><span class="line">对其进行监控) or sinks</span><br><span class="line">3. Disk Space - Sufficient disk space for configurations used by channels or sinks</span><br><span class="line">4. Directory Permissions - Read/Write permissions for directories used by agent(可以理解为flume), 如果flume没有读写权限, 就不需要再进行收集操作了, 因为采集之&gt;后都无法写出去</span><br></pre></td></tr></table></figure></p>
-<p>2.Flume部署步骤</p>
-<p>2.1 下载flume的tar包<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget http://archive.cloudera.com/cdh5/cdh/5/flume-ng-1.6.0-cdh5.7.0.tar.gz</span><br></pre></td></tr></table></figure></p>
-<p>2.2 解压tar包</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar zxvf flume-ng-1.6.0-cdh5.7.0.tar.gz</span><br></pre></td></tr></table></figure>
-<p>2.3 查看flume根目录的结构</p>
-<p><img src="/img/flume1.png" alt="72827a355505b4e6e37c3147ffb63227"></p>
-<p>2.4 配置文件</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">在$Flume_Home/conf文件夹下找到flume-env.sh文件</span><br></pre></td></tr></table></figure>
-<p><img src="/img/flume2.png" alt="24cbf97e47fe5965214e4cfdc91ee9e4"></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">按照下图配置</span><br></pre></td></tr></table></figure>
-<p><img src="/img/flume3.png" alt="78dc229c1a9ec79f233b0ade2602e5bd"></p>
-<p>2.5 运行Flume所需的参数</p>
-<p><img src="/img/flume4.png" alt="2b3e846c61bfd895fdace8eb595ec0ed"></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Flume//" class="article-tag-list-link color1">Flume</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/06/01/Flume01/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-raft" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/02/02/raft/">Raft论文</a>
-    </h1>
-  
-
-        
-        <a href="/2019/02/02/raft/" class="archive-article-date">
-  	<time datetime="2019-02-01T16:34:14.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-02-02</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><b>Abstract</b></p>
-<table>
-<thead>
-<tr>
-<th style="text-align:left">原文</th>
-<th style="text-align:left">翻译</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left">Raft is a consensus algorithm for managing a replicated log. It produces a result equivalent to (multi-)Paxos, and it is as efficient as Paxos, but its structure is different from Paxos; this makes Raft more understandable than Paxos and also provides a better foundation for building practical systems. In order to enhance understandability, Raft separates the key elements of consensus, such as leader election, log replication, and safety, and it enforces a stronger degree of coherency to reduce the number of states that must be considered. Results from a user study demonstrate that Raft is easier for students to learn than Paxos. Raft also includes a new mechanism for changing the cluster membership, which uses overlapping majorities to guarantee safety.</td>
-<td style="text-align:left">Raft是一个共识算法，该算法主要的作用就是管理复制的日志。他产生一个与multi-paxos相同的结果，并且效率与Paxos一样，但是他的结构与Paxos不同；正因为如此，Raft比Paxos更容易理解并且raft为构建实际系统提供了更好的基础。为了增强礼节性，Raft将共识算法的关键组成部分独立出来，比如leader的选举，log复制和安全性，并且强制实施了更强的一致性来减少需要考虑的状态的数量。从用户调查的结果上看，raft相对于paxos来说，更适合与学生学习。Raft包含一个关于改变集群成员的新的机制，使用重叠的大多数来保障安全性</td>
-</tr>
-</tbody>
-</table>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/raft//" class="article-tag-list-link color5">raft</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/02/02/raft/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-SparkSQL01" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/01/25/SparkSQL01/">DataFrame</a>
-    </h1>
-  
-
-        
-        <a href="/2019/01/25/SparkSQL01/" class="archive-article-date">
-  	<time datetime="2019-01-24T16:34:14.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-01-25</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>1.Why use DataFrame</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(1) RDD is hard to use</span><br><span class="line"></span><br><span class="line">(2) Pandas can not be used in the distributed system</span><br></pre></td></tr></table></figure>
-<p>2.What is DataFrame</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DataFrame can be viewed as a table, while it does a lot of optimization</span><br></pre></td></tr></table></figure>
-<p>3.How to create DataFrame</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">With a SparkSession, Application can create DataFrames from an exsiting RDD, Hive table or spark data source</span><br></pre></td></tr></table></figure>
-<p>4.Three ways to create RDD</p>
-<p>4.1 Read from json</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> spark = <span class="type">SparkSession</span>.builder().appName(<span class="string">"test"</span>)</span><br><span class="line">                        .master(<span class="string">"local[2]"</span>)</span><br><span class="line">                        .getOrCreate()</span><br><span class="line"></span><br><span class="line"><span class="keyword">val</span> df = spark.read.json(<span class="string">"/people.json"</span>)</span><br><span class="line">df.show</span><br></pre></td></tr></table></figure>
-<p>4.2 Read from Hive table<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">val spark = SparkSession.builder().appName(&quot;test&quot;)</span><br><span class="line">                        .master(&quot;local[2]&quot;)</span><br><span class="line">                        .getOrCreate()</span><br><span class="line"></span><br><span class="line">val df = spark.table(&quot;henry_emp&quot;)</span><br><span class="line"></span><br><span class="line">df.show</span><br></pre></td></tr></table></figure></p>
-<p>4.3 Convert RDD to DataFrame</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line"><span class="keyword">import</span> spark.implicits._</span><br><span class="line"><span class="keyword">val</span> df = spark.sparkContext.parallelize(</span><br><span class="line">    <span class="type">Array</span>((<span class="string">"1"</span>, <span class="string">"Henry"</span>), (<span class="string">"2"</span>, <span class="string">"Ronaldo"</span>), (<span class="string">"3"</span>, <span class="string">"kaka"</span>))</span><br><span class="line">).toDF(<span class="string">"id"</span>, <span class="string">"name"</span>)</span><br><span class="line"></span><br><span class="line">df.show</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Notice:</span><br><span class="line">    (1) must use</span><br><span class="line">            import spark.implicits._</span><br><span class="line">        otherwise</span><br><span class="line">            toDF function can not be used</span><br></pre></td></tr></table></figure>
-<p>5.DataFrame vs RDD vs Dataset</p>
-<p>5.1 From structure</p>
-<p>(1) For <code>RDD[People]</code>, RDD only knows that the type of its elements is People, but it do not know the attribute about People</p>
-<p>(2) For <code>DataFrame[People]</code> can be viewed as a table, which means that <code>row</code> can be seen as an instance of People and <code>column</code> can be seen as attributes about People.</p>
-<p>In other words, <code>DataFrame</code> get schema and combines data and schema. It is similar to Hive, which combines schema and HDFS files.</p>
-<p>(3) For optimization, the code below is an example<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="keyword">id</span>, <span class="keyword">name</span> <span class="keyword">from</span> hw</span><br></pre></td></tr></table></figure></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/SparkSQL//" class="article-tag-list-link color4">SparkSQL</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/01/25/SparkSQL01/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-spark12" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/01/14/spark12/">Spark Core常用算子解析</a>
-    </h1>
-  
-
-        
-        <a href="/2019/01/14/spark12/" class="archive-article-date">
-  	<time datetime="2019-01-13T16:34:14.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-01-14</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>1.collect注释与源码</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:center">注释原文</th>
-<th style="text-align:center">中文翻译</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">Return an array that contains all of the elements in this RDD.This method should only be used if the resulting array is expected to be small, as all the data is loaded into the driver’s memory.</td>
-<td style="text-align:center">返回一个包含RDD中所有元素的数组。该方法只能使用在结果数组是较短的, 因为所有的数据都会被load到driver的内存中, 所有数据量过大, driver内存会扛不住挂掉。</td>
-</tr>
-</tbody>
-</table>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">collect</span></span>(): <span class="type">Array</span>[<span class="type">T</span>] = withScope &#123;</span><br><span class="line">    <span class="comment">//之前说过每个action就触发一个job, 其底层就是sc.runjob</span></span><br><span class="line">    <span class="keyword">val</span> results = sc.runJob(<span class="keyword">this</span>, (iter: <span class="type">Iterator</span>[<span class="type">T</span>]) =&gt; iter.toArray)</span><br><span class="line">    <span class="comment">//将results转成可变参数</span></span><br><span class="line">    <span class="type">Array</span>.concat(results: _*)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>注意<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">每个action算子都执行了runjob函数</span><br></pre></td></tr></table></figure></p>
-<p>2.Map与MapPartition</p>
-<p>2.1 Map注释与源码</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:center">注释原文</th>
-<th style="text-align:center">中文翻译</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">Return a new RDD by applying a function to all elements of this RDD</td>
-<td style="text-align:center">返回一个新的RDD, 该RDD是原RDD的所有元素作用了一个函数之后得到的</td>
-</tr>
-</tbody>
-</table>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">map</span></span>[<span class="type">U</span>: <span class="type">ClassTag</span>](f: <span class="type">T</span> =&gt; <span class="type">U</span>): <span class="type">RDD</span>[<span class="type">U</span>] = withScope &#123;</span><br><span class="line">    <span class="keyword">val</span> cleanF = sc.clean(f)</span><br><span class="line">    <span class="keyword">new</span> <span class="type">MapPartitionsRDD</span>[<span class="type">U</span>, <span class="type">T</span>](<span class="keyword">this</span>, (context, pid, iter) =&gt; iter.map(cleanF))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>2.2 MapPartition注释与源码</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:center">注释原文</th>
-<th style="text-align:center">中文翻译</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">Return a new RDD by applying a function to each partition of this RDD</td>
-<td style="text-align:center">返回一个新的RDD, 该RDD是通过将函数作用到old RDD的每个partition得到的</td>
-</tr>
-</tbody>
-</table>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">mapPartitions</span></span>[<span class="type">U</span>: <span class="type">ClassTag</span>](</span><br><span class="line">      f: <span class="type">Iterator</span>[<span class="type">T</span>] =&gt; <span class="type">Iterator</span>[<span class="type">U</span>],</span><br><span class="line">      preservesPartitioning: <span class="type">Boolean</span> = <span class="literal">false</span>): <span class="type">RDD</span>[<span class="type">U</span>] = withScope &#123;</span><br><span class="line">    <span class="keyword">val</span> cleanedF = sc.clean(f)</span><br><span class="line">    <span class="keyword">new</span> <span class="type">MapPartitionsRDD</span>(</span><br><span class="line">      <span class="keyword">this</span>,</span><br><span class="line">      (context: <span class="type">TaskContext</span>, index: <span class="type">Int</span>, iter: <span class="type">Iterator</span>[<span class="type">T</span>]) =&gt; cleanedF(iter),</span><br><span class="line">      preservesPartitioning)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>2.3 Map VS MapPartition</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">RDD是由很多个partition构成的, 每个partition由N个元素构成。map算子是将函数作用到record上, 而mapPartition是将函数作用到partition上。</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">比如将rdd数据save到MySQL中，如果使用map方式，假设RDD有10个分区, 每个分区有100万数据, 其获得的connection为100万, 而用mapPartition所需的connection为10个。</span><br></pre></td></tr></table></figure>
-<p>MapPartition的缺点<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Map是操作单个元素, 在此操作之前的已处理过的元素就从内存中清掉，空间就出来，所以不会导致OOM, 而MapPartition，如果partition元素是100万, 内存会扛不住</span><br></pre></td></tr></table></figure></p>
-<p>即便如此，还是首选MapPartition, 性能高些，能盖住这些缺点</p>
-<p>3.foreach与foreachPartition</p>
-<p>3.1 foreach注释</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:center">注释原文</th>
-<th style="text-align:center">中文翻译</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">Applies a function f to all elements of this RDD</td>
-<td style="text-align:center">给RDD的所有元素应用一个函数</td>
-</tr>
-</tbody>
-</table>
-<p>3.2 foreachPartition注释</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:center">注释原文</th>
-<th style="text-align:center">中文翻译</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">Applies a function f to each partition of this RDD</td>
-<td style="text-align:center">给RDD的每个分区应用一个函数</td>
-</tr>
-</tbody>
-</table>
-<p>3.3 哪个更好<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">保存到数据库首选foreachPartition, 因为首先它是action, 其次它是对整个partition操作</span><br></pre></td></tr></table></figure></p>
-<p>4.textFile注释与源码</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:center">注释原文</th>
-<th style="text-align:center">中文翻译</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">Read a directory of text files from HDFS, a local file system (available on all nodes), or any Hadoop-supported file system URI, and return it as an RDD of Strings</td>
-<td style="text-align:center">从HDFS, 本地文件系统(如果是standalone模式, 必须每个节点的相同的目录上都有该文件), 或者任意支持Hadoop的文件系统的URI上读取文件的目录， 返回的是一个string类型的rdd</td>
-</tr>
-</tbody>
-</table>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">textFile</span></span>(</span><br><span class="line">      path: <span class="type">String</span>,</span><br><span class="line">      minPartitions: <span class="type">Int</span> = defaultMinPartitions): <span class="type">RDD</span>[<span class="type">String</span>] = withScope &#123;</span><br><span class="line">    assertNotStopped()</span><br><span class="line">    hadoopFile(path, classOf[<span class="type">TextInputFormat</span>], classOf[<span class="type">LongWritable</span>], classOf[<span class="type">Text</span>],</span><br><span class="line">      minPartitions).map(pair =&gt; pair._2.toString).setName(path)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>问题: map(pair =&gt; pair._2.toString)的作用<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">因为MR中key是偏移量, value才是所需要的, 所以只取value, 所以需要map将key拿掉</span><br></pre></td></tr></table></figure></p>
-<p>问题: 为什么默认两个分区<br><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">因为在源码中</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">defaultMinPartitions</span></span>: <span class="type">Int</span> = math.min(defaultParallelism, <span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">所以defaultMinPartitions不能大于<span class="number">2</span></span><br></pre></td></tr></table></figure></p>
-<p>4.1 textFile底层调用代码解析</p>
-<p>4.1.1 HadoopFile注释与源码</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:center">注释原文</th>
-<th style="text-align:center">中文翻译</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">Get an RDD for a Hadoop file with an arbitrary InputFormat</td>
-<td style="text-align:center">得到一个RDD, 该RDD是的内容是任意InputFormat的Hadoop文件</td>
-</tr>
-</tbody>
-</table>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">hadoopFile</span></span>[<span class="type">K</span>, <span class="type">V</span>](</span><br><span class="line">      path: <span class="type">String</span>,</span><br><span class="line">      inputFormatClass: <span class="type">Class</span>[_ &lt;: <span class="type">InputFormat</span>[<span class="type">K</span>, <span class="type">V</span>]],</span><br><span class="line">      keyClass: <span class="type">Class</span>[<span class="type">K</span>],</span><br><span class="line">      valueClass: <span class="type">Class</span>[<span class="type">V</span>],</span><br><span class="line">      minPartitions: <span class="type">Int</span> = defaultMinPartitions): <span class="type">RDD</span>[(<span class="type">K</span>, <span class="type">V</span>)] = withScope &#123;</span><br><span class="line">        <span class="comment">//与MR流程一致</span></span><br><span class="line">        <span class="keyword">val</span> setInputPathsFunc = (jobConf: <span class="type">JobConf</span>) =&gt; <span class="type">FileInputFormat</span>.setInputPaths(jobConf, path)</span><br><span class="line">      <span class="keyword">new</span> <span class="type">HadoopRDD</span>(</span><br><span class="line">        <span class="keyword">this</span>,</span><br><span class="line">        confBroadcast,</span><br><span class="line">        <span class="type">Some</span>(setInputPathsFunc),</span><br><span class="line">        inputFormatClass,</span><br><span class="line">        keyClass,</span><br><span class="line">        valueClass,</span><br><span class="line">        minPartitions</span><br><span class="line">      ).setName(path)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>补充说明<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(1) 通过InputFormat来读数据</span><br><span class="line">(2) keyClass， valueClass也就是在MR中设置的key的类型和value的类型</span><br></pre></td></tr></table></figure></p>
-<p>4.1.2 HadoopRDD注释</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:center">注释原文</th>
-<th style="text-align:center">中文翻译</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">An RDD that provides core functionality for reading data stored in Hadoop</td>
-<td style="text-align:center">是一个RDD, 该RDD提供了一些核心功能, 该功能作用是读取在存储在Hadoop上的数据</td>
-</tr>
-</tbody>
-</table>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Spark//" class="article-tag-list-link color1">Spark</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/01/14/spark12/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-spark11" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/01/13/spark11/">Cache和Persist</a>
-    </h1>
-  
-
-        
-        <a href="/2019/01/13/spark11/" class="archive-article-date">
-  	<time datetime="2019-01-12T16:34:14.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-01-13</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>1.简介</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:center">官网原文</th>
-<th style="text-align:center">中文翻译</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">One of the most important capabilities in Spark is persisting (or caching) a dataset in memory across operations.When you persist an RDD, each node stores any partitions of it that it computes in memory and reuses them in other actions on that dataset (or datasets derived from it).This allows future actions to be much faster (often by more than 10x)</td>
-<td style="text-align:center">Spark中最重要的能力是缓存一个在内存中的数据集，该数据集可被很多操作使用。当你持久化一个RDD时, 每个节点存储RDD的任意分区，这样在内存中RDD可以进行计算或者作用于该数据集上的其他action中重新使用被cache的RDD。这个允许未来的action速度更快(经常差不多是原来的10倍速度)</td>
-</tr>
-<tr>
-<td style="text-align:center">You can mark an RDD to be persisted using the persist() or cache() methods on it</td>
-<td style="text-align:center">可以使用persist()或者cache()方法来持久化RDD</td>
-</tr>
-</tbody>
-</table>
-<p>2.存储级别</p>
-<p>2.1 存储级别注释及源码</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:center">注释原文</th>
-<th style="text-align:center">中文翻译</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">Various <code>org.apache.spark.storage.StorageLevel</code> defined and utility functions for creating new storage levels.</td>
-<td style="text-align:center">定义各种各样的存储级别</td>
-</tr>
-</tbody>
-</table>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> <span class="type">NONE</span> = <span class="keyword">new</span> <span class="type">StorageLevel</span>(<span class="literal">false</span>, <span class="literal">false</span>, <span class="literal">false</span>, <span class="literal">false</span>)</span><br><span class="line"><span class="keyword">val</span> <span class="type">DISK_ONLY</span> = <span class="keyword">new</span> <span class="type">StorageLevel</span>(<span class="literal">true</span>, <span class="literal">false</span>, <span class="literal">false</span>, <span class="literal">false</span>)</span><br><span class="line"><span class="keyword">val</span> <span class="type">DISK_ONLY_2</span> = <span class="keyword">new</span> <span class="type">StorageLevel</span>(<span class="literal">true</span>, <span class="literal">false</span>, <span class="literal">false</span>, <span class="literal">false</span>, <span class="number">2</span>)</span><br><span class="line"><span class="keyword">val</span> <span class="type">MEMORY_ONLY</span> = <span class="keyword">new</span> <span class="type">StorageLevel</span>(<span class="literal">false</span>, <span class="literal">true</span>, <span class="literal">false</span>, <span class="literal">true</span>)</span><br><span class="line"><span class="keyword">val</span> <span class="type">MEMORY_ONLY_2</span> = <span class="keyword">new</span> <span class="type">StorageLevel</span>(<span class="literal">false</span>, <span class="literal">true</span>, <span class="literal">false</span>, <span class="literal">true</span>, <span class="number">2</span>)</span><br><span class="line"><span class="keyword">val</span> <span class="type">MEMORY_ONLY_SER</span> = <span class="keyword">new</span> <span class="type">StorageLevel</span>(<span class="literal">false</span>, <span class="literal">true</span>, <span class="literal">false</span>, <span class="literal">false</span>)</span><br><span class="line"><span class="keyword">val</span> <span class="type">MEMORY_ONLY_SER_2</span> = <span class="keyword">new</span> <span class="type">StorageLevel</span>(<span class="literal">false</span>, <span class="literal">true</span>, <span class="literal">false</span>, <span class="literal">false</span>, <span class="number">2</span>)</span><br><span class="line"><span class="keyword">val</span> <span class="type">MEMORY_AND_DISK</span> = <span class="keyword">new</span> <span class="type">StorageLevel</span>(<span class="literal">true</span>, <span class="literal">true</span>, <span class="literal">false</span>, <span class="literal">true</span>)</span><br><span class="line"><span class="keyword">val</span> <span class="type">MEMORY_AND_DISK_2</span> = <span class="keyword">new</span> <span class="type">StorageLevel</span>(<span class="literal">true</span>, <span class="literal">true</span>, <span class="literal">false</span>, <span class="literal">true</span>, <span class="number">2</span>)</span><br><span class="line"><span class="keyword">val</span> <span class="type">MEMORY_AND_DISK_SER</span> = <span class="keyword">new</span> <span class="type">StorageLevel</span>(<span class="literal">true</span>, <span class="literal">true</span>, <span class="literal">false</span>, <span class="literal">false</span>)</span><br><span class="line"><span class="keyword">val</span> <span class="type">MEMORY_AND_DISK_SER_2</span> = <span class="keyword">new</span> <span class="type">StorageLevel</span>(<span class="literal">true</span>, <span class="literal">true</span>, <span class="literal">false</span>, <span class="literal">false</span>, <span class="number">2</span>)</span><br><span class="line"><span class="keyword">val</span> <span class="type">OFF_HEAP</span> = <span class="keyword">new</span> <span class="type">StorageLevel</span>(<span class="literal">true</span>, <span class="literal">true</span>, <span class="literal">true</span>, <span class="literal">false</span>, <span class="number">1</span>)</span><br></pre></td></tr></table></figure>
-<p>2.2 StorageLevel构造器的参数意义<br><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">StorageLevel</span> <span class="title">private</span>(<span class="params"></span></span></span><br><span class="line"><span class="class"><span class="params">    //是否使用磁盘</span></span></span><br><span class="line"><span class="class"><span class="params">    private var _useDisk: <span class="type">Boolean</span>,</span></span></span><br><span class="line"><span class="class"><span class="params">    private var _useMemory: <span class="type">Boolean</span>,</span></span></span><br><span class="line"><span class="class"><span class="params">    private var _useOffHeap: <span class="type">Boolean</span>,</span></span></span><br><span class="line"><span class="class"><span class="params">    private var _deserialized: <span class="type">Boolean</span>,</span></span></span><br><span class="line"><span class="class"><span class="params">    //副本因子, 缓存几个副本</span></span></span><br><span class="line"><span class="class"><span class="params">    private var _replication: <span class="type">Int</span> = 1</span>)</span></span><br><span class="line"><span class="class">  <span class="keyword">extends</span> <span class="title">Externalizable</span> </span>&#123;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>2.3 以MEMORY_ONLY为例解释StorageLevel构造器的参数</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> <span class="type">MEMORY_ONLY</span> = <span class="keyword">new</span> <span class="type">StorageLevel</span>(<span class="literal">false</span>, <span class="literal">true</span>, <span class="literal">false</span>, <span class="literal">true</span>)</span><br></pre></td></tr></table></figure>
-<p>解释参数对应的值<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">不使用磁盘</span><br><span class="line">使用内存</span><br><span class="line">不用堆外空间</span><br><span class="line">使用反序列化</span><br><span class="line">1副本</span><br></pre></td></tr></table></figure></p>
-<p>2.4 其他种类的StorageLevel源码</p>
-<p>2.4.1 DISK_ONLY</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> <span class="type">DISK_ONLY</span> = <span class="keyword">new</span> <span class="type">StorageLevel</span>(<span class="literal">true</span>, <span class="literal">false</span>, <span class="literal">false</span>, <span class="literal">false</span>)</span><br></pre></td></tr></table></figure>
-<p>2.4.2 MEMORY_ONLY_SER</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> <span class="type">MEMORY_ONLY_SER</span> = <span class="keyword">new</span> <span class="type">StorageLevel</span>(<span class="literal">false</span>, <span class="literal">true</span>, <span class="literal">false</span>, <span class="literal">false</span>)</span><br></pre></td></tr></table></figure>
-<p>2.5 取消缓存<br><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lines.unpersist()</span><br></pre></td></tr></table></figure></p>
-<p>3.cache与persist的区别</p>
-<p>3.1 cache注释及源码</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:center">注释原文</th>
-<th style="text-align:center">中文翻译</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">Persist this RDD with the default storage level (<code>MEMORY_ONLY</code>)</td>
-<td style="text-align:center">使用默认存储级别(MEMORY_ONLY)持久化RDD</td>
-</tr>
-</tbody>
-</table>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">persist</span></span>(): <span class="keyword">this</span>.<span class="keyword">type</span> = persist(<span class="type">StorageLevel</span>.<span class="type">MEMORY_ONLY</span>)</span><br></pre></td></tr></table></figure>
-<p>3.2 persist源码<br><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">persist</span></span>(): <span class="keyword">this</span>.<span class="keyword">type</span> = persist(<span class="type">StorageLevel</span>.<span class="type">MEMORY_ONLY</span>)</span><br></pre></td></tr></table></figure></p>
-<p>3.3 总结<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cache时persist的其中一个特例，是存储级别为MEMORY_ONLY时的persist</span><br></pre></td></tr></table></figure></p>
-<p>4.测试</p>
-<p>4.1 测试代码</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> lines = sc.textFile(<span class="string">"hdfs://hadoop:9000/helloworld.txt"</span>)</span><br><span class="line">lines.cache</span><br></pre></td></tr></table></figure>
-<p>4.2 Web UI上显示</p>
-<p>4.2.1 cahce操作</p>
-<p><img src="/img/cache2.png" alt="avatatr"></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">此时storage是显示没有进行任何存储</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">此时就会非常奇怪，明明使用了cache，那么为什么什么都没显示。其原因就是cache是lazy的，只有其对应的rdd执行了action操作，cache操作才会执行</span><br></pre></td></tr></table></figure>
-<p>使用下述代码进行测试<br><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lines.collect</span><br></pre></td></tr></table></figure></p>
-<p>此时wen ui上如下图所示</p>
-<p><img src="/img/cache3.png" alt="avatatr"></p>
-<p>4.2.2 缓存之后文件大小</p>
-<p>测试代码<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">val lines = sc.textFile(&quot;hdfs://hadoop:9000/helloworld.txt&quot;)</span><br><span class="line">lines.cache</span><br><span class="line">lines.collect</span><br></pre></td></tr></table></figure></p>
-<p>此时在web ui下的输出如下表</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:center">Job Id</th>
-<th style="text-align:center">Description</th>
-<th style="text-align:center">submitted</th>
-<th style="text-align:center">Duration</th>
-<th style="text-align:center">Stages:Succeeded/Total</th>
-<th style="text-align:center">Tasks:Succeeded/Total</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">1</td>
-<td style="text-align:center">collect at <console>:26</console></td>
-<td style="text-align:center">2019/01/12 13:08:27</td>
-<td style="text-align:center">75ms</td>
-<td style="text-align:center">1/1</td>
-<td style="text-align:center">2/2</td>
-</tr>
-</tbody>
-</table>
-<table>
-<thead>
-<tr>
-<th style="text-align:center">Job Id</th>
-<th style="text-align:center">Description</th>
-<th style="text-align:center">submitted</th>
-<th style="text-align:center">Duration</th>
-<th style="text-align:center">Tasks:Succeeded/Total</th>
-<th style="text-align:center">Input</th>
-<th style="text-align:center">Output</th>
-<th style="text-align:center">Shuffle Read</th>
-<th style="text-align:center">Shuffle write</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">1</td>
-<td style="text-align:center">collect at <console>:26</console></td>
-<td style="text-align:center">2019/01/12 13:08:27</td>
-<td style="text-align:center">61ms</td>
-<td style="text-align:center">2/2</td>
-<td style="text-align:center">41.0B</td>
-<td style="text-align:center"></td>
-<td style="text-align:center"></td>
-</tr>
-</tbody>
-</table>
-<p>而在Storage界面看</p>
-<p><img src="/img/cache3.png" alt="avatatr"></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">缓存的数据为224B, 而真正数据大小为41.0B</span><br><span class="line"></span><br><span class="line">所以，采用默认机制的条件下, 缓存的数据会比原始数据大</span><br></pre></td></tr></table></figure>
-<p>4.2.3 何时使用cache的数据</p>
-<p>当第一次执行如下代码后<br><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> lines = sc.textFile(<span class="string">"hdfs://hadoop:9000/helloworld.txt"</span>)</span><br><span class="line">lines.cache</span><br><span class="line">lines.collect</span><br></pre></td></tr></table></figure></p>
-<p>再执行下面代码<br><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lines.collect</span><br></pre></td></tr></table></figure></p>
-<p>此时web ui输出如下表所示</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:center">Job Id</th>
-<th style="text-align:center">Description</th>
-<th style="text-align:center">submitted</th>
-<th style="text-align:center">Duration</th>
-<th style="text-align:center">Tasks:Succeeded/Total</th>
-<th style="text-align:center">Input</th>
-<th style="text-align:center">Output</th>
-<th style="text-align:center">Shuffle Read</th>
-<th style="text-align:center">Shuffle write</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">1</td>
-<td style="text-align:center">collect at <console>:26</console></td>
-<td style="text-align:center">2019/01/12 13:08:27</td>
-<td style="text-align:center">61ms</td>
-<td style="text-align:center">2/2</td>
-<td style="text-align:center">224.0B</td>
-<td style="text-align:center"></td>
-<td style="text-align:center"></td>
-</tr>
-</tbody>
-</table>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">此时数据是从cache中读取出来的</span><br></pre></td></tr></table></figure>
-<p>4.2.4 查看cache的Storage level</p>
-<p>Web UI上显示为</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:center">ID</th>
-<th style="text-align:center">RDD Name</th>
-<th style="text-align:center">Storage Level</th>
-<th style="text-align:center">Cached Partitions</th>
-<th style="text-align:center">Fraction Cached</th>
-<th style="text-align:center">Size in Memory</th>
-<th style="text-align:center">Size on Disk</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">3</td>
-<td style="text-align:center">hdfs://hadoop:9000/helloworld.txt</td>
-<td style="text-align:center">Memory Deserialized 1x Replicated</td>
-<td style="text-align:center">2</td>
-<td style="text-align:center">100%</td>
-<td style="text-align:center">224.0B</td>
-<td style="text-align:center">0.0B</td>
-</tr>
-</tbody>
-</table>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">从上表中可以看出其Storage Level为Memory Deserialized 1x Replicated(内存不序列化1副本)</span><br></pre></td></tr></table></figure>
-<p>4.2.5 修改存储级别</p>
-<p>测试代码为<br><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lines.persist(<span class="type">StorageLevel</span>.<span class="type">MEMORY_AND_DISK_SER_2</span>).collect</span><br></pre></td></tr></table></figure></p>
-<p>之前再Web UI的Storage界面上显示为</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:center">ID</th>
-<th style="text-align:center">RDD Name</th>
-<th style="text-align:center">Storage Level</th>
-<th style="text-align:center">Cached Partitions</th>
-<th style="text-align:center">Fraction Cached</th>
-<th style="text-align:center">Size in Memory</th>
-<th style="text-align:center">Size on Disk</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">3</td>
-<td style="text-align:center">hdfs://hadoop:9000/helloworld.txt</td>
-<td style="text-align:center">Memory Deserialized 1x Replicated</td>
-<td style="text-align:center">2</td>
-<td style="text-align:center">100%</td>
-<td style="text-align:center">224.0B</td>
-<td style="text-align:center">0.0B</td>
-</tr>
-</tbody>
-</table>
-<p>现在Web UI上的Storage界面上显示为</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:center">ID</th>
-<th style="text-align:center">RDD Name</th>
-<th style="text-align:center">Storage Level</th>
-<th style="text-align:center">Cached Partitions</th>
-<th style="text-align:center">Fraction Cached</th>
-<th style="text-align:center">Size in Memory</th>
-<th style="text-align:center">Size on Disk</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">3</td>
-<td style="text-align:center">hdfs://hadoop:9000/helloworld.txt</td>
-<td style="text-align:center">Memory Serialized 2x Replicated</td>
-<td style="text-align:center">2</td>
-<td style="text-align:center">100%</td>
-<td style="text-align:center">224.0B</td>
-<td style="text-align:center">0.0B</td>
-</tr>
-</tbody>
-</table>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">此时其Storage Level已发生改变</span><br></pre></td></tr></table></figure>
-<p>5.几种默认存储级别的官网描述</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:center">Storage Level</th>
-<th style="text-align:center">Meaning</th>
-<th style="text-align:center">Meaning的中文翻译</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">MEMORY_ONLY</td>
-<td style="text-align:center">Store RDD as deserialized Java objects in the JVM. If the RDD does not fit in memory, some partitions will not be cached and will be recomputed on the fly each time they’re needed. This is the default level.</td>
-<td style="text-align:center">在JVM中以不序列化的Java对象存储RDD。如果RDD在not fit in 内存(也就是说该RDD中的partition的数据存储不了)，一些partition将不会被cache住, 并且将会在每次需要的时候重新计算。这是默认的级别。</td>
-</tr>
-</tbody>
-</table>
-<table>
-<thead>
-<tr>
-<th style="text-align:center">Storage Level</th>
-<th style="text-align:center">Meaning</th>
-<th style="text-align:center">Meaning的中文翻译</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">MEMORY_AND_DISK</td>
-<td style="text-align:center">Store RDD as deserialized Java objects in the JVM. If the RDD does not fit in memory, store the partitions that don’t fit on disk, and read them from there when they’re needed.</td>
-<td style="text-align:center">在JVM中以不序列化的Java对象存储RDD。如果RDD不能fit in 内存, 在disk上存储不能fit的partition，实用的时候再读出来。</td>
-</tr>
-</tbody>
-</table>
-<table>
-<thead>
-<tr>
-<th style="text-align:center">Storage Level</th>
-<th style="text-align:center">Meaning</th>
-<th style="text-align:center">Meaning的中文翻译</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">MEMORY_ONLY_SER</td>
-<td style="text-align:center">Store RDD as serialized Java objects (one byte array per partition). This is generally more space-efficient than deserialized objects, especially when using a fast serializer, but more CPU-intensive to read.</td>
-<td style="text-align:center">以序列化的方式存储RDD(每个partition一个字节数组)。该方式比不序列化的对象更加节省空间, 特别是使用快速的serializer, 但是读取的时候增加对CPU性能的消耗。</td>
-</tr>
-</tbody>
-</table>
-<p>6.序列化优缺点<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">序列化后能够节省内存空间，但是序列化耗费CPU</span><br></pre></td></tr></table></figure></p>
-<p>7.如何选择Storage Level</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:center">官网原文</th>
-<th style="text-align:center">中文翻译</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">Spark’s storage levels are meant to provide different trade-offs between memory usage and CPU efficiency</td>
-<td style="text-align:center">Spark的存储级别的选择意味着是在内存使用和CPU效率之间做一个平衡</td>
-</tr>
-</tbody>
-</table>
-<table>
-<thead>
-<tr>
-<th style="text-align:center">官网原文</th>
-<th style="text-align:center">中文翻译</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">We recommend going through the following process to select one：If your RDDs fit comfortably with the default storage level (MEMORY_ONLY), leave them that way.This is the most CPU-efficient option, allowing operations on the RDDs to run as fast as possible.If not, try using MEMORY_ONLY_SER and selecting a fast serialization library to make the objects much more space-efficient, but still reasonably fast to access. (Java and Scala).Don’t spill to disk unless the functions that computed your datasets are expensive, or they filter a large amount of the data.Otherwise, recomputing a partition may be as fast as reading it from disk.Use the replicated storage levels if you want fast fault recovery (e.g. if using Spark to serve requests from a web application).All the storage levels provide full fault tolerance by recomputing lost data, but the replicated ones let you continue running tasks on the RDD without waiting to recompute a lost partition.</td>
-<td style="text-align:center">我们推荐选择的时候采取如下步骤：如果你的RDD能够很好的适用默认的存储级别(MEMORY_ONLY), 就不需要改变。这是最省CPU的选择, 允许RDD上的操作运行的尽可能快。如果第一种(默认的)不行, 尝试使用MEMORY_ONLY_SER模式, 并且使用一个快速的序列化库, 这样可以使对象更加节省空间, 但是访问速度还是可以的。不要将RDD存储到磁盘上, 除非从数据集计算出RDD的函数是花费巨大的, 或者该函数过滤了大数据。重新计算一个分区可能比从磁盘中读RDD速度更快。如果你想快速容错, 可以使用副本的存储级别。所有的存储级别通过丢失数据后重新计算的方式提供了一个完整的容错机制, 但是副本的方式可以让你继续在RDD上运行task, 不需要等待重新计算丢失的partition</td>
-</tr>
-</tbody>
-</table>
-<p>注意<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(1) Persist的参数不要选择和disk有关的</span><br><span class="line">(2) Storage Level推荐MEMORY_ONLY和MEMORY_ONLY_SER</span><br></pre></td></tr></table></figure></p>
-<p>8.移除缓存</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:center">官网原文</th>
-<th style="text-align:center">中文翻译</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">Spark automatically monitors cache usage on each node and drops out old data partitions in a least-recently-used (LRU) fashion.If you would like to manually remove an RDD instead of waiting for it to fall out of the cache, use the RDD.unpersist() method.</td>
-<td style="text-align:center">Spark自动监测每个节点上cache的使用量, 以LRU的风格删除old数据。如果想要手工清除RDD使用RDD.unpersist()</td>
-</tr>
-</tbody>
-</table>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Spark//" class="article-tag-list-link color1">Spark</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/01/13/spark11/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
   
   
-    <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/3/">Next &raquo;</a>
-    </nav>
+  
+
+  
+
+  
+
   
 
 
@@ -1729,8 +431,8 @@
     <script>
 	var yiliaConfig = {
 		mathjax: true,
-		isHome: true,
-		isPost: false,
+		isHome: false,
+		isPost: true,
 		isArchive: false,
 		isTag: false,
 		isCategory: false,
