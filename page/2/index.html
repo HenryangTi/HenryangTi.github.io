@@ -212,6 +212,192 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-Flume02" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/06/02/Flume02/">Flume各种source以及Example</a>
+    </h1>
+  
+
+        
+        <a href="/2019/06/02/Flume02/" class="archive-article-date">
+  	<time datetime="2019-06-02T02:42:01.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-06-02</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.Flume架构</p>
+<p>1.1 基本架构</p>
+<p><img src="/img/flumeAgent.png" alt="34bcc677a69bd5311cd23a875aba7620"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Agent另外一种理解:</span><br><span class="line">    Agent可以理解为Flume的配置文件, 因为其source、channel与sink都在配置文件上</span><br></pre></td></tr></table></figure>
+<p>1.2 复杂架构</p>
+<p><img src="/img/flumeAgent.png" alt="34bcc677a69bd5311cd23a875aba7620"></p>
+<p>2.配置Agent</p>
+<p>2.1 官网描述</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">官网原文</th>
+<th style="text-align:center">中文翻译</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">Flume agent configuration is stored in a local configuration file. This is a text file that follows the Java properties file format.</td>
+<td style="text-align:center">Flume agent的配置存储与本地配置文件中, 这是textFile, 其格式是java配置文件格式</td>
+</tr>
+</tbody>
+</table>
+<p>2.2 Example</p>
+<p><img src="/img/flumeConfig.png" alt="0739f011ab7973451dcce28f0b3a5847"></p>
+<p>2.2.1 Example所用到的组件简要解析</p>
+<p>2.2.1.1 NetCat Source</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">Property Name</th>
+<th style="text-align:center">Default</th>
+<th style="text-align:center">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">channels</td>
+<td style="text-align:center">–</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">type</td>
+<td style="text-align:center">–</td>
+<td style="text-align:center">The component type name, needs to be netcat</td>
+</tr>
+<tr>
+<td style="text-align:center">bind</td>
+<td style="text-align:center">–</td>
+<td style="text-align:center">Host name or IP address to bind to</td>
+</tr>
+<tr>
+<td style="text-align:center">port</td>
+<td style="text-align:center">–</td>
+<td style="text-align:center">Port # to bind to</td>
+</tr>
+</tbody>
+</table>
+<p>2.2.1.2 Memory Channel</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">Property Name</th>
+<th style="text-align:center">Default</th>
+<th style="text-align:center">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">type</td>
+<td style="text-align:center">–</td>
+<td style="text-align:center">The component type name, needs to be memory</td>
+</tr>
+<tr>
+<td style="text-align:center">capacity</td>
+<td style="text-align:center">100</td>
+<td style="text-align:center">The maximum number of events(一条记录可以理解为一个event) stored in the channel</td>
+</tr>
+<tr>
+<td style="text-align:center">transactionCapacity</td>
+<td style="text-align:center">100</td>
+<td style="text-align:center">The maximum number of events the channel will take from a source or give to a sink per transaction(也就是说存储到100条记录时, 会move)</td>
+</tr>
+</tbody>
+</table>
+<p>2.2.1.3 Logger Sink</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">Property Name</th>
+<th style="text-align:center">Default</th>
+<th style="text-align:center">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">channel</td>
+<td style="text-align:center">–</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">type</td>
+<td style="text-align:center">–</td>
+<td style="text-align:center">The component type name, needs to be logger</td>
+</tr>
+</tbody>
+</table>
+<p>2.2.2 运行Flume</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(1) 在Flume_Home/conf下创建Example.conf文件, 将上图的配置放于该配置文件中</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(2) 使用如下命令来启动:：</span><br><span class="line">        flume-ng agent --name a1 --conf $FLUME_HOME/conf --conf-file $FLUME_HOME/conf/Example.conf -Dflume.root.logger=INFO,console</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">(3) 启动后，log日志:</span><br><span class="line">        Reloading configuration file:/home/hadoop/app/apache-flume-1.6.0-cdh5.7.0-bin/conf/Example.conf</span><br><span class="line">        说明使用的配置文件是自定义的配置文件</span><br><span class="line">        </span><br><span class="line">        k1 Agent: a1</span><br><span class="line">        Creating channels</span><br><span class="line">        Creating instance of channel c1 type memory</span><br><span class="line">        Creating instance of source r1, type netcat</span><br><span class="line">        Creating instance of sink: k1, type: logger</span><br><span class="line">        说明已经按照配置文件创建好了实例</span><br><span class="line">        </span><br><span class="line">        Created serverSocket:sun.nio.ch.ServerSocketChannelImpl[/127.0.0.1:44444]</span><br><span class="line">        说明已经监听44444端口</span><br></pre></td></tr></table></figure>
+<p>2.2.3 测试是否运行成功</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">打开telnet, 并在命令行输入如下:</span><br><span class="line">    </span><br><span class="line">    telnet localhost 44444</span><br><span class="line">    </span><br><span class="line">    henry</span><br></pre></td></tr></table></figure>
+<p>flume上的日志显示为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2019-05-31 10:04:42,083 (SinkRunner-PollingRunner-DefaultSinkProcessor) [INFO - org.apache.flume.sink.LoggerSink.process(LoggerSink.java:94)] Event: &#123; headers:&#123;&#125; body: 68 65 6E 72 79 0D                               henry. &#125;</span><br></pre></td></tr></table></figure></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Flume//" class="article-tag-list-link color1">Flume</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/06/02/Flume02/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-Flume01" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1654,153 +1840,6 @@
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2019/01/09/spark09/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-spark08" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/01/08/spark08/">coalesce与repartition</a>
-    </h1>
-  
-
-        
-        <a href="/2019/01/08/spark08/" class="archive-article-date">
-  	<time datetime="2019-01-07T16:34:14.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-01-08</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>1.coalesce</p>
-<p>1.1 coalesce源码注释</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:left">原文</th>
-<th style="text-align:left">中文翻译</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left">Return a new RDD that is reduced into <code>numPartitions</code> partitions.This results in a narrow dependency, e.g. if you go from 1000 partitions to 100 partitions, there will not be a shuffle, instead each of the 100 new partitions will claim 10 of the current partitions.</td>
-<td style="text-align:left">返回一个新的RDD, 其分区数减少到numPartitions的分区数。coalesce是窄依赖操作，比如，如果你将1000个partitions降低到100个partitions的过程中不会存在shuffle</td>
-</tr>
-</tbody>
-</table>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">numPartitions默认为2，可以自定义分区数</span><br></pre></td></tr></table></figure>
-<p>1.2 coalesce测试案例</p>
-<p>1.2.1 测试案例1</p>
-<p>scala代码<br><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> data = sc.textFile(<span class="string">"hdfs://hadoop:9000/helloworld.txt"</span>)</span><br><span class="line">data.partitions.length</span><br></pre></td></tr></table></figure></p>
-<p>其输出结果为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">res1: Int = 2</span><br></pre></td></tr></table></figure></p>
-<p>说明coalesce默认的分区数为2</p>
-<p>1.2.2 测试案例2</p>
-<p>scala代码</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> data = sc.textFile(<span class="string">"hdfs://hadoop:9000/helloworld.txt"</span>)</span><br><span class="line"><span class="keyword">val</span> data1 = data.coalesce(<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
-<p>输出为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">res2: Int = 1</span><br></pre></td></tr></table></figure></p>
-<p>说明此时分区已变为1个</p>
-<p>1.2.3 测试案例3</p>
-<p>scala代码<br><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> data = sc.textFile(<span class="string">"hdfs://hadoop:9000/helloworld.txt"</span>)</span><br><span class="line"><span class="keyword">val</span> data1 = data.coalesce(<span class="number">4</span>)</span><br><span class="line">data1.partitions.length</span><br></pre></td></tr></table></figure></p>
-<p>输出结果为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">res3: Int = 2</span><br></pre></td></tr></table></figure></p>
-<p>由于data的partition使用的默认值，即为2，无法使用coalesce变成4分区，可以使用repartition算子或者data.coalesce(4, true)</p>
-<p>注<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">data.coalesce(4, true)就不是一个窄依赖操作了，如下图所示</span><br></pre></td></tr></table></figure></p>
-<p><img src="/img/shuffle3.png" alt="avatar"></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">此时coalesce就不是窄依赖算子了，因为出现了2个stage</span><br></pre></td></tr></table></figure>
-<p>1.3 coalesce源码</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">coalesce</span></span>(numPartitions: <span class="type">Int</span>, shuffle: <span class="type">Boolean</span> = <span class="literal">false</span>,</span><br><span class="line">               partitionCoalescer: <span class="type">Option</span>[<span class="type">PartitionCoalescer</span>] = <span class="type">Option</span>.empty)</span><br><span class="line">              (<span class="keyword">implicit</span> ord: <span class="type">Ordering</span>[<span class="type">T</span>] = <span class="literal">null</span>)</span><br><span class="line">      : <span class="type">RDD</span>[<span class="type">T</span>] = withScope &#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>说明coalesce默认情况下是不会进行shuffle的，所以是窄依赖的</p>
-<p>2.repartition</p>
-<p>2.1 repartition注释</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:left">原文</th>
-<th style="text-align:left">中文翻译</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left">Return a new RDD that has exactly numPartitions partitions, Can increase or decrease the level of parallelism in this RDD</td>
-<td style="text-align:left">返回一个新的RDD, 它有<code>numPartitions</code>分区, 可以通过repartition算子来增加或降低RDD的并行度</td>
-</tr>
-</tbody>
-</table>
-<p>通过代码和Web UI截图解释</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> data5 = data.repartition(<span class="number">6</span>)</span><br><span class="line">data5.collect</span><br></pre></td></tr></table></figure>
-<p><img src="/img/shuffle6.png" alt="avatar"></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">从上图可以看出，经过repartition操作后产生了新的stage</span><br><span class="line">partition数从2个变成了6个，提高了并行度</span><br></pre></td></tr></table></figure>
-<table>
-<thead>
-<tr>
-<th style="text-align:left">原文</th>
-<th style="text-align:left">中文翻译</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left">Internally, this uses a shuffle to redistribute data.If you are decreasing the number of partitions in this RDD, consider using <code>coalesce</code>, which can avoid performing a shuffle.</td>
-<td style="text-align:left">内部上，该算子使用shuffle来将数据重新分布数据。如果你只是减少RDD上partition的数量，考虑使用coalesce, 它可以避免shuffle</td>
-</tr>
-</tbody>
-</table>
-<p>3.coalesce和repartition的应用场景</p>
-<p>3.1 coalesce应用场景<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">如果RDDA有100万条数据，300个分区，每个分区3333条，但是经过filter操作后，发现每个分区只有一条数据，此时就需要coalesce减少分区</span><br></pre></td></tr></table></figure></p>
-<p>3.2 repartition应用场景<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">当处理过慢时，需要提高并行度的地方</span><br></pre></td></tr></table></figure></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Spark//" class="article-tag-list-link color1">Spark</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/01/08/spark08/">展开全文 >></a>
         </p>
       
 
