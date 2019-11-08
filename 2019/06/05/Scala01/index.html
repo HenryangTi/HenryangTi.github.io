@@ -6,23 +6,23 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="http://HenryangTi.github.io">
-  <title>key-value pair | HenryangTi&#39;s blog</title>
+  <title>Scala面对对象之抽象类 | HenryangTi&#39;s blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="1.官网对于key-value pair的描述    官网原文 中文翻译     While most Spark operations work on RDDs containing any type of objects, a few special operations are only available on RDDs of key-value pairs. The most commo">
+  <meta name="description" content="1.定义1一个类中, 其方法没有具体实现, 其属性也是只有定义 2.Example 2.1 Example1123abstract class A&amp;#123;  def speak&amp;#125; 3.常见错误 3.1 错误一  1如果一个类中的方法没有实现，只有定义，那么该类就是抽象类，使用abstract修饰 3.2 错误二  1抽象类不能直接直接被实例化, 而是通过子类(不能还是抽象的)来实例化">
 <meta property="og:type" content="article">
-<meta property="og:title" content="key-value pair">
-<meta property="og:url" content="http://HenryangTi.github.io/2019/01/07/spark07/index.html">
+<meta property="og:title" content="Scala面对对象之抽象类">
+<meta property="og:url" content="http://HenryangTi.github.io/2019/06/05/Scala01/index.html">
 <meta property="og:site_name" content="HenryangTi&#39;s blog">
-<meta property="og:description" content="1.官网对于key-value pair的描述    官网原文 中文翻译     While most Spark operations work on RDDs containing any type of objects, a few special operations are only available on RDDs of key-value pairs. The most commo">
+<meta property="og:description" content="1.定义1一个类中, 其方法没有具体实现, 其属性也是只有定义 2.Example 2.1 Example1123abstract class A&amp;#123;  def speak&amp;#125; 3.常见错误 3.1 错误一  1如果一个类中的方法没有实现，只有定义，那么该类就是抽象类，使用abstract修饰 3.2 错误二  1抽象类不能直接直接被实例化, 而是通过子类(不能还是抽象的)来实例化">
 <meta property="og:locale" content="default">
-<meta property="og:image" content="http://henryangti.github.io/img/keyValue1.png">
-<meta property="og:image" content="http://henryangti.github.io/img/keyValue2.png">
-<meta property="og:image" content="http://henryangti.github.io/img/keyValue3.png">
-<meta property="og:updated_time" content="2019-08-04T08:18:26.288Z">
+<meta property="og:image" content="http://henryangti.github.io/img/2019090312.png">
+<meta property="og:image" content="http://henryangti.github.io/img/2019090313.png">
+<meta property="og:image" content="http://henryangti.github.io/img/error5.png">
+<meta property="og:updated_time" content="2019-11-08T05:05:40.112Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="key-value pair">
-<meta name="twitter:description" content="1.官网对于key-value pair的描述    官网原文 中文翻译     While most Spark operations work on RDDs containing any type of objects, a few special operations are only available on RDDs of key-value pairs. The most commo">
-<meta name="twitter:image" content="http://henryangti.github.io/img/keyValue1.png">
+<meta name="twitter:title" content="Scala面对对象之抽象类">
+<meta name="twitter:description" content="1.定义1一个类中, 其方法没有具体实现, 其属性也是只有定义 2.Example 2.1 Example1123abstract class A&amp;#123;  def speak&amp;#125; 3.常见错误 3.1 错误一  1如果一个类中的方法没有实现，只有定义，那么该类就是抽象类，使用abstract修饰 3.2 错误二  1抽象类不能直接直接被实例化, 而是通过子类(不能还是抽象的)来实例化">
+<meta name="twitter:image" content="http://henryangti.github.io/img/2019090312.png">
   
     <link rel="alternative" href="/atom.xml" title="HenryangTi&#39;s blog" type="application/atom+xml">
   
@@ -218,82 +218,40 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-spark07" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-Scala01" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      key-value pair
+      Scala面对对象之抽象类
     </h1>
   
 
         
-        <a href="/2019/01/07/spark07/" class="archive-article-date">
-  	<time datetime="2019-01-06T16:34:14.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-01-07</time>
+        <a href="/2019/06/05/Scala01/" class="archive-article-date">
+  	<time datetime="2019-06-05T05:33:01.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-06-05</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>1.官网对于key-value pair的描述</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:left">官网原文</th>
-<th style="text-align:left">中文翻译</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left">While most Spark operations work on RDDs containing any type of objects, a few special operations are only available on RDDs of key-value pairs. The most common ones are distributed “shuffle” operations, such as grouping or aggregating the elements by a key.</td>
-<td style="text-align:left">尽管大多数的Spark算子都能操作包含任意对象的RDD，一小部分特殊的算子只能作用于包含key-value pair类型的RDD。最常见的就是带有shuffle操作的，比如grouping操作和aggregating操作</td>
-</tr>
-</tbody>
-</table>
-<table>
-<thead>
-<tr>
-<th style="text-align:left">官网原文</th>
-<th style="text-align:left">中文翻译</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left">In Scala, these operations are automatically available on RDDs containing Tuple2 objects (the built-in tuples in the language, created by simply writing (a, b)). The key-value pair operations are available in the PairRDDFunctions class, which automatically wraps around an RDD of tuples.</td>
-<td style="text-align:left">在scala中，这些操作在Tuple2对象的RDD上可以使用(Tuple2对象是语言本身自带的内置tuple，形式为（a,b） )。key-value pair算子的操作都能从PairRDDFunctions获得，会自动包装成tuple的RDD</td>
-</tr>
-</tbody>
-</table>
-<p>2.PairRDDFunctions类</p>
-<p>2.1 PairRDDFunctions注释</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:left">注释原文</th>
-<th style="text-align:left">中文翻译</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left">functions available on RDDs of (key, value) pairs through an implicit conversion</td>
-<td style="text-align:left">通过隐式转换的方式使用这些函数, 函数在(key, value)的RDD上使用</td>
-</tr>
-</tbody>
-</table>
-<p>2.2 在源码中如何体现该隐式转换的</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">implicit</span> <span class="function"><span class="keyword">def</span> <span class="title">rddToPairRDDFunctions</span></span>[<span class="type">K</span>, <span class="type">V</span>](rdd: <span class="type">RDD</span>[(<span class="type">K</span>, <span class="type">V</span>)])</span><br><span class="line">  (<span class="keyword">implicit</span> kt: <span class="type">ClassTag</span>[<span class="type">K</span>], vt: <span class="type">ClassTag</span>[<span class="type">V</span>], ord: <span class="type">Ordering</span>[<span class="type">K</span>] = <span class="literal">null</span>): <span class="type">PairRDDFunctions</span>[<span class="type">K</span>, <span class="type">V</span>] = &#123;</span><br><span class="line">  <span class="keyword">new</span> <span class="type">PairRDDFunctions</span>(rdd)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">从代码可以，rddToPairRDDFunctions入参为RDD类型，返回类型为PairRDDFunctions类型</span><br></pre></td></tr></table></figure>
-<p>2.3 Example</p>
-<p>示例代码<br><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rdd.map((_,<span class="number">1</span>)).reduceByKey(_+_).collect().foreach(println)</span><br></pre></td></tr></table></figure></p>
-<p>map函数源码为</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">map</span></span>[<span class="type">U</span>: <span class="type">ClassTag</span>](f: <span class="type">T</span> =&gt; <span class="type">U</span>): <span class="type">RDD</span>[<span class="type">U</span>] = withScope &#123;</span><br><span class="line">  <span class="keyword">val</span> cleanF = sc.clean(f)</span><br><span class="line">  <span class="keyword">new</span> <span class="type">MapPartitionsRDD</span>[<span class="type">U</span>, <span class="type">T</span>](<span class="keyword">this</span>, (context, pid, iter) =&gt; iter.map(cleanF))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">从map函数源码可以看出map函数的返回值为RDD，并且由于map((_,1)), 说明其输出为包含tuple的RDD</span><br></pre></td></tr></table></figure>
-<p>示例代码经过map操作后经过的操作如下图所示</p>
-<p><img src="/img/keyValue1.png" alt="avatar"><br><img src="/img/keyValue2.png" alt="avatar"><br><img src="/img/keyValue3.png" alt="avatar"></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">从上图可以看出, 在示例代码经过map函数后，会自动走到rddToPairRDDFunctions函数，将RDD转化为PairRDDFunctions, 然后才能进行reduceByKey操作</span><br></pre></td></tr></table></figure>
+        <p>1.定义<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">一个类中, 其方法没有具体实现, 其属性也是只有定义</span><br></pre></td></tr></table></figure></p>
+<p>2.Example</p>
+<p>2.1 Example1<br><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">A</span></span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">speak</span></span></span><br><span class="line"><span class="function">&#125;</span></span><br></pre></td></tr></table></figure></p>
+<p>3.常见错误</p>
+<p>3.1 错误一</p>
+<p><img src="/img/2019090312.png" alt="5bd2cbf10d3c3b5f1c67280ac6c6b8de"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">如果一个类中的方法没有实现，只有定义，那么该类就是抽象类，使用abstract修饰</span><br></pre></td></tr></table></figure>
+<p>3.2 错误二</p>
+<p><img src="/img/2019090313.png" alt="32a0150fdd3b3f200c147384d2b544d4"><br><img src="/img/error5.png" alt="0cdbe92f6521a633e85c17af58296617"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">抽象类不能直接直接被实例化, 而是通过子类(不能还是抽象的)来实例化</span><br></pre></td></tr></table></figure>
+<p>4.Spark源码中的体现</p>
+<p>4.1 MemoryManager与其子类StaticMemoryManager</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span>[spark] <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">MemoryManager</span>(<span class="params"></span></span></span><br><span class="line"><span class="class"><span class="params">    conf: <span class="type">SparkConf</span>,</span></span></span><br><span class="line"><span class="class"><span class="params">    numCores: <span class="type">Int</span>,</span></span></span><br><span class="line"><span class="class"><span class="params">    onHeapStorageMemory: <span class="type">Long</span>,</span></span></span><br><span class="line"><span class="class"><span class="params">    onHeapExecutionMemory: <span class="type">Long</span></span>) <span class="keyword">extends</span> <span class="title">Logging</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">maxOffHeapStorageMemory</span></span>: <span class="type">Long</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span>[spark] <span class="class"><span class="keyword">class</span> <span class="title">StaticMemoryManager</span>(<span class="params"></span></span></span><br><span class="line"><span class="class"><span class="params">    conf: <span class="type">SparkConf</span>,</span></span></span><br><span class="line"><span class="class"><span class="params">    maxOnHeapExecutionMemory: <span class="type">Long</span>,</span></span></span><br><span class="line"><span class="class"><span class="params">    override val maxOnHeapStorageMemory: <span class="type">Long</span>,</span></span></span><br><span class="line"><span class="class"><span class="params">    numCores: <span class="type">Int</span></span>)</span></span><br><span class="line"><span class="class">  <span class="keyword">extends</span> <span class="title">MemoryManager</span>(<span class="params"></span></span></span><br><span class="line"><span class="class"><span class="params">    conf,</span></span></span><br><span class="line"><span class="class"><span class="params">    numCores,</span></span></span><br><span class="line"><span class="class"><span class="params">    maxOnHeapStorageMemory,</span></span></span><br><span class="line"><span class="class"><span class="params">    maxOnHeapExecutionMemory</span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">def</span> <span class="title">maxOffHeapStorageMemory</span></span>: <span class="type">Long</span> = <span class="number">0</span>L</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
       
 
@@ -329,7 +287,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="/categories/Spark//" class="article-tag-list-link color1">Spark</a>
+        			<a href="/categories/Scala//" class="article-tag-list-link color1">Scala</a>
         		</li>
       		
 		</ul>
@@ -384,7 +342,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http://HenryangTi.github.io/2019/01/07/spark07/" alt="微信分享二维码">
+      <img src="//pan.baidu.com/share/qrcode?url=http://HenryangTi.github.io/2019/06/05/Scala01/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -398,18 +356,18 @@
   
 <nav id="article-nav">
   
-    <a href="/2019/01/08/spark08/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2019/06/22/Leetcode207/" id="article-nav-newer" class="article-nav-link-wrap">
       <i class="icon-circle-left"></i>
       <div class="article-nav-title">
         
-          coalesce与repartition
+          Leetcode207 - course schedule
         
       </div>
     </a>
   
   
-    <a href="/2019/01/06/spark06/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">宽依赖与窄依赖</div>
+    <a href="/2019/06/04/Conc/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Java并发之thread</div>
       <i class="icon-circle-right"></i>
     </a>
   

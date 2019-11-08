@@ -75,6 +75,8 @@
 	        
 				<li><a href="/categories/Concurrent">Concurrent</a></li>
 	        
+				<li><a href="/categories/Scala">Scala</a></li>
+	        
 			</ul>
 		</nav>
 		<nav class="header-smart-menu">
@@ -149,6 +151,8 @@
 			
 				
 			
+				
+			
 			
 			
 			<nav class="header-nav">
@@ -169,27 +173,29 @@
 				<ul style="width: 70%">
 				
 				
-					<li style="width: 9.090909090909092%"><a href="/">主页</a></li>
+					<li style="width: 8.333333333333334%"><a href="/">主页</a></li>
 		        
-					<li style="width: 9.090909090909092%"><a href="/categories/Spark">Spark</a></li>
+					<li style="width: 8.333333333333334%"><a href="/categories/Spark">Spark</a></li>
 		        
-					<li style="width: 9.090909090909092%"><a href="/categories/SparkSQL">SparkSQL</a></li>
+					<li style="width: 8.333333333333334%"><a href="/categories/SparkSQL">SparkSQL</a></li>
 		        
-					<li style="width: 9.090909090909092%"><a href="/categories/Netty">Netty</a></li>
+					<li style="width: 8.333333333333334%"><a href="/categories/Netty">Netty</a></li>
 		        
-					<li style="width: 9.090909090909092%"><a href="/categories/raft">Raft</a></li>
+					<li style="width: 8.333333333333334%"><a href="/categories/raft">Raft</a></li>
 		        
-					<li style="width: 9.090909090909092%"><a href="/categories/ML">ML</a></li>
+					<li style="width: 8.333333333333334%"><a href="/categories/ML">ML</a></li>
 		        
-					<li style="width: 9.090909090909092%"><a href="/categories/problem">Problem</a></li>
+					<li style="width: 8.333333333333334%"><a href="/categories/problem">Problem</a></li>
 		        
-					<li style="width: 9.090909090909092%"><a href="/categories/Lintcode">Lintcode</a></li>
+					<li style="width: 8.333333333333334%"><a href="/categories/Lintcode">Lintcode</a></li>
 		        
-					<li style="width: 9.090909090909092%"><a href="/categories/Flume">Flume</a></li>
+					<li style="width: 8.333333333333334%"><a href="/categories/Flume">Flume</a></li>
 		        
-					<li style="width: 9.090909090909092%"><a href="/categories/Hive">Hive</a></li>
+					<li style="width: 8.333333333333334%"><a href="/categories/Hive">Hive</a></li>
 		        
-					<li style="width: 9.090909090909092%"><a href="/categories/Concurrent">Concurrent</a></li>
+					<li style="width: 8.333333333333334%"><a href="/categories/Concurrent">Concurrent</a></li>
+		        
+					<li style="width: 8.333333333333334%"><a href="/categories/Scala">Scala</a></li>
 		        
 				</ul>
 			</nav>
@@ -495,6 +501,93 @@
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2019/06/22/Leetcode207/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-Scala01" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/06/05/Scala01/">Scala面对对象之抽象类</a>
+    </h1>
+  
+
+        
+        <a href="/2019/06/05/Scala01/" class="archive-article-date">
+  	<time datetime="2019-06-05T05:33:01.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-06-05</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.定义<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">一个类中, 其方法没有具体实现, 其属性也是只有定义</span><br></pre></td></tr></table></figure></p>
+<p>2.Example</p>
+<p>2.1 Example1<br><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">A</span></span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">speak</span></span></span><br><span class="line"><span class="function">&#125;</span></span><br></pre></td></tr></table></figure></p>
+<p>3.常见错误</p>
+<p>3.1 错误一</p>
+<p><img src="/img/2019090312.png" alt="5bd2cbf10d3c3b5f1c67280ac6c6b8de"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">如果一个类中的方法没有实现，只有定义，那么该类就是抽象类，使用abstract修饰</span><br></pre></td></tr></table></figure>
+<p>3.2 错误二</p>
+<p><img src="/img/2019090313.png" alt="32a0150fdd3b3f200c147384d2b544d4"><br><img src="/img/error5.png" alt="0cdbe92f6521a633e85c17af58296617"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">抽象类不能直接直接被实例化, 而是通过子类(不能还是抽象的)来实例化</span><br></pre></td></tr></table></figure>
+<p>4.Spark源码中的体现</p>
+<p>4.1 MemoryManager与其子类StaticMemoryManager</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span>[spark] <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">MemoryManager</span>(<span class="params"></span></span></span><br><span class="line"><span class="class"><span class="params">    conf: <span class="type">SparkConf</span>,</span></span></span><br><span class="line"><span class="class"><span class="params">    numCores: <span class="type">Int</span>,</span></span></span><br><span class="line"><span class="class"><span class="params">    onHeapStorageMemory: <span class="type">Long</span>,</span></span></span><br><span class="line"><span class="class"><span class="params">    onHeapExecutionMemory: <span class="type">Long</span></span>) <span class="keyword">extends</span> <span class="title">Logging</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">maxOffHeapStorageMemory</span></span>: <span class="type">Long</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span>[spark] <span class="class"><span class="keyword">class</span> <span class="title">StaticMemoryManager</span>(<span class="params"></span></span></span><br><span class="line"><span class="class"><span class="params">    conf: <span class="type">SparkConf</span>,</span></span></span><br><span class="line"><span class="class"><span class="params">    maxOnHeapExecutionMemory: <span class="type">Long</span>,</span></span></span><br><span class="line"><span class="class"><span class="params">    override val maxOnHeapStorageMemory: <span class="type">Long</span>,</span></span></span><br><span class="line"><span class="class"><span class="params">    numCores: <span class="type">Int</span></span>)</span></span><br><span class="line"><span class="class">  <span class="keyword">extends</span> <span class="title">MemoryManager</span>(<span class="params"></span></span></span><br><span class="line"><span class="class"><span class="params">    conf,</span></span></span><br><span class="line"><span class="class"><span class="params">    numCores,</span></span></span><br><span class="line"><span class="class"><span class="params">    maxOnHeapStorageMemory,</span></span></span><br><span class="line"><span class="class"><span class="params">    maxOnHeapExecutionMemory</span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">def</span> <span class="title">maxOffHeapStorageMemory</span></span>: <span class="type">Long</span> = <span class="number">0</span>L</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Scala//" class="article-tag-list-link color1">Scala</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/06/05/Scala01/">展开全文 >></a>
         </p>
       
 
@@ -1097,94 +1190,6 @@
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2019/06/01/Flume01/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-raft" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/02/02/raft/">Raft论文</a>
-    </h1>
-  
-
-        
-        <a href="/2019/02/02/raft/" class="archive-article-date">
-  	<time datetime="2019-02-01T16:34:14.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-02-02</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><b>Abstract</b></p>
-<table>
-<thead>
-<tr>
-<th style="text-align:left">原文</th>
-<th style="text-align:left">翻译</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left">Raft is a consensus algorithm for managing a replicated log. It produces a result equivalent to (multi-)Paxos, and it is as efficient as Paxos, but its structure is different from Paxos; this makes Raft more understandable than Paxos and also provides a better foundation for building practical systems. In order to enhance understandability, Raft separates the key elements of consensus, such as leader election, log replication, and safety, and it enforces a stronger degree of coherency to reduce the number of states that must be considered. Results from a user study demonstrate that Raft is easier for students to learn than Paxos. Raft also includes a new mechanism for changing the cluster membership, which uses overlapping majorities to guarantee safety.</td>
-<td style="text-align:left">Raft是一个共识算法，该算法主要的作用就是管理复制的日志。他产生一个与multi-paxos相同的结果，并且效率与Paxos一样，但是他的结构与Paxos不同；正因为如此，Raft比Paxos更容易理解并且raft为构建实际系统提供了更好的基础。为了增强礼节性，Raft将共识算法的关键组成部分独立出来，比如leader的选举，log复制和安全性，并且强制实施了更强的一致性来减少需要考虑的状态的数量。从用户调查的结果上看，raft相对于paxos来说，更适合与学生学习。Raft包含一个关于改变集群成员的新的机制，使用重叠的大多数来保障安全性</td>
-</tr>
-</tbody>
-</table>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/raft//" class="article-tag-list-link color5">raft</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/02/02/raft/">展开全文 >></a>
         </p>
       
 
