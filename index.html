@@ -530,6 +530,86 @@
 
 
   
+    <article id="post-Scala6" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/06/10/Scala6/">Scala之变长参数</a>
+    </h1>
+  
+
+        
+        <a href="/2019/06/10/Scala6/" class="archive-article-date">
+  	<time datetime="2019-06-10T10:11:23.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-06-10</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.定义<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">入参是可变的</span><br></pre></td></tr></table></figure></p>
+<p>2.Example</p>
+<p>2.1 Example1</p>
+<p><img src="/img/2019100367.png" alt="f06a6de67c06a3c1f0f0a6060e5c7c67"></p>
+<p>2.2 Example2</p>
+<p><img src="/img/2019100372.png" alt="4557771b86a68dda6ea39c1b377fabd9"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">1 to 10 : _* </span><br><span class="line">就是将Range类型转化为可变参数</span><br></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Scala//" class="article-tag-list-link color1">Scala</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/06/10/Scala6/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-Scala5" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -993,113 +1073,6 @@
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2019/06/05/Scala01/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Conc" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/06/04/Conc/">Java并发之thread</a>
-    </h1>
-  
-
-        
-        <a href="/2019/06/04/Conc/" class="archive-article-date">
-  	<time datetime="2019-06-04T04:42:05.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-06-04</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>1.Thread类与Runnable接口的关系</p>
-<p>提到并发，我们首先想到的概念就是线程, 在Java中与线程有关的组件就是Thread类和Runnable接口, 那么有人会产生疑问，Thread类与Runnable接口是否有关呢？为了说明此问题，我们来查看一下Thread类的源码</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Thread</span> <span class="keyword">implements</span> <span class="title">Runnable</span> </span>&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>从上面我们看见Thread类实现了Runnable接口</p>
-<p>2.Thread类详解</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">既然Thread是如此重要，那么我们来看下其源码注释</span><br></pre></td></tr></table></figure>
-<p>2.1 Thread类源码注释</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">A thread is a thread of execution in a program. The Java Virtual Machine allows an application to have multiple threads of execution running concurrently.</span><br><span class="line"></span><br><span class="line">一个thread就是程序中的一个执行线程。JVM允许应用能够同时运行多个执行线程。</span><br></pre></td></tr></table></figure>
-<p>2.2 优先级</p>
-<p>2.2.1 为什么需要优先级<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">既然每个Thread对象都代表一个线程，那么它就会拥有线程的一些特性。</span><br><span class="line"></span><br><span class="line">在我看来，线程最重要的特性就是优先级，在synchronized的时候, 如果某个线程想要去获取到对象的锁，那么它就需要与其它线程进行竞争，那么线程是依靠什么特性与其它线程进行竞争的呢？</span><br><span class="line"></span><br><span class="line">此特性就是优先级。</span><br></pre></td></tr></table></figure></p>
-<p>2.2.2 优先级的作用<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">每个线程都是有优先级的, 优先级高的线程会先被执行</span><br></pre></td></tr></table></figure></p>
-<p>2.2.3 优先级与子线程<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">在一个线程内创建新的线程, 那么新的线程优先级会与其父线程的优先级相同。</span><br><span class="line"></span><br><span class="line">Eg.</span><br><span class="line"></span><br><span class="line">在ThreadA中创建了ThreadB, ThreadB的优先级是与ThreadA的优先级相同</span><br></pre></td></tr></table></figure></p>
-<p>2.3 daemon线程</p>
-<p>2.3.1 daemon线程的作用<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">JVM启动时会生成一个daemon进程来调用main方法</span><br></pre></td></tr></table></figure></p>
-<p>2.3.2 什么时候创建的线程为daemon线程</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">只有daemon线程创建的线程才是daemon线程</span><br></pre></td></tr></table></figure>
-<p>2.4 线程的消亡</p>
-<p>2.4.1 线程消亡的两种方式</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">某类的runtime.exit()方法被调用, 并且安全管理器允许该方法被调用</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">所有的非daemon线程都被消亡</span><br></pre></td></tr></table></figure>
-<p>2.4.2 什么时候非daemon线程都消亡</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">方法调用回到了run方法</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">exception抛出到run方法之外</span><br></pre></td></tr></table></figure>
-<p>2.5 两种线程创建的方式</p>
-<p>2.5.1 继承Thread的方式创建线程</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ThreadClass</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        PrimeThread p = <span class="keyword">new</span> PrimeThread(<span class="number">143</span>);</span><br><span class="line">        p.start();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">PrimeThread</span> <span class="keyword">extends</span> <span class="title">Thread</span></span>&#123;</span><br><span class="line">    <span class="keyword">long</span> minPrime;</span><br><span class="line">    PrimeThread(<span class="keyword">long</span> minPrime)&#123;</span><br><span class="line">        <span class="keyword">this</span>.minPrime = minPrime;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">第一种方式是创建一个Thread的子类, 并且不仅仅写一个extends就完事, 而是需要重写run方法, 这样子类可以被分配一个线程。</span><br></pre></td></tr></table></figure>
-<p>2.5.2 实现Runnable接口创建线程</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PrimeRun</span> <span class="keyword">implements</span> <span class="title">Runnable</span></span>&#123;</span><br><span class="line">    <span class="keyword">long</span> minPrime;</span><br><span class="line">    PrimeRun(<span class="keyword">long</span> minPrime)&#123;</span><br><span class="line">        <span class="keyword">this</span>.minPrime = minPrime;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"hhh"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        PrimeRun p = <span class="keyword">new</span> PrimeRun(<span class="number">143</span>);</span><br><span class="line">        <span class="keyword">new</span> Thread(p).start();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">任何实现Runnable的类可以创建线程, 并不仅仅写个implements就可以, 还需要实现run方法, 这样的话就可以该类的实例分配一个线程, 然后调用start方法启动</span><br></pre></td></tr></table></figure>
-<p>2.6 线程的名字</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">在一个系统中存在很多的线程, 我们应该给每个线程其名字, 这个名字可以由我们自己起，当然如果我们没有起的话, 系统会帮助我们给其起个名字</span><br></pre></td></tr></table></figure>
-<p>3.总结</p>
-<p><img src="/img/conc.png" alt></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Concurrent//" class="article-tag-list-link color1">Concurrent</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/06/04/Conc/">展开全文 >></a>
         </p>
       
 

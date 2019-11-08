@@ -212,6 +212,139 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-Netty02" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/01/11/Netty02/">Netty Example</a>
+    </h1>
+  
+
+        
+        <a href="/2019/01/11/Netty02/" class="archive-article-date">
+  	<time datetime="2019-01-10T16:34:14.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-01-11</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.测试代码<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestHttpServerHandler</span> <span class="keyword">extends</span> <span class="title">SimpleChannelInboundHandler</span>&lt;<span class="title">HttpObject</span>&gt; </span>&#123;</span><br><span class="line">    <span class="comment">//读取客户端请求，并向客户端返回响应的方法</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">channelRead0</span><span class="params">(ChannelHandlerContext ctx, HttpObject msg)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span>(msg <span class="keyword">instanceof</span> HttpRequest) &#123;</span><br><span class="line"></span><br><span class="line">            ByteBuf content = Unpooled.copiedBuffer(<span class="string">"Hello World\n"</span>, CharsetUtil.UTF_8);</span><br><span class="line">            FullHttpResponse response = <span class="keyword">new</span> DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK, content);</span><br><span class="line">            response.headers().set(HttpHeaderNames.CONTENT_TYPE, <span class="string">"text/plain"</span>);</span><br><span class="line">            response.headers().set(HttpHeaderNames.CONTENT_LENGTH, content.readableBytes());</span><br><span class="line"></span><br><span class="line">            ctx.writeAndFlush(response);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">testServer</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception</span>&#123;</span><br><span class="line">        <span class="comment">//定义两个线程组, 都是not-ending loop</span></span><br><span class="line">        <span class="comment">//不断从客户端接收连接，不对连接做任何处理，接到连接将连接转给workerGroup，由workerGroup对连接进行真正的处理</span></span><br><span class="line">        EventLoopGroup bossGroup = <span class="keyword">new</span> NioEventLoopGroup();</span><br><span class="line">        EventLoopGroup workerGroup = <span class="keyword">new</span> NioEventLoopGroup();</span><br><span class="line">        <span class="keyword">try</span>&#123;</span><br><span class="line">            ServerBootstrap serverBootstrap = <span class="keyword">new</span> ServerBootstrap();</span><br><span class="line">            serverBootstrap.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class)</span><br><span class="line">                    .childHandler(<span class="keyword">new</span> testServerInitalizer());</span><br><span class="line">            ChannelFuture channelFuture =  serverBootstrap.bind(<span class="number">8899</span>).sync();</span><br><span class="line">            channelFuture.channel().closeFuture().sync();</span><br><span class="line">        &#125;<span class="keyword">finally</span> &#123;</span><br><span class="line">            bossGroup.shutdownGracefully();</span><br><span class="line">            workerGroup.shutdownGracefully();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">testServerInitalizer</span> <span class="keyword">extends</span> <span class="title">ChannelInitializer</span>&lt;<span class="title">SocketChannel</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">initChannel</span><span class="params">(SocketChannel ch)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        ChannelPipeline pipeline = ch.pipeline();</span><br><span class="line">        pipeline.addLast(<span class="string">"httpServerCodec"</span>, <span class="keyword">new</span> HttpServerCodec());</span><br><span class="line">        pipeline.addLast(<span class="string">"TestHttpServerHandler"</span>, <span class="keyword">new</span> TestHttpServerHandler());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>2.代码测试<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">当每次在terminal中输入curl &apos;http://localhost:8899&apos;的时候，屏幕上会打印出Hello World</span><br></pre></td></tr></table></figure></p>
+<p>2.1 注意<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">当在terminal输入curl &apos;http://localhost:8899/123.html&apos;的时候，屏幕上仍然会打印Hello World, 因为服务端只监听本地8899端口，只要向8899端口发出请求，不管之后的路径如何，都会满足该请求</span><br></pre></td></tr></table></figure></p>
+<p>3.浏览器中测试</p>
+<p><img src="/img/Netty01_nettyBro.png" alt="avatar"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">从上图可以看出的是, 当在浏览器中访问该网址时，返回两个资源</span><br></pre></td></tr></table></figure>
+<p>3.1 返回两个请求的原因</p>
+<p>将代码修改为<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestHttpServerHandler</span> <span class="keyword">extends</span> <span class="title">SimpleChannelInboundHandler</span>&lt;<span class="title">HttpObject</span>&gt; </span>&#123;</span><br><span class="line">    <span class="comment">//读取客户端请求，并向客户端返回响应的方法</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">channelRead0</span><span class="params">(ChannelHandlerContext ctx, HttpObject msg)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span>(msg <span class="keyword">instanceof</span> HttpRequest) &#123;</span><br><span class="line"></span><br><span class="line">            System.out.println(<span class="string">"执行channelRead0"</span>);</span><br><span class="line"></span><br><span class="line">            </span><br><span class="line">            ByteBuf content = Unpooled.copiedBuffer(<span class="string">"Hello World\n"</span>, CharsetUtil.UTF_8);</span><br><span class="line">            FullHttpResponse response = <span class="keyword">new</span> DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK, content);</span><br><span class="line">            response.headers().set(HttpHeaderNames.CONTENT_TYPE, <span class="string">"text/plain"</span>);</span><br><span class="line">            response.headers().set(HttpHeaderNames.CONTENT_LENGTH, content.readableBytes());</span><br><span class="line"></span><br><span class="line">            ctx.writeAndFlush(response);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>再重新访问之前的网址，我们可以发现输出为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">执行channelRead0</span><br><span class="line">执行channelRead0</span><br></pre></td></tr></table></figure></p>
+<p>这时就可以看出客户端发出了两个请求，那么为什么输入一个网址就发出两次请求呢？</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">从图中可以看出, 当浏览器输入该网址后，还需要获取一个favicon.icon图标, 因为某些浏览器如chrome中, 它们会发出第二个请求, 会请求网站的图标。</span><br><span class="line">那么该图标的查找策略是，首先查找当前网页所在服务端的相同目录, 查找文件名为favicon.icon的文件, 如果找不到就去网站的根目录下再进行查找</span><br></pre></td></tr></table></figure>
+<p>3.2 使用代码测试浏览器是否发出查找favicon.ico请求</p>
+<p>代码修改为<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestHttpServerHandler</span> <span class="keyword">extends</span> <span class="title">SimpleChannelInboundHandler</span>&lt;<span class="title">HttpObject</span>&gt; </span>&#123;</span><br><span class="line">    <span class="comment">//读取客户端请求，并向客户端返回响应的方法</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">channelRead0</span><span class="params">(ChannelHandlerContext ctx, HttpObject msg)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(msg <span class="keyword">instanceof</span> HttpRequest) &#123;</span><br><span class="line">            System.out.println(<span class="string">"执行channelRead0"</span>);</span><br><span class="line">            HttpRequest httpRequest = (HttpRequest)msg;</span><br><span class="line"></span><br><span class="line">            System.out.println(<span class="string">"请求方法名: "</span> + httpRequest.method().name());</span><br><span class="line">            URI uri = <span class="keyword">new</span> URI(httpRequest.uri());</span><br><span class="line">            <span class="keyword">if</span>(<span class="string">"/favicon.ico"</span>.equals(uri.getPath()))&#123;</span><br><span class="line">                System.out.println(<span class="string">"请求favicon.ico"</span>);</span><br><span class="line">                <span class="keyword">return</span>;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            ByteBuf content = Unpooled.copiedBuffer(<span class="string">"Hello World\n"</span>, CharsetUtil.UTF_8);</span><br><span class="line">            FullHttpResponse response = <span class="keyword">new</span> DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK, content);</span><br><span class="line">            response.headers().set(HttpHeaderNames.CONTENT_TYPE, <span class="string">"text/plain"</span>);</span><br><span class="line">            response.headers().set(HttpHeaderNames.CONTENT_LENGTH, content.readableBytes());</span><br><span class="line"></span><br><span class="line">            ctx.writeAndFlush(response);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>此时输出为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">执行channelRead0</span><br><span class="line">请求方法名: GET</span><br><span class="line">执行channelRead0</span><br><span class="line">请求方法名: GET</span><br><span class="line">请求favicon.ico</span><br></pre></td></tr></table></figure></p>
+<p>说明确实请求了favicon.ico</p>
+<p>4.代码要点简要解析</p>
+<p>4.1 SimpleChannelInboundHandler</p>
+<p>4.1.1 Inbound与Outbound<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Inbound:</span><br><span class="line">    网络编程术语，代表请求进入到server中</span><br><span class="line">Outbound</span><br><span class="line">    server发送response</span><br></pre></td></tr></table></figure></p>
+<p>4.1.2 InboundHandler与OutboundHandler<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">InboundHandler:</span><br><span class="line">    表示对进来请求的处理</span><br><span class="line"></span><br><span class="line">OutboundHandler:</span><br><span class="line">    表示对返回相应的处理</span><br></pre></td></tr></table></figure></p>
+<p>4.1.3 SimpleChannelInboundHandler源码中回调方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">SimpleChannelInboundHandler</span>&lt;<span class="title">I</span>&gt; <span class="keyword">extends</span> <span class="title">ChannelInboundHandlerAdapter</span> </span>&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ChannelInboundHandlerAdapter</span> <span class="keyword">extends</span> <span class="title">ChannelHandlerAdapter</span> <span class="keyword">implements</span> <span class="title">ChannelInboundHandler</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">channelRegistered</span><span class="params">(ChannelHandlerContext ctx)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        ctx.fireChannelRegistered();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">channelUnregistered</span><span class="params">(ChannelHandlerContext ctx)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        ctx.fireChannelUnregistered();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">channelActive</span><span class="params">(ChannelHandlerContext ctx)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        ctx.fireChannelActive();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">channelInactive</span><span class="params">(ChannelHandlerContext ctx)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        ctx.fireChannelInactive();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">channelRead</span><span class="params">(ChannelHandlerContext ctx, Object msg)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        ctx.fireChannelRead(msg);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">channelReadComplete</span><span class="params">(ChannelHandlerContext ctx)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        ctx.fireChannelReadComplete();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">exceptionCaught</span><span class="params">(ChannelHandlerContext ctx, Throwable cause)</span></span></span><br><span class="line"><span class="function">            <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        ctx.fireExceptionCaught(cause);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>ChannelInboundHandlerAdapter中的方法都是事件回调方法，也就是说在某一个事件发生的时候, 该方法会自动的被netty框架所调用</p>
+<p>4.1.4 理解SimpleChannelInboundHandler源码中回调方法</p>
+<p>修改代码为<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestHttpServerHandler</span> <span class="keyword">extends</span> <span class="title">SimpleChannelInboundHandler</span>&lt;<span class="title">HttpObject</span>&gt; </span>&#123;</span><br><span class="line">    <span class="comment">//读取客户端请求，并向客户端返回响应的方法</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">channelRead0</span><span class="params">(ChannelHandlerContext ctx, HttpObject msg)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(msg <span class="keyword">instanceof</span> HttpRequest) &#123;</span><br><span class="line">            System.out.println(<span class="string">"执行channelRead0"</span>);</span><br><span class="line">            HttpRequest httpRequest = (HttpRequest)msg;</span><br><span class="line"></span><br><span class="line">            System.out.println(<span class="string">"请求方法名: "</span> + httpRequest.method().name());</span><br><span class="line">            URI uri = <span class="keyword">new</span> URI(httpRequest.uri());</span><br><span class="line">            <span class="keyword">if</span>(<span class="string">"/favicon.ico"</span>.equals(uri.getPath()))&#123;</span><br><span class="line">                System.out.println(<span class="string">"请求favicon.ico"</span>);</span><br><span class="line">                <span class="keyword">return</span>;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            ByteBuf content = Unpooled.copiedBuffer(<span class="string">"Hello World\n"</span>, CharsetUtil.UTF_8);</span><br><span class="line">            FullHttpResponse response = <span class="keyword">new</span> DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK, content);</span><br><span class="line">            response.headers().set(HttpHeaderNames.CONTENT_TYPE, <span class="string">"text/plain"</span>);</span><br><span class="line">            response.headers().set(HttpHeaderNames.CONTENT_LENGTH, content.readableBytes());</span><br><span class="line"></span><br><span class="line">            ctx.writeAndFlush(response);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//当通道变为活动状态时会执行的方法</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">channelActive</span><span class="params">(ChannelHandlerContext ctx)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"channel active"</span>);</span><br><span class="line">        <span class="keyword">super</span>.channelActive(ctx);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">channelRegistered</span><span class="params">(ChannelHandlerContext ctx)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"channel registered"</span>);</span><br><span class="line">        <span class="keyword">super</span>.channelRegistered(ctx);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">handlerAdded</span><span class="params">(ChannelHandlerContext ctx)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"handler added"</span>);</span><br><span class="line">        <span class="keyword">super</span>.handlerAdded(ctx);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">channelInactive</span><span class="params">(ChannelHandlerContext ctx)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"channel inactive"</span>);</span><br><span class="line">        <span class="keyword">super</span>.channelInactive(ctx);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">channelUnregistered</span><span class="params">(ChannelHandlerContext ctx)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"channel unregistered"</span>);</span><br><span class="line">        <span class="keyword">super</span>.channelUnregistered(ctx);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>测试上述代码，输出为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">handler added</span><br><span class="line">channel registered</span><br><span class="line">channel active</span><br><span class="line">执行channelRead0</span><br><span class="line">请求方法名: GET</span><br><span class="line">channel inactive</span><br><span class="line">channel unregistered</span><br></pre></td></tr></table></figure></p>
+<p>所以其流程为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">(1) handler added: 说明新添加了一个处理器</span><br><span class="line">(2) channel registered: 注册了一个channel，当然该channel肯定注册到一个对象上</span><br><span class="line">(3) channel active: 可以将channel看成一个连接，说明此时该连接是处于活动的状态</span><br><span class="line">(4) 请求方法名 GET: 真正开始请求的读取, 请求的读取是在channelRead0方法中进行的</span><br><span class="line">(5) channel inactive</span><br><span class="line">(6) channel unregistered</span><br></pre></td></tr></table></figure></p>
+<p>4.1.5 Netty关闭程序的注意</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Http协议是基于请求和响应模式的无状态的协议，对于Netty来说，当请求到达后，Netty本身监听TCP端口号, 对于HTTP来说, 其底层也是基于socket的, 或者说是基于TCP这类带有连接的协议, 并且Netty底层机制或者Tomcat底层机制都是serverSocket类(JAVA网络编程中很重要的组件)在进行死循环</span><br><span class="line"></span><br><span class="line">那么对于上层应用来说，首先需要判断其协议的版本,是否为HTTP1.1, 如果为HTTP1.1的话再看其keep-alive的时长，如果超过该keep-alive时长后，客户端仍未再发送新的请求，服务端会主动的将连接关闭掉。但是如果是HTTP1.0协议, 其本身是一个短连接协议(请求发送之后, server端便将连接关闭掉)</span><br><span class="line"></span><br><span class="line">所以如果要使用Netty自定义关闭策略, 也需要按照上述步骤，判断是否是HTTP1.1，再判断keep-alive时间。</span><br><span class="line"></span><br><span class="line">服务端关闭连接的话就是将client与server之间的连接真正的关闭掉</span><br></pre></td></tr></table></figure>
+<p>代码修改<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestHttpServerHandler</span> <span class="keyword">extends</span> <span class="title">SimpleChannelInboundHandler</span>&lt;<span class="title">HttpObject</span>&gt; </span>&#123;</span><br><span class="line">    <span class="comment">//读取客户端请求，并向客户端返回响应的方法</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">channelRead0</span><span class="params">(ChannelHandlerContext ctx, HttpObject msg)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(msg <span class="keyword">instanceof</span> HttpRequest) &#123;</span><br><span class="line">            System.out.println(<span class="string">"执行channelRead0"</span>);</span><br><span class="line">            HttpRequest httpRequest = (HttpRequest)msg;</span><br><span class="line"></span><br><span class="line">            System.out.println(<span class="string">"请求方法名: "</span> + httpRequest.method().name());</span><br><span class="line">            URI uri = <span class="keyword">new</span> URI(httpRequest.uri());</span><br><span class="line">            <span class="keyword">if</span>(<span class="string">"/favicon.ico"</span>.equals(uri.getPath()))&#123;</span><br><span class="line">                System.out.println(<span class="string">"请求favicon.ico"</span>);</span><br><span class="line">                <span class="keyword">return</span>;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            ByteBuf content = Unpooled.copiedBuffer(<span class="string">"Hello World\n"</span>, CharsetUtil.UTF_8);</span><br><span class="line">            FullHttpResponse response = <span class="keyword">new</span> DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK, content);</span><br><span class="line">            response.headers().set(HttpHeaderNames.CONTENT_TYPE, <span class="string">"text/plain"</span>);</span><br><span class="line">            response.headers().set(HttpHeaderNames.CONTENT_LENGTH, content.readableBytes());</span><br><span class="line"></span><br><span class="line">            ctx.writeAndFlush(response);</span><br><span class="line">            <span class="comment">//关闭连接</span></span><br><span class="line">            ctx.channel().close();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//当通道变为活动状态时会执行的方法</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">channelActive</span><span class="params">(ChannelHandlerContext ctx)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"channel active"</span>);</span><br><span class="line">        <span class="keyword">super</span>.channelActive(ctx);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">channelRegistered</span><span class="params">(ChannelHandlerContext ctx)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"channel registered"</span>);</span><br><span class="line">        <span class="keyword">super</span>.channelRegistered(ctx);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">handlerAdded</span><span class="params">(ChannelHandlerContext ctx)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"handler added"</span>);</span><br><span class="line">        <span class="keyword">super</span>.handlerAdded(ctx);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">channelInactive</span><span class="params">(ChannelHandlerContext ctx)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"channel inactive"</span>);</span><br><span class="line">        <span class="keyword">super</span>.channelInactive(ctx);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">channelUnregistered</span><span class="params">(ChannelHandlerContext ctx)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"channel unregistered"</span>);</span><br><span class="line">        <span class="keyword">super</span>.channelUnregistered(ctx);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>运行结果<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">在chrome输入localhost:8899</span><br><span class="line"></span><br><span class="line">handler added</span><br><span class="line">handler added</span><br><span class="line">channel registered</span><br><span class="line">channel registered</span><br><span class="line">channel active</span><br><span class="line">channel active</span><br><span class="line">执行channelRead0</span><br><span class="line">请求方法名: GET</span><br><span class="line">channel inactive</span><br><span class="line">channel unregistered</span><br><span class="line">执行channelRead0</span><br><span class="line">请求方法名: GET</span><br><span class="line">请求favicon.ico</span><br></pre></td></tr></table></figure></p>
+<p>继续对程序进行修改, 查看msg的类型<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestHttpServerHandler</span> <span class="keyword">extends</span> <span class="title">SimpleChannelInboundHandler</span>&lt;<span class="title">HttpObject</span>&gt; </span>&#123;</span><br><span class="line">    <span class="comment">//读取客户端请求，并向客户端返回响应的方法</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">channelRead0</span><span class="params">(ChannelHandlerContext ctx, HttpObject msg)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line"></span><br><span class="line">        System.out.println(msg.getClass());</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span>(msg <span class="keyword">instanceof</span> HttpRequest) &#123;</span><br><span class="line">            System.out.println(<span class="string">"执行channelRead0"</span>);</span><br><span class="line">            HttpRequest httpRequest = (HttpRequest)msg;</span><br><span class="line"></span><br><span class="line">            System.out.println(<span class="string">"请求方法名: "</span> + httpRequest.method().name());</span><br><span class="line">            URI uri = <span class="keyword">new</span> URI(httpRequest.uri());</span><br><span class="line">            <span class="keyword">if</span>(<span class="string">"/favicon.ico"</span>.equals(uri.getPath()))&#123;</span><br><span class="line">                System.out.println(<span class="string">"请求favicon.ico"</span>);</span><br><span class="line">                <span class="keyword">return</span>;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            ByteBuf content = Unpooled.copiedBuffer(<span class="string">"Hello World\n"</span>, CharsetUtil.UTF_8);</span><br><span class="line">            FullHttpResponse response = <span class="keyword">new</span> DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK, content);</span><br><span class="line">            response.headers().set(HttpHeaderNames.CONTENT_TYPE, <span class="string">"text/plain"</span>);</span><br><span class="line">            response.headers().set(HttpHeaderNames.CONTENT_LENGTH, content.readableBytes());</span><br><span class="line"></span><br><span class="line">            ctx.writeAndFlush(response);</span><br><span class="line">            <span class="comment">//关闭连接</span></span><br><span class="line">            ctx.channel().close();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ......</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>输出为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">class io.netty.handler.codec.http.DefaultHttpRequest</span><br><span class="line">执行channelRead0</span><br><span class="line">请求方法名: GET</span><br><span class="line">class io.netty.handler.codec.http.LastHttpContent$1</span><br><span class="line">...</span><br></pre></td></tr></table></figure></p>
+<p>DefaultHttpRequest实现了HttpRequest接口<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DefaultHttpRequest</span> <span class="keyword">extends</span> <span class="title">DefaultHttpMessage</span> <span class="keyword">implements</span> <span class="title">HttpRequest</span> </span>&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>4.1.6 Netty获得远程的地址</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestHttpServerHandler</span> <span class="keyword">extends</span> <span class="title">SimpleChannelInboundHandler</span>&lt;<span class="title">HttpObject</span>&gt; </span>&#123;</span><br><span class="line">    <span class="comment">//读取客户端请求，并向客户端返回响应的方法</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">channelRead0</span><span class="params">(ChannelHandlerContext ctx, HttpObject msg)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        System.out.println(ctx.channel().remoteAddress());</span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输出为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/0:0:0:0:0:0:0:1:49486</span><br></pre></td></tr></table></figure></p>
+<p>说明chrome开启的49486端口与server进行连接</p>
+<p>4.1.7 HttpServerCodec</p>
+<p>(1)功能<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">对于Http的请求和响应的编码与解码进行了封装</span><br></pre></td></tr></table></figure></p>
+<p>(2) HttpServerCodec源码注释</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">原文</th>
+<th style="text-align:left">翻译</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">A combination of HttpRequestDecoder and HttpResponseEncoder which enables easier server side HTTP implementation.</td>
+<td style="text-align:left">HttpRequestDecoder和HttpResponseEncoder的一个组合，可以得到简化的HTTP服务器端的实现</td>
+</tr>
+</tbody>
+</table>
+<p>(3) HttpRequestDecoder和HttpResponseEncoder</p>
+<p>HttpRequestDecoder<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">当请求从客户端发向服务器端之后, 会做解码操作, 也就是将请求里的信息全部提取出来，完成相应的解码的动作</span><br></pre></td></tr></table></figure></p>
+<p>HttpResponseEncoder<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">对HTTP响应进行编码操作, 当client响应时, 会对响应进行响应的编码操作</span><br></pre></td></tr></table></figure></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Netty//" class="article-tag-list-link color1">Netty</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/01/11/Netty02/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-Netty01" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1528,153 +1661,6 @@
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2019/01/02/spark02/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-hello-world" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/01/01/hello-world/">Spark简介</a>
-    </h1>
-  
-
-        
-        <a href="/2019/01/01/hello-world/" class="archive-article-date">
-  	<time datetime="2018-12-31T16:34:14.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-01-01</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>1.介绍</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:left">官网原文</th>
-<th style="text-align:left">中文翻译</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left">Apache Spark™ is a unified analytics engine for large-scale data processing.</td>
-<td style="text-align:left">Apache Spark是应用于大规模数据处理的一个统一的分析引擎</td>
-</tr>
-<tr>
-<td style="text-align:left">Apache Spark is a fast and general-purpose cluster computing system. It provides high-level APIs in Java, Scala, Python and R, and an optimized engine that supports general execution graphs. It also supports a rich set of higher-level tools including Spark SQL for SQL and structured data processing, MLlib for machine learning, GraphX for graph processing, and Spark Streaming.</td>
-<td style="text-align:left">Apache Spark是一个快速的通用的集群计算系统。它提供了一些高级API，这些高级API支持JAVA、Scala、Python和R语言。它同样支持了一些高级工具，比如用于SQL和结构化数据处理的Spark SQL、用于机器学习的MLlib、用于图处理的GraphX和Spark Streaming</td>
-</tr>
-</tbody>
-</table>
-<p>2.几大特点</p>
-<p>(1) Run workloads 100x faster</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:left">官网原文</th>
-<th style="text-align:left">中文翻译</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left">Apache Spark achieves high performance for both batch and streaming data, using a state-of-the-art DAG scheduler, a query optimizer, and a physical execution engine.</td>
-<td style="text-align:left">Apache Spark对于离线处理和流失处理都能达到高性能, 因为使用最新的DAG schedulet，查询优化器和物理执行引擎</td>
-</tr>
-</tbody>
-</table>
-<p>(2) Ease of use</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:left">官网原文</th>
-<th style="text-align:left">中文翻译</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left">Spark offers over 80 high-level operators that make it easy to build parallel apps. And you can use it interactively from the Scala, Python, R, and SQL shells.</td>
-<td style="text-align:left">Spark提供了超过80中高级别的operators, 这些operators可以很容易的构建并行的应用。你可以使用Scala, Python, R和SQL命令行来操作它</td>
-</tr>
-</tbody>
-</table>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">如果要实现MapReduce的wordCount, 不仅需要实现Map函数, 也需要实现Reduce函数，较为复杂。</span><br><span class="line">而在Spark中就很简单 sc.parallize(Array(1,2,3,4,5)).map((_,1)).reduceByKey(_+_).collect</span><br></pre></td></tr></table></figure>
-<p>(3) Generality</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:left">官网原文</th>
-<th style="text-align:left">中文翻译</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left">Combine SQL, streaming, and complex analytics.</td>
-<td style="text-align:left">结合了SQL, 流式处理和复杂的分析</td>
-</tr>
-</tbody>
-</table>
-<p><img src="/img/spark-stack.png" alt="avatar"></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">上图可以看到, Spark SQL、Spark Streaming等都是基于Apache Spark诞生的组件, 每个组件都是解决了特定的问题, 这些组件组成了Spark生态栈</span><br></pre></td></tr></table></figure>
-<p>(4) Runs Everywhere</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">处理standalone模式外，其他时候都相当于一个客户端，底层是运行的是其他集群如(hadoop集群， Apache Mesos集群等)，这也就是为什么Spark除standalone外没有单点问题的原因</span><br></pre></td></tr></table></figure>
-<p>(5) 问题</p>
-<p>为什么Spark run faster？</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">MapReduce中Map task和reduce task都是以进程形式存在的, 即便有JVM重用(只要是同一个job的task就可以重新使用之前使用的JVM, 不需要启动新的JVM)，但是JVM重用也会花费时间</span><br><span class="line"></span><br><span class="line">而Spark是线程, 创建比进程快很多，资源占用少</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">在Hadoop中, 首先要读取InputSplit, map方法后放到环形缓冲区内，缓冲区满了之后再刷到磁盘上，之后shuffle，reduce等操作，需要通过网络将数据拉到本地，这样就是每一步都落到磁盘上</span><br><span class="line"></span><br><span class="line">而Spark中，如果没产生新的stage，是不需要落在磁盘上，直接在内存中以pipeline的形式执行的</span><br></pre></td></tr></table></figure>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Spark//" class="article-tag-list-link color1">Spark</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/01/01/hello-world/">展开全文 >></a>
         </p>
       
 
