@@ -6,22 +6,21 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="http://HenryangTi.github.io">
-  <title>Scala之变长参数 | HenryangTi&#39;s blog</title>
+  <title>类加载(一) | HenryangTi&#39;s blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="1.定义1入参是可变的 2.Example 2.1 Example1  2.2 Example2  121 to 10 : _* 就是将Range类型转化为可变参数">
+  <meta name="description" content="1.类型与类加载1提到类加载, 那么我们首先想知道类具体代表什么 1.1 类型的重要性 1类型是类加载的第一个概念, 因为类加载中的类具体指的就是类型 1.2 什么是类型 1定义的class、定义的interface和定义的枚举等 1.3 类型和对象与类加载 1整个类加载的过程并不涉及对象的概念, 类加载就是涉及到类型(即class本身) 1.4 类型与对象的关系 1创建对象前必须先有对象所属的类">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Scala之变长参数">
-<meta property="og:url" content="http://HenryangTi.github.io/2019/06/10/Scala6/index.html">
+<meta property="og:title" content="类加载(一)">
+<meta property="og:url" content="http://HenryangTi.github.io/2019/07/01/JVM4/index.html">
 <meta property="og:site_name" content="HenryangTi&#39;s blog">
-<meta property="og:description" content="1.定义1入参是可变的 2.Example 2.1 Example1  2.2 Example2  121 to 10 : _* 就是将Range类型转化为可变参数">
+<meta property="og:description" content="1.类型与类加载1提到类加载, 那么我们首先想知道类具体代表什么 1.1 类型的重要性 1类型是类加载的第一个概念, 因为类加载中的类具体指的就是类型 1.2 什么是类型 1定义的class、定义的interface和定义的枚举等 1.3 类型和对象与类加载 1整个类加载的过程并不涉及对象的概念, 类加载就是涉及到类型(即class本身) 1.4 类型与对象的关系 1创建对象前必须先有对象所属的类">
 <meta property="og:locale" content="default">
-<meta property="og:image" content="http://henryangti.github.io/img/2019100367.png">
-<meta property="og:image" content="http://henryangti.github.io/img/2019100372.png">
-<meta property="og:updated_time" content="2019-11-08T06:14:58.252Z">
+<meta property="og:image" content="http://henryangti.github.io/img/类加载(一">
+<meta property="og:updated_time" content="2019-11-10T23:07:02.288Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Scala之变长参数">
-<meta name="twitter:description" content="1.定义1入参是可变的 2.Example 2.1 Example1  2.2 Example2  121 to 10 : _* 就是将Range类型转化为可变参数">
-<meta name="twitter:image" content="http://henryangti.github.io/img/2019100367.png">
+<meta name="twitter:title" content="类加载(一)">
+<meta name="twitter:description" content="1.类型与类加载1提到类加载, 那么我们首先想知道类具体代表什么 1.1 类型的重要性 1类型是类加载的第一个概念, 因为类加载中的类具体指的就是类型 1.2 什么是类型 1定义的class、定义的interface和定义的枚举等 1.3 类型和对象与类加载 1整个类加载的过程并不涉及对象的概念, 类加载就是涉及到类型(即class本身) 1.4 类型与对象的关系 1创建对象前必须先有对象所属的类">
+<meta name="twitter:image" content="http://henryangti.github.io/img/类加载(一">
   
     <link rel="alternative" href="/atom.xml" title="HenryangTi&#39;s blog" type="application/atom+xml">
   
@@ -223,33 +222,79 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-Scala6" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-JVM4" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      Scala之变长参数
+      类加载(一)
     </h1>
   
 
         
-        <a href="/2019/06/10/Scala6/" class="archive-article-date">
-  	<time datetime="2019-06-10T10:11:23.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-06-10</time>
+        <a href="/2019/07/01/JVM4/" class="archive-article-date">
+  	<time datetime="2019-07-01T02:56:01.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-07-01</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>1.定义<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">入参是可变的</span><br></pre></td></tr></table></figure></p>
-<p>2.Example</p>
-<p>2.1 Example1</p>
-<p><img src="/img/2019100367.png" alt="f06a6de67c06a3c1f0f0a6060e5c7c67"></p>
-<p>2.2 Example2</p>
-<p><img src="/img/2019100372.png" alt="4557771b86a68dda6ea39c1b377fabd9"></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">1 to 10 : _* </span><br><span class="line">就是将Range类型转化为可变参数</span><br></pre></td></tr></table></figure>
+        <p>1.类型与类加载<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">提到类加载, 那么我们首先想知道类具体代表什么</span><br></pre></td></tr></table></figure></p>
+<p>1.1 类型的重要性</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">类型是类加载的第一个概念, 因为类加载中的类具体指的就是类型</span><br></pre></td></tr></table></figure>
+<p>1.2 什么是类型</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">定义的class、定义的interface和定义的枚举等</span><br></pre></td></tr></table></figure>
+<p>1.3 类型和对象与类加载</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">整个类加载的过程并不涉及对象的概念, 类加载就是涉及到类型(即class本身)</span><br></pre></td></tr></table></figure>
+<p>1.4 类型与对象的关系</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">创建对象前必须先有对象所属的类的类型信息, 才能将类型信息在heap中创建对象</span><br></pre></td></tr></table></figure>
+<p>1.5 类型定义的时间</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">绝大多数情况下, 类型是提前编写好的(如Object类, 就是jdk提供的)。</span><br><span class="line">但是任何事情都需要辩证的来看, java中有一种特殊机制就是动态代理，其机制就是在编译期间该类型是不存在的，只有在runtime的时候，才会定义某类型，并且加载连接与初始化。</span><br></pre></td></tr></table></figure>
+<p>2.加载、连接、初始化、使用、卸载</p>
+<p>2.1 加载<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">将已经编译完成的类的二进制文件(类的class文件)从磁盘加载到内存中, 若该文件不存在则直接抛出异常</span><br></pre></td></tr></table></figure></p>
+<p>2.2 连接</p>
+<p>2.2.1 验证</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">确保被加载的类的正确性, 其会确保被加载的类的字节码文件没有被恶意篡改(都是符合JVM对字节码格式的要求)</span><br></pre></td></tr></table></figure>
+<p>2.2.1.1 为什么需要验证字节码文件的正确性</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">虽然大部分情况下字节码文件是编译之后生成的, 但是也可以手工生成或编辑字节码文件，所以就有可能发生恶意篡改</span><br></pre></td></tr></table></figure>
+<p>2.2.2 准备</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">为类的静态变量分配内存, 并将其初始化为默认值</span><br></pre></td></tr></table></figure>
+<p>2.2.2.1 为什么在此可以为静态变量做分配内存等操作</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">首先静态变量不需要对象进行调用, 只需要类进行调用, 其实可以将其看作为全局变量</span><br><span class="line">所以既然不需要对象来调用，那么就可以在此时对其分配内存</span><br></pre></td></tr></table></figure>
+<p>2.2.2.2 java各种类型的默认值</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">在java中每个类型都有其默认值, 比如int的默认值为0, boolean的默认值为false, 引用类型的默认值为null(即便其引用的是int类型)</span><br></pre></td></tr></table></figure>
+<p>2.2.2.3 举例说明整个流程</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> a = <span class="number">1</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">在准备阶段，会先给a分配内存, 然后JVM会将int型的默认值0赋值给a</span><br></pre></td></tr></table></figure>
+<p>2.2.3 解析<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">将类的符号引用转换为直接引用</span><br></pre></td></tr></table></figure></p>
+<p>2.2.3.1 符号引用<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">通过符号的方式表示一个类的方法引用了另外一个类</span><br></pre></td></tr></table></figure></p>
+<p>2.2.3.2 直接引用<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">利用指针的方式指向对象的内存位置, 既然直接找到对象在内存的地址, 那么找到其特定方法也是很容易的事情</span><br></pre></td></tr></table></figure></p>
+<p>2.3 初始化</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">为静态变量赋予正确的初始值</span><br></pre></td></tr></table></figure>
+<p>2.3.1 Example</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> a = <span class="number">1</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">准备阶段: 先给a分配内存, 然后将int类型的默认值赋给a</span><br><span class="line">初始化阶段: 给a赋予正确的值, 也就是1</span><br></pre></td></tr></table></figure>
+<p>2.4 类的使用</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">就是对类的正常操作。首先就是创建对象, 使用对象的方法等。</span><br></pre></td></tr></table></figure>
+<p>2.5 类的卸载<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">将class在内存中所对应的数据结构销毁掉。</span><br><span class="line">类一旦卸载后, 就不能再使用该类创建对象，需要重新加载该类。</span><br></pre></td></tr></table></figure></p>
+<p>2.6 JVM厂商具体实现</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">整个执行流程JVM是有相应的规范，但是很多地方JVM仅仅是做了一些描述。所以对于做了一些描述的地方, 只要保证最终结果符合JVM规范，JVM厂商便可以自由发挥。所以一些JVM实现并不是完全按照加载连接初始化这三个顺序执行的。</span><br></pre></td></tr></table></figure>
+<p>2.7 java语言与其它语言的区别</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">很多语言加载连接与初始化都是在编译期完成, 而java是在运行期完成</span><br></pre></td></tr></table></figure>
+<p>2.8 运行期间类加载的好处</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">由于一切文件都是运行期可以生成, 这样可以为程序员创造性开发提供便利性, 因为他们可以使用一些手段将已经生成的和运行期生成的装配在一起。</span><br><span class="line"></span><br><span class="line">虽然java是静态语言, 类型在运行期间加载连接与初始化保证了java具有动态语言的特性。</span><br></pre></td></tr></table></figure>
+<p>3.类加载器<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">类加载器，英文是ClassLoader就是加载类的工具。</span><br><span class="line">它作用是将每个类型的数据结构信息加载到JVM管辖范围内(内存中)</span><br></pre></td></tr></table></figure></p>
+<p>4.结束JVM</p>
+<p>4.1 为什么JVM会结束<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">JVM本身是进程, 进程会在某些条件下结束掉</span><br></pre></td></tr></table></figure></p>
+<p>4.2 JVM何时会结束</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">程序显式执行System.exit()方法，给JVM提供一个信号，告诉其该结束了。</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">程序正常执行结束</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">程序在执行过程中遇到错误，并且在一直向上抛的过程中，所有异常处理都没有catch到该异常，一直抛到main方法，仍旧没有catch到异常，程序就退出</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">由于操作系统的错误导致JVM终止</span><br></pre></td></tr></table></figure>
+<p><img src="/img/类加载(一" alt="b83aa222c62efde27bc6fe2cd4b281f8">.png)</p>
 
       
 
@@ -285,7 +330,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="/categories/Scala//" class="article-tag-list-link color1">Scala</a>
+        			<a href="/categories/JVM//" class="article-tag-list-link color4">JVM</a>
         		</li>
       		
 		</ul>
@@ -340,7 +385,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http://HenryangTi.github.io/2019/06/10/Scala6/" alt="微信分享二维码">
+      <img src="//pan.baidu.com/share/qrcode?url=http://HenryangTi.github.io/2019/07/01/JVM4/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -354,18 +399,18 @@
   
 <nav id="article-nav">
   
-    <a href="/2019/06/11/Scala07/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2019/09/27/problem1/" id="article-nav-newer" class="article-nav-link-wrap">
       <i class="icon-circle-left"></i>
       <div class="article-nav-title">
         
-          Scala之option
+          HDFS遇到的坑(一)
         
       </div>
     </a>
   
   
-    <a href="/2019/06/09/Scala5/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">Scala之模式匹配</div>
+    <a href="/2019/06/22/Leetcode207/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Leetcode207 - course schedule</div>
       <i class="icon-circle-right"></i>
     </a>
   
