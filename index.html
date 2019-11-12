@@ -460,6 +460,113 @@
 
 
   
+    <article id="post-JVM5" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/07/02/JVM5/">类加载之主动使用与被动使用</a>
+    </h1>
+  
+
+        
+        <a href="/2019/07/02/JVM5/" class="archive-article-date">
+  	<time datetime="2019-07-02T04:23:01.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-07-02</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.初始化的时机</p>
+<p>1.1 java对类的使用方式<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">主动使用与被动使用</span><br></pre></td></tr></table></figure></p>
+<p>1.2 何时java程序会初始化类<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java程序对类首次主动使用的时候,  初始化类不仅需要java第一次使用某类, 而且需要主动使用该类。</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">原因是初始化只会进行一次</span><br></pre></td></tr></table></figure>
+<p>2.主动使用七种方式</p>
+<p>2.1 创建类的实例</p>
+<p>2.2 访问某类/接口的静态变量, 或者对该静态变量赋值</p>
+<p>2.3 调用类的静态方法</p>
+<p>2.4 反射</p>
+<p>2.4.1 为什么反射也是主动使用</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">因为可以通过Class.forName(packageName + className)方式获得Class对象, 然后根据Class对象就可以获取一个类的实例, 所以也叫做类的主动使用</span><br></pre></td></tr></table></figure>
+<p>2.5 初始化一个类的子类</p>
+<p>2.5.1 Example<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">比如有两个类, Parent和Child类, 其中Child类是Parent类的子类。</span><br><span class="line">当初始化child类的时候, 就是对parent类的主动使用, 如果Parent是Grandparent的子类, 那么当初始化Child的时候也就代表对Grandparent的主动使用。</span><br></pre></td></tr></table></figure></p>
+<p>2.6 JVM启动时被标明为启动类的类</p>
+<p>2.6.1 什么类会被标名为启动类<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">包含main方法的类</span><br></pre></td></tr></table></figure></p>
+<p>2.7 对于动态语言支持(不需要关注)</p>
+<p>3.为什么说主动使用的第二种方式与第三种方式是一样的</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">根据字节码来看, 读取某变量的字节码为getStatic、对静态变量赋值为putStatic、调用类的静态方法使用invokeStatic, 不管怎么变都是与static有关</span><br></pre></td></tr></table></figure>
+<p>4.被动使用</p>
+<p>4.1 什么是被动使用<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">除了主动使用外都是被动使用</span><br></pre></td></tr></table></figure></p>
+<p>4.2 被动使用意味着什么<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">被动使用不会导致类被初始化, 但该类并不意味着没有被加载。</span><br></pre></td></tr></table></figure></p>
+<p>5.类的加载</p>
+<p>5.1 什么是类的加载<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">将类的.class文件的二进制数据放到到内存中的运行时方法区内, 在内存中创建了java.lang.Class对象。</span><br><span class="line">该对象是封装了类的数据结构, Class对象对应的类的所有信息都可以从Class对象获取到，所以才会有反射这一概念。</span><br></pre></td></tr></table></figure></p>
+<p>5.2 Class对象与类的实例<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">一个类可以有多个实例, 但是其Class对象只能有一个</span><br></pre></td></tr></table></figure></p>
+<p>5.3 Class对象一般存在于哪<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">JVM虽然并没有规定Class对象的存放位置, 它让各个虚拟机厂商来实现虚拟机存放的位置。</span><br><span class="line">一般来说各种对象是存放于堆之中, 但是对于hotspot来说, Class对象是存放于方法区内。</span><br></pre></td></tr></table></figure></p>
+<p>5.4 类加载的方式</p>
+<p>5.4.1 出现不止一种类加载方式的原因<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">JVM并没有强制规定必须以哪种方式来加载类, 所以JVM实现厂商使用各种方式加载类</span><br></pre></td></tr></table></figure></p>
+<p>5.4.2 加载类的若干方式</p>
+<p>5.4.2.1 从本地文件中加载<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">class文件在本地classpath目录下, 就可以直接从磁盘上加载下来</span><br></pre></td></tr></table></figure></p>
+<p>5.4.2.2 通过网络加载类</p>
+<p>5.4.2.3 通过zip或jar包等加载<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">一些第三方库会将class文件变成jar包, 所以可以从jar包中加载class文件</span><br></pre></td></tr></table></figure></p>
+<p>5.4.2.4 java源文件动态编译为Class文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">动态代理时, 类的.class文件是运行期才生成出来</span><br></pre></td></tr></table></figure>
+<p><img src="/img/chushihua.png" alt="9af7b0a75968cb9ec52cb20d30eae21a"></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/JVM//" class="article-tag-list-link color4">JVM</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/07/02/JVM5/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-JVM4" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1006,83 +1113,6 @@
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2019/06/08/Scala4/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-Scala03" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/06/07/Scala03/">函数柯里化(currying)</a>
-    </h1>
-  
-
-        
-        <a href="/2019/06/07/Scala03/" class="archive-article-date">
-  	<time datetime="2019-06-07T01:28:01.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-06-07</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>1.函数柯里化代表什么<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">eg. sum(x:Int, y:Int) ==&gt; sum(x:Int)(y:Int)</span><br></pre></td></tr></table></figure></p>
-<p>2.Example</p>
-<p><img src="/img/20191003107.png" alt="0bffd0269e6f537be89474d836150e35"></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sum函数是一般写法, ad函数是函数的currying</span><br></pre></td></tr></table></figure>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Scala//" class="article-tag-list-link color1">Scala</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/06/07/Scala03/">展开全文 >></a>
         </p>
       
 
