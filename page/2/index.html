@@ -1199,45 +1199,139 @@
 
 
   
-    <article id="post-SparkSQL01" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-raft1" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2019/01/25/SparkSQL01/">DataFrame</a>
+      <a class="article-title" href="/2019/02/02/raft1/">Raft之复制状态机</a>
     </h1>
   
 
         
-        <a href="/2019/01/25/SparkSQL01/" class="archive-article-date">
-  	<time datetime="2019-01-24T16:34:14.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-01-25</time>
+        <a href="/2019/02/02/raft1/" class="archive-article-date">
+  	<time datetime="2019-02-01T16:34:14.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-02-02</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>1.Why use DataFrame</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(1) RDD is hard to use</span><br><span class="line"></span><br><span class="line">(2) Pandas can not be used in the distributed system</span><br></pre></td></tr></table></figure>
-<p>2.What is DataFrame</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DataFrame can be viewed as a table, while it does a lot of optimization</span><br></pre></td></tr></table></figure>
-<p>3.How to create DataFrame</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">With a SparkSession, Application can create DataFrames from an exsiting RDD, Hive table or spark data source</span><br></pre></td></tr></table></figure>
-<p>4.Three ways to create RDD</p>
-<p>4.1 Read from json</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> spark = <span class="type">SparkSession</span>.builder().appName(<span class="string">"test"</span>)</span><br><span class="line">                        .master(<span class="string">"local[2]"</span>)</span><br><span class="line">                        .getOrCreate()</span><br><span class="line"></span><br><span class="line"><span class="keyword">val</span> df = spark.read.json(<span class="string">"/people.json"</span>)</span><br><span class="line">df.show</span><br></pre></td></tr></table></figure>
-<p>4.2 Read from Hive table<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">val spark = SparkSession.builder().appName(&quot;test&quot;)</span><br><span class="line">                        .master(&quot;local[2]&quot;)</span><br><span class="line">                        .getOrCreate()</span><br><span class="line"></span><br><span class="line">val df = spark.table(&quot;henry_emp&quot;)</span><br><span class="line"></span><br><span class="line">df.show</span><br></pre></td></tr></table></figure></p>
-<p>4.3 Convert RDD to DataFrame</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line"><span class="keyword">import</span> spark.implicits._</span><br><span class="line"><span class="keyword">val</span> df = spark.sparkContext.parallelize(</span><br><span class="line">    <span class="type">Array</span>((<span class="string">"1"</span>, <span class="string">"Henry"</span>), (<span class="string">"2"</span>, <span class="string">"Ronaldo"</span>), (<span class="string">"3"</span>, <span class="string">"kaka"</span>))</span><br><span class="line">).toDF(<span class="string">"id"</span>, <span class="string">"name"</span>)</span><br><span class="line"></span><br><span class="line">df.show</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Notice:</span><br><span class="line">    (1) must use</span><br><span class="line">            import spark.implicits._</span><br><span class="line">        otherwise</span><br><span class="line">            toDF function can not be used</span><br></pre></td></tr></table></figure>
-<p>5.DataFrame vs RDD vs Dataset</p>
-<p>5.1 From structure</p>
-<p>(1) For <code>RDD[People]</code>, RDD only knows that the type of its elements is People, but it do not know the attribute about People</p>
-<p>(2) For <code>DataFrame[People]</code> can be viewed as a table, which means that <code>row</code> can be seen as an instance of People and <code>column</code> can be seen as attributes about People.</p>
-<p>In other words, <code>DataFrame</code> get schema and combines data and schema. It is similar to Hive, which combines schema and HDFS files.</p>
-<p>(3) For optimization, the code below is an example<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="keyword">id</span>, <span class="keyword">name</span> <span class="keyword">from</span> hw</span><br></pre></td></tr></table></figure></p>
+        <p><img src="/img/2019111401.png" alt="d138af51816fc149632e072e6dcfb53b"></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">英文原文</th>
+<th style="text-align:center">中文翻译</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">Consensus algorithms typically arise in the context of replicated state machines [37]. In this approach, state machines on a collection of servers compute identical copies of the same state and can continue operating even if some of the servers are down. Replicated state machines are used to solve a variety of fault tolerance problems in distributed systems. For example, large-scale systems that have a single cluster leader, such as GFS [8], HDFS [38], and RAMCloud [33], typically use a separate replicated state machine to manage leader election and store configuration information that must survive leader crashes. Examples of replicated state machines include Chubby [2] and ZooKeeper [11].</td>
+<td style="text-align:center">共识算法是在复制状态机的场景下产生的。在这种方式下, 在一组servers上的状态机计算同一个状态的相同的copies并且如果一些server down了, 操作仍然可以继续执行。复制状态机被使用去解决各种各样的在分布式系统中出现的容错问题。例如, 一个有single master的大规模系统, 比如GFS、HDFS和RAMCloud，典型的使用独立的复制状态机来管理leader选举和在leader crush之后支持整个系统运转的配置信息。复制状态机的Example包括Chubby和ZooKeeper。</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">英文原文</th>
+<th style="text-align:center">中文翻译</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">Replicated state machines are typically implemented using a replicated log, as shown in Figure 1. Each server stores a log containing a series of commands, which its state machine executes in order. Each log contains the same commands in the same order, so each state machine processes the same sequence of commands. Since the state machines are deterministic, each computes the same state and the same sequence of outputs.</td>
+<td style="text-align:center">复制状态机使用log的复制来实现，正如图1所示，每个server储存着包含一系列命令的log信息。每个log文件包含了相同顺序的命令, 当然这些命令都是相同的。因为状态机是确定的，每个状态机都计算相同的状态并且得到相同的结果</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">英文原文</th>
+<th style="text-align:center">中文翻译</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">Keeping the replicated log consistent is the job of the consensus algorithm. The consensus module on a server receives commands from clients and adds them to its log. It communicates with the consensus modules on other servers to ensure that every log eventually contains the same requests in the same order, even if some servers fail. Once commands are properly replicated, each server’s state machine processes them in log order, and the outputs are returned to clients. As a result, the servers appear to form a single, highly reliable state machine.</td>
+<td style="text-align:center">共识算法的目的是保持log副本的一致性。server上的consensus module从客户端接收指令，之后便将指令加到log里。该consensus module会与在其他server上的consensus module模块交互，这样可以确保即使server fail了，每个log最终包含了相同的请求, 并且这些请求顺序是完全一致的。一旦这些命令被正确的复制, 每个server的状态机以log顺序来处理它们，并且将结果返回给client。结果是, servers似乎是去形成一个单独的, 高可靠地状态机</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">英文原文</th>
+<th style="text-align:center">中文翻译</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">Consensus algorithms for practical systems typically have the following properties:</td>
+<td style="text-align:center">实际系统的共识算法有如下的性质</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">英文原文</th>
+<th style="text-align:center">中文翻译</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">They ensure safety (never returning an incorrect result) under all non-Byzantine conditions, including network delays, partitions, and packet loss, duplication, and reordering</td>
+<td style="text-align:center">它们确保在非拜占庭问题下的安全性(从来不会返回错误结果)，包括网络延迟、分区、packet丢失、复制与重排序</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">英文原文</th>
+<th style="text-align:center">中文翻译</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">They are fully functional (available) as long as any majority of the servers are operational and can communicate with each other and with clients. Thus, a typical cluster of five servers can tolerate the failure of any two servers. Servers are assumed to fail by stopping; they may later recover from state on stable storage and rejoin the cluster.</td>
+<td style="text-align:center">该算法在某种方式下是可用的, 该方式是只要大多数server是可用的并且它们和server以及其他的clutser能够交互。因此一个典型的由5个server所组成的集群能够容忍任意两个server failure。假设server是因为停止而失败。server可能之后会从存储于稳定存储的状态中恢复，并且重新加入到集群之中。</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">英文原文</th>
+<th style="text-align:center">中文翻译</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">They do not depend on timing to ensure the consistency of the logs: faulty clocks and extreme message delays can, at worst, cause availability problems.</td>
+<td style="text-align:center">它们不依赖于时间就可以确保log的一致性: 在最坏情况下，错误的时钟和极端消息的延迟可能会造成可靠性的问题</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">英文原文</th>
+<th style="text-align:center">中文翻译</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">In the common case, a command can complete as soon as a majority of the cluster has responded to a single round of remote procedure calls; a minority of slow servers need not impact overall system performance.</td>
+<td style="text-align:center">一般情况下，只要集群的大多数server会响应一轮的RPC调用，该命令就算完成。</td>
+</tr>
+</tbody>
+</table>
 
       
 
@@ -1252,7 +1346,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="/categories/SparkSQL//" class="article-tag-list-link color4">SparkSQL</a>
+        			<a href="/categories/raft//" class="article-tag-list-link color5">raft</a>
         		</li>
       		
 		</ul>
@@ -1261,7 +1355,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2019/01/25/SparkSQL01/">展开全文 >></a>
+          <a class="article-more-a" href="/2019/02/02/raft1/">展开全文 >></a>
         </p>
       
 
